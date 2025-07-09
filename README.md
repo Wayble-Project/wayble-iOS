@@ -218,4 +218,49 @@ if let user = self.veryLongFunctionNameWhichReturnsOptionalUser(),
 
 ## 🗂️ 폴더 컨벤션
 ```
+
+MyApp/
+├── App/                  # 앱 진입점 (AppDelegate, SceneDelegate 등)
+│   └── AppDelegate.swift
+│   └── SceneDelegate.swift
+
+├── Resources/            # 이미지, 폰트, 색상 등 리소스
+│   ├── Assets.xcassets
+│   ├── Fonts/
+│   └── Colors.swift
+
+├── Common/               # 공용 컴포넌트 (버튼, 텍스트필드, 네비게이션 등)
+│   ├── UI/
+│   │   ├── CustomButton.swift
+│   │   └── BackNavigationBar.swift
+│   └── Extension/
+│       ├── UIView+Extension.swift
+│       └── String+Extension.swift
+
+├── Constants/            # 상수 관리 (URL, 색상, 폰트 등)
+│   ├── FontConstants.swift
+│   ├── ColorConstants.swift
+│   └── APIConstants.swift
+
+├── Features/             # 기능별 폴더
+│   ├── Login/
+│   │   ├── View/
+│   │   │   └── LoginViewController.swift
+│   │   ├── ViewModel/
+│   │   │   └── LoginViewModel.swift
+│   │   └── Model/
+│   │       └── LoginUser.swift
+│   ├── Signup/
+│   ├── Home/
+│   └── Map/
+
+├── Network/              # 네트워크 관련 코드
+│   ├── APIManager.swift
+│   ├── Endpoint.swift
+│   └── DTO/
+
+└── Utils/                # 유틸리티 도구 (예: 날짜 포맷터, Alert 등)
+    └── AlertHelper.swift
+
+
 ```
