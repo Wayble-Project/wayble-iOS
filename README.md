@@ -17,7 +17,7 @@
 | 신민정 | 이서현 | 최무헌 | 팀원 4 |
 |:------:|:------:|:------:|:------:|
 | FE | FE | FE |
-| [GitHub](깃허브 링크) | [GitHub](깃허브 링크) | [GitHub](깃허브 링크) | [GitHub](깃허브 링크) |
+| [[GitHub](깃허브 링크)](https://github.com/littby) | [[GitHub](깃허브 링크)](https://github.com/doitexactly) | [[GitHub](깃허브 링크)](https://github.com/hammoooo) | [GitHub](깃허브 링크) |
 
 <br>
 
