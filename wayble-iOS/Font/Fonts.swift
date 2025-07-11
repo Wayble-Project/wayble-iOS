@@ -108,5 +108,34 @@ extension Font{
     static var mainTextSemibold18: Font {
         return .pretend(type: .semibold, size: 18)
     }
+    static var mainTextSemibold20: Font {
+        return .pretend(type: .semibold, size: 20)
+    }
+    static var mainTextRegular14: Font {
+        return .pretend(type: .regular, size: 14)
+    }
         
+    static var mainTextRegular16: Font {
+        return .pretend(type: .regular, size: 16)
+    }
+    
+    static var mainTextRegular24: Font {
+        return .pretend(type: .regular, size: 24)
+    }
+    
+    static var mainTextRegular20: Font {
+        return .pretend(type: .regular, size: 20)
+    }
+    
+    static var mainTextRegular10: Font {
+        return .pretend(type: .regular, size: 10)
+    }
+        
+    static var mainTextSemibold12: Font {
+        return .pretend(type: .semibold, size: 12)
+    }
+    
+    static var mainTextSemibold10: Font {
+        return .pretend(type: .semibold, size: 10)
+    }
 }
