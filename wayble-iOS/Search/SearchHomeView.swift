@@ -52,7 +52,7 @@ struct SearchHomeView: View {
                 .padding(.vertical, 15)
                 .frame(width: 350, height: 51)
                 .background(Color.white)
-                .cornerRadius(15)
+                .clipShape(RoundedRectangle(cornerRadius: 15))
                 .overlay(
                     RoundedRectangle(cornerRadius: 15)
                         .inset(by: 0.5)

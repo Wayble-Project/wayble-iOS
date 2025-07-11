@@ -18,9 +18,8 @@ struct FinishButton: View {
             .padding(.horizontal, 20)
             .padding(.vertical, 12)
             .frame(width: 110, height: 44, alignment: .center)
-            .cornerRadius(24)
+            .clipShape(RoundedRectangle(cornerRadius: 24))
             .background(Color.blue500)
-            .cornerRadius(24)
             .buttonStyle(.plain)
         }
     }

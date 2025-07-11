@@ -25,7 +25,7 @@ struct SearchBarView: View {
                         }
                         
                         
-                        Text("ex.숙대입구역 맛집")
+                        TextField("ex.숙대입구역 맛집", text: $viewModel.searchText)
                             .foregroundStyle(Color.gray500)
                             .font(.mainTextRegular14)
                         
@@ -49,7 +49,7 @@ struct SearchBarView: View {
                             .padding(.horizontal, 12)
                             .padding(.vertical, 15)
                             .frame(width: 50, height: 50, alignment: .center)
-                            .cornerRadius(15)
+                            .clipShape(RoundedRectangle(cornerRadius: 15))
                             .overlay(
                                 RoundedRectangle(cornerRadius: 15)
                                     .inset(by: 0.5)
