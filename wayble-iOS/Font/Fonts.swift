@@ -108,6 +108,7 @@ extension Font{
     static var mainTextSemibold18: Font {
         return .pretend(type: .semibold, size: 18)
     }
+
     static var mainTextSemibold20: Font {
         return .pretend(type: .semibold, size: 20)
     }
@@ -138,4 +139,5 @@ extension Font{
     static var mainTextSemibold10: Font {
         return .pretend(type: .semibold, size: 10)
     }
+
 }

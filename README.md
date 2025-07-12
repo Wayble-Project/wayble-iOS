@@ -1,8 +1,9 @@
 # 🚀 wayble
 
-![배너 이미지 또는 로고](링크)
+![image](https://github.com/user-attachments/assets/24f2efe9-6892-40dc-83fd-b82a11876ecd)
 
-> 모두가 편하게 일상생활이 가능하도록 도와주는 앱
+
+> 베리어프리 맞춤형 지도 서비스
 
 [![Swift](https://img.shields.io/badge/Swift-6.0-orange.svg)]()
 [![Xcode](https://img.shields.io/badge/Xcode-16.0-blue.svg)]()
@@ -16,20 +17,24 @@
 | 신민정 | 이서현 | 최무헌 | 팀원 4 |
 |:------:|:------:|:------:|:------:|
 | FE | FE | FE |
-| [GitHub](깃허브 링크) | [GitHub] (https://github.com/doitexactly) | [GitHub](깃허브 링크) | [GitHub](깃허브 링크) |
+| [[GitHub](깃허브 링크)](https://github.com/littby) | [[GitHub](깃허브 링크)](https://github.com/doitexactly) | [[GitHub](깃허브 링크)](https://github.com/hammoooo) | [GitHub](깃허브 링크) |
+
 
 <br>
 
 
 ## 📱 소개
 
-> 모두가 편하게 일상생활이 가능하도록 도와주는 앱 ...
+> 베리어프리 맞춤형 지도 앱
+
+사용자는 맞춤 설정을 통해 편리한 경로와 접근 가능한 장소를 찾고 경험을 공유하며
+모두가 이동하기 좋은 세상을 함께 만듭니다.
 
 <br>
 
 ## 📆 프로젝트 기간
-- 전체 기간: `YYYY.MM.DD - YYYY.MM.DD`
-- 개발 기간: `YYYY.MM.DD - YYYY.MM.DD`
+- 전체 기간: `2025.07.10 - 2025.08.20(미정)`
+- 개발 기간: `2025.07.10 - 2025.08.20(미정)`
 
 <br>
 
