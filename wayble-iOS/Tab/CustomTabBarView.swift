@@ -29,14 +29,14 @@ struct CustomTabBarView: View {
                                 .renderingMode(.template)
                                 .resizable()
                                 .frame(width: 24, height: 24)
-                                .foregroundColor(selectedIndex == 0 ? Color("darkblue") : .gray)
+                                .foregroundColor(selectedIndex == 0 ? Color("darkblue-500") : .gray500)
                         }
                     }
                     .buttonStyle(.plain)
 
                     Text("홈")
                         .font(.mainTextRegular12)
-                        .foregroundStyle(selectedIndex == 0 ? Color("darkblue") : .gray)
+                        .foregroundStyle(selectedIndex == 0 ? Color("darkblue-500") : .gray500)
                 }
                 .frame(maxWidth: .infinity)
 
@@ -45,7 +45,7 @@ struct CustomTabBarView: View {
                     Spacer().frame(height: 24) // 위에 버튼 공간 확보만
                     Text("지도")
                         .font(.mainTextRegular12)
-                        .foregroundStyle(selectedIndex == 1 ? Color("darkblue") : .gray)
+                        .foregroundStyle(selectedIndex == 1 ? Color("darkblue-500") : .gray500)
                 }
                 .frame(maxWidth: .infinity)
 
@@ -59,14 +59,14 @@ struct CustomTabBarView: View {
                                 .renderingMode(.template)
                                 .resizable()
                                 .frame(width: 24, height: 24)
-                                .foregroundStyle(selectedIndex == 2 ? Color("darkblue-500") : .gray)
+                                .foregroundStyle(selectedIndex == 2 ? Color("darkblue-500") : .gray500)
                         }
                     }
                     .buttonStyle(.plain)
 
                     Text("내정보")
                         .font(.mainTextRegular12)
-                        .foregroundStyle(selectedIndex == 2 ? Color("darkblue") : .gray)
+                        .foregroundStyle(selectedIndex == 2 ? Color("darkblue-500") : .gray500)
                 }
                 .frame(maxWidth: .infinity)
             }
@@ -77,19 +77,13 @@ struct CustomTabBarView: View {
             }) {
                 ZStack {
                     Circle()
-                        .fill(Color("darkblue"))
+                        .fill(Color("darkblue-500"))
                         .frame(width: 52, height: 52)
                         .shadow(color: .black.opacity(0.2), radius: 8, x: 0, y: 4)
 
-                    if selectedIndex == 1 {
-                        Image("waybleLogo")
-                            .resizable()
-                            .frame(width: 27.4, height: 17.9)
-                    } else {
-                        Image("map01")
-                            .resizable()
-                            .frame(width: 24, height: 24)
-                    }                }
+                    Image("map01")
+                               .resizable()
+                               .frame(width: 24, height: 24)                }
             }
             .offset(y: -35)
         }    }

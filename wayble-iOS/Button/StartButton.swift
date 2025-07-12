@@ -18,7 +18,8 @@ struct StartButton: View {
             .padding(.horizontal, 20)
             .padding(.vertical, 12)
             .frame(width: 110, height: 44, alignment: .center)
-            .cornerRadius(24)
+            .clipShape(RoundedRectangle(cornerRadius: 24))
+
             .buttonStyle(.plain)
             .overlay(
                 RoundedRectangle(cornerRadius: 24)
