@@ -34,18 +34,26 @@ struct EmailField: View {
     }
 
     var body: some View {
-        TextField("아이디(이메일)", text: $email)
-            .padding(.horizontal, 20)
-            .padding(.vertical, 15)
-            .frame(width: 350, height: 50)
-            .font(.mainTextRegular14)
-            .tracking(-0.28)
-            .foregroundStyle(Color.gray900)
-            .background(
-                RoundedRectangle(cornerRadius: 15)
-                    .stroke(borderColor(for: fieldState), lineWidth: 1)
-            )
-            .focused($isFocused)
+        VStack(alignment: .leading) {
+            Text("이메일(아이디)")
+                .font(.mainTextSemibold14)
+                .foregroundStyle(Color.gray900)
+                .tracking(-0.28)
+                .frame(height: 20)
+                .padding(.bottom, 5)
+            TextField("아이디(이메일)", text: $email)
+                .padding(.horizontal, 20)
+                .padding(.vertical, 15)
+                .frame(width: 350, height: 50)
+                .font(.mainTextRegular14)
+                .tracking(-0.28)
+                .foregroundStyle(Color.gray900)
+                .background(
+                    RoundedRectangle(cornerRadius: 15)
+                        .stroke(borderColor(for: fieldState), lineWidth: 1)
+                )
+                .focused($isFocused)
+        }
     }
     
 
