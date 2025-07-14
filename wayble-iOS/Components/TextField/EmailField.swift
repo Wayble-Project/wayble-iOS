@@ -42,7 +42,7 @@ struct EmailField: View {
                 .tracking(-0.28)
                 .frame(height: 20)
                 .padding(.bottom, 5)
-            TextField("아이디(이메일)", text: $email)
+            TextField("wayble@email.com", text: $email)
                 .padding(.horizontal, 20)
                 .padding(.vertical, 15)
                 .frame(width: 350, height: 50)
