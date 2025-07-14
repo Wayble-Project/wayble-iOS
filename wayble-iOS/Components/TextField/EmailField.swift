@@ -14,6 +14,7 @@ enum EmailFieldState {
     case mismatched
 }
 
+//FIXME: - isCheckingMismatch 타입 변경
 
 struct EmailField: View {
     @Binding var email: String            // 외부에서 상태 바인딩
@@ -34,7 +35,7 @@ struct EmailField: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading,spacing: 0) {
             Text("이메일(아이디)")
                 .font(.mainTextSemibold14)
                 .foregroundStyle(Color.gray900)

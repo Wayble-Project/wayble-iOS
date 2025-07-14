@@ -43,6 +43,9 @@ extension Font{
     static var mainTextBold24: Font {
         return .pretend(type: .bold, size: 24)
     }
+    static var mainTextBold30: Font {
+        return .pretend(type: .bold, size: 30)
+    }
     static var mainTextSemibold24: Font {
         return .pretend(type: .semibold, size: 24)
     }
