@@ -15,6 +15,7 @@ enum PasswordFieldState {
     case mismatched
 }
 
+//FIXME: - isCheckingMismatch 타입 변경
 
 struct PasswordField: View {
     @Binding var password: String            // 외부에서 상태 바인딩
@@ -36,14 +37,14 @@ struct PasswordField: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 0) {
             Text("비밀번호")
                 .font(.mainTextSemibold14)
                 .foregroundStyle(Color.gray900)
                 .tracking(-0.28)
                 .padding(.bottom, 5)
             
-            HStack {
+            HStack(spacing: 0) {
                 if isSecure {
                     SecureField("비밀번호를 입력하세요", text: $password)
                         .font(.mainTextRegular14)
@@ -78,7 +79,7 @@ struct PasswordField: View {
             
             Text("5회 로그인 실패시, 로그인이 10분 동안 제한됩니다.(1/5)")
                 .font(.mainTextRegular12)
-                .foregroundStyle(Color.error)
+                .foregroundStyle(fieldState == .mismatched ? Color.error : Color.white) //틀렸을 때만 보이게
                 .tracking(-0.24)
                 .padding(.leading, 5)
                 .padding(.top, 5)
