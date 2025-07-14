@@ -1,0 +1,50 @@
+//
+//  SignupTermsView.swift
+//  wayble-iOS
+//
+//  Created by 이서현 on 7/14/25.
+//
+
+import SwiftUI
+
+struct SignupTermsView: View {
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            BackButton()
+                .padding(.top, 30)
+                .padding(.bottom, 27)
+            TitleText(text: "wayble 이용 약관에\n동의해 주세요")
+                .padding(.bottom, 48)
+            
+            HStack(spacing: 0) {
+                Button(action: {}) {
+                    Image("check01")
+                        .resizable()
+                        .frame(width: 24, height: 24)
+                }
+                Text("웨이블 서비스 이용 동의")
+                    .font(.mainTextSemibold14)
+                    .foregroundStyle(Color.black)
+                    .padding(.leading, 12)
+            }
+            .padding(.bottom, 9)
+            
+            Text("가입 약관 내용 추가")
+                .font(.mainTextRegular14)
+                .foregroundStyle(Color.black)
+                .padding(.leading, 36)
+            
+            Spacer()
+            OkButton(title: "확인", isDisabled: false) {
+                print("아이디 생성")
+            }
+            .padding(.bottom, 54)
+            
+        }
+    }
+}
+
+#Preview {
+    SignupTermsView()
+        .environment(NavigationRouter())
+}
