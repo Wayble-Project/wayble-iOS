@@ -44,6 +44,8 @@ struct SearchBarView: View {
                     )
                     Spacer()
                         .frame(width:10)
+                    
+                    //누르면 지도 펼쳐짐
                     Button(action: {}) {
                         Image("map02")
                             .padding(.horizontal, 12)
@@ -102,6 +104,7 @@ struct SearchBarView: View {
         }
 }
 
+// 집 회사 학교 버튼 커스텀
 struct FilterTagView: View {
     let label: String
     
@@ -117,6 +120,7 @@ struct FilterTagView: View {
     }
 }
 
+//밑에 검색기록 
 struct SearchRow: View {
     let icon: String
     let title: String

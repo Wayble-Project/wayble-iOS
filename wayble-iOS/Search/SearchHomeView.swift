@@ -14,8 +14,10 @@ struct SearchHomeView: View {
         VStack(alignment: .leading) {
             Spacer()
                 .frame(height: 11)
+            
+            //상단
             HStack {
-                Image("wableLogo3")
+                Image("waybleLogo3")
                     .resizable()
                     .frame(width: 26, height: 17)
               
@@ -34,6 +36,7 @@ struct SearchHomeView: View {
             Spacer()
                 .frame(height: 20)
 
+            // 상단 홍대입구역 
             Button(action: {
                 // 라우터 만들어지면 작성
             }) {

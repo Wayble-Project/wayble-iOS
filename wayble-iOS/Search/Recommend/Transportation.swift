@@ -11,6 +11,8 @@ struct Transportation: View {
     @StateObject var viewModel = TransportationViewModel()
     
     var body: some View {
+        
+        // 출발지 목적지 설정
         VStack(spacing: 0) {
             VStack(spacing: 0) {
                 HStack(alignment: .top) {
@@ -82,7 +84,7 @@ struct Transportation: View {
             .background(Color("blue-50"))
             
             
-            // 탭 바 (대중교통 / 도보)
+            // 탭 바 (대중교통 |  도보)
             VStack(spacing: 0) {
                 HStack(alignment: .firstTextBaseline, spacing: 0) {
                     ForEach(TransportationTab.allCases.indices, id: \.self) { index in
@@ -130,7 +132,7 @@ struct Transportation: View {
                     RouteView()
                 }
             } else {
-                // 여기에 도보 넣기
+                // 여기에 도보 화면 넣기 ! 
                 Spacer()
                     
             }
