@@ -31,6 +31,11 @@
 			path = SignUp;
 			sourceTree = "<group>";
 		};
+		6194FC222E26525900C78222 /* Onboarding */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
 		6E29C8BC2E1EAD3B00E69785 /* wayble-iOS */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -59,6 +64,7 @@
 				6E29C8BB2E1EAD3B00E69785 /* Products */,
 				6194FB712E25265E00C78222 /* Login */,
 				6194FB722E2526CF00C78222 /* SignUp */,
+				6194FC222E26525900C78222 /* Onboarding */,
 			);
 			sourceTree = "<group>";
 		};
@@ -88,6 +94,7 @@
 			fileSystemSynchronizedGroups = (
 				6194FB712E25265E00C78222 /* Login */,
 				6194FB722E2526CF00C78222 /* SignUp */,
+				6194FC222E26525900C78222 /* Onboarding */,
 				6E29C8BC2E1EAD3B00E69785 /* wayble-iOS */,
 			);
 			name = "wayble-iOS";

@@ -1,31 +1,33 @@
 //
-//  PasswordField.swift
+//  CheckPasswordField.swift
 //  wayble-iOS
 //
-//  Created by 이서현 on 7/13/25.
+//  Created by 이서현 on 7/15/25.
 //
 
 import SwiftUI
 
-
+/*
 enum PasswordFieldState {
     case `default`
     case focused
     case completed
     case mismatched
 }
+ */
+
 
 //FIXME: - isCheckingMismatch 타입 변경
 
-struct PasswordField: View {
+struct CheckPasswordField: View {
     @Binding var password: String            // 외부에서 상태 바인딩
     @FocusState private var isFocused: Bool  // 포커스 상태
-    var storedPassword: String             // 저장된 패스워드
+    var setPassword: String             // 설정한 패스워드
     @State private var showPassword: Bool = true // 패스워드 공개 버튼
-    var isCheckingMismatch: Bool          // 확인 버튼 눌렸는지 여부
+    var isPasswordSame: Bool          // 설정한 패스워드와 같은지
 
     private var fieldState: PasswordFieldState {
-        if isCheckingMismatch && password != storedPassword {
+        if isPasswordSame && password != setPassword {
             return .mismatched
         } else if isFocused {
             return .focused

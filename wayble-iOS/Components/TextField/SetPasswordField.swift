@@ -1,34 +1,42 @@
 //
-//  PasswordField.swift
+//  SetPasswordField.swift
 //  wayble-iOS
 //
-//  Created by 이서현 on 7/13/25.
+//  Created by 이서현 on 7/15/25.
 //
 
 import SwiftUI
 
-
+/*
 enum PasswordFieldState {
     case `default`
     case focused
     case completed
     case mismatched
 }
+ */
+
 
 //FIXME: - isCheckingMismatch 타입 변경
 
-struct PasswordField: View {
+struct SetPasswordField: View {
     @Binding var password: String            // 외부에서 상태 바인딩
+    @Binding var confirmPassword: String
+    @Binding var isMatched: Bool
     @FocusState private var isFocused: Bool  // 포커스 상태
-    var storedPassword: String             // 저장된 패스워드
+    var setPassword: String             // 설정한 패스워드
     @State private var showPassword: Bool = true // 패스워드 공개 버튼
-    var isCheckingMismatch: Bool          // 확인 버튼 눌렸는지 여부
 
+    var content: String
+    var shouldCheckMatch: Bool = true
+    
     private var fieldState: PasswordFieldState {
-        if isCheckingMismatch && password != storedPassword {
-            return .mismatched
-        } else if isFocused {
+        if isFocused {
             return .focused
+        } else if !isPasswordValid() {
+            return .mismatched
+        } else if shouldCheckMatch && !isPasswordMatched {
+            return .mismatched
         } else if !password.isEmpty {
             return .completed
         } else {
@@ -46,17 +54,19 @@ struct PasswordField: View {
             
             HStack(spacing: 0) {
                 if !showPassword {
-                    SecureField("비밀번호를 입력하세요", text: $password)
+                    SecureField("8자 이상의 비밀번호", text: $password)
                         .font(.mainTextRegular14)
                         .tracking(-0.28)
                         .foregroundStyle(Color.gray900)
-                        .autocorrectionDisabled(true)
+                        .textContentType(.newPassword)
+                        .focused($isFocused)
                 } else {
-                    TextField("비밀번호를 입력하세요", text: $password)
+                    TextField("8자 이상의 비밀번호", text: $password)
                         .font(.mainTextRegular14)
                         .tracking(-0.28)
                         .foregroundStyle(Color.gray900)
-                        .autocorrectionDisabled(true)
+                        .textContentType(.newPassword)
+                        .focused($isFocused)
                 }
                 
                 Button(action: {
@@ -76,17 +86,31 @@ struct PasswordField: View {
                 RoundedRectangle(cornerRadius: 15)
                     .stroke(borderColor(for: fieldState), lineWidth: 1)
             )
-            .focused($isFocused)
+            .onChange(of: password) {
+                isMatched = isPasswordMatched
+            }
+            .onChange(of: confirmPassword) {
+                isMatched = isPasswordMatched
+            }
+            
+            if(isPasswordValid()) {
+                Text(content)
+                    .font(.mainTextRegular12)
+                    .foregroundStyle(Color.positive) // 조건에 부합할 때만 positive 색으로
+                    .tracking(-0.24)
+                    .padding(.leading, 5)
+                    .padding(.top, 5)
+            } else {
+                Text(content)
+                    .font(.mainTextRegular12)
+                    .foregroundStyle(Color.gray500) // 조건에 부합할 때만 positive 색으로
+                    .tracking(-0.24)
+                    .padding(.leading, 5)
+                    .padding(.top, 5)
+                
+            }
             
             
-            Text("5회 로그인 실패시, 로그인이 10분 동안 제한됩니다.(1/5)")
-                .font(.mainTextRegular12)
-                .foregroundStyle(fieldState == .mismatched ? Color.error : Color.white) //틀렸을 때만 보이게
-                .tracking(-0.24)
-                .padding(.leading, 5)
-                .padding(.top, 5)
-            
-             
         }//v
     }
     
@@ -94,18 +118,15 @@ struct PasswordField: View {
 
     private func borderColor(for state: PasswordFieldState) -> Color {
         switch state {
-        case .default:
-            return Color.gray200
         case .focused:
             return Color(red: 1/255, green: 32/255, blue: 50/255)
             // #012032
-        case .completed:
+        case .completed, .default, .mismatched:
             return Color.gray200
-        case .mismatched:
-            return Color.error
         }
     }
 
+    // TODO: - 와프 요청해야 함!!
     private func textColor(for state: PasswordFieldState) -> Color {
         switch state {
         case .default:
@@ -125,7 +146,27 @@ struct PasswordField: View {
     private func savePassword() {
         // UserInfo 모델 만들기 -> 저장?
     }
+    
+    
+    //MARK: - 대소문자, 특수기호 포함
+    private func isPasswordValid() -> Bool {
+        let upperCase = NSPredicate(format: "SELF MATCHES %@", ".*[A-Z]+.*")
+        let lowerCase = NSPredicate(format: "SELF MATCHES %@", ".*[a-z]+.*")
+        let specialChar = NSPredicate(format: "SELF MATCHES %@", ".*[^A-Za-z0-9].*")
+        
+        return upperCase.evaluate(with: password) &&
+                lowerCase.evaluate(with: password) &&
+                specialChar.evaluate(with: password)
+    }
+    
+    //MARK: - 패스워드 일치 여부
+    private var isPasswordMatched: Bool { // 계산 속성
+        return password == confirmPassword
+    }
+    
 }
+
+
 
 
 /*
