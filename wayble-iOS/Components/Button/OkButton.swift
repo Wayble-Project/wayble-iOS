@@ -35,7 +35,7 @@ struct OkButtonStyle: ButtonStyle {
 
 struct OkButton: View {
     var title: String
-    var isDisabled: Bool = false
+    var isDisabled: Bool
     var action: () -> Void
 
     var body: some View {
@@ -45,6 +45,8 @@ struct OkButton: View {
         .buttonStyle(OkButtonStyle(isDisabled: isDisabled))
         .disabled(isDisabled)
     }
+    
+    
 }
 
 #Preview {

@@ -43,6 +43,9 @@ struct EmailField: View {
                 .frame(height: 20)
                 .padding(.bottom, 5)
             TextField("wayble@email.com", text: $email)
+                .keyboardType(.emailAddress)
+                .textInputAutocapitalization(.none) //.autocapitalization()은 deprecated!
+                .autocorrectionDisabled(true) // 자동완성 해제
                 .padding(.horizontal, 20)
                 .padding(.vertical, 15)
                 .frame(width: 350, height: 50)

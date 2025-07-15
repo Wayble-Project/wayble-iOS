@@ -1,16 +1,15 @@
 //
-//  SignupCompletedView.swift
+//  NewPasswordCompletedView.swift
 //  wayble-iOS
 //
-//  Created by 이서현 on 7/14/25.
+//  Created by 이서현 on 7/15/25.
 //
 
+
+//FIXME: - 이미지 바꾸기 , 확인 네비게이션
 import SwiftUI
 
-
-//FIXME: - image 변경해야 함
-
-struct SignupCompletedView: View {
+struct NewPasswordCompletedView: View {
     var body: some View {
         VStack {
             Spacer()
@@ -19,11 +18,11 @@ struct SignupCompletedView: View {
                 .resizable()
                 .frame(width: 33, height: 33)
                 .padding(.bottom, 50.4)
-            TitleText(text: "환영합니다\n가입이 완료되었어요!", alignment: .center)
+            TitleText(text: "새로운 비밀번호가\n설정되었습니다!", alignment: .center)
             
             Spacer()
             
-            OkButton(title: "확인", isDisabled: true) {
+            OkButton(title: "확인", isDisabled: false) {
                 print("appstorge 저장하는 코드")
             }
             .padding(.bottom, 54)
@@ -32,5 +31,5 @@ struct SignupCompletedView: View {
 }
 
 #Preview {
-    SignupCompletedView()
+    NewPasswordCompletedView()
 }

@@ -1,18 +1,18 @@
 //
-//  SignupEmailView.swift
+//  findPWDView.swift
 //  wayble-iOS
 //
-//  Created by 이서현 on 7/14/25.
+//  Created by 이서현 on 7/15/25.
 //
 
 
-//FIXME: - 가입 UserInfo 모델? signupModel 완성하고 signviewModel 수정
+//FIXME: - 이메일 텍스트필드 수정해야 함
+
 import SwiftUI
 
-struct signupEmailView: View {
+struct findPasswordView: View {
     @State var signviewModel = SignupViewModel()
     
-    @AppStorage("email") var email: String = ""
 
 
     
@@ -21,8 +21,10 @@ struct signupEmailView: View {
             BackButton()
                 .padding(.top, 30)
                 .padding(.bottom, 27)
-            TitleText(text: "로그인에 사용할\n아이디를 입력해 주세요")
+            TitleText(text: "이메일 주소로\n비밀번호를 찾을 수 있어요")
                 .padding(.bottom, 48)
+            
+            //FIXME: - EmailField 수정
             EmailField(email: $signviewModel.signupModel.email, storedEmail: "", isCheckingMismatch: false)
             
             Spacer()
@@ -36,6 +38,6 @@ struct signupEmailView: View {
 }
 
 #Preview {
-    signupEmailView()
+    findPasswordView()
         .environment(NavigationRouter())
 }

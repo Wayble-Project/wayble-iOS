@@ -1,18 +1,16 @@
 //
-//  SignupEmailView.swift
+//  VerifyCodeView.swift
 //  wayble-iOS
 //
-//  Created by 이서현 on 7/14/25.
+//  Created by 이서현 on 7/15/25.
 //
 
 
-//FIXME: - 가입 UserInfo 모델? signupModel 완성하고 signviewModel 수정
+//TODO: - 인증코드 컴포넌트 만들기
+
 import SwiftUI
 
-struct signupEmailView: View {
-    @State var signviewModel = SignupViewModel()
-    
-    @AppStorage("email") var email: String = ""
+struct VerifyCodeView: View {
 
 
     
@@ -21,9 +19,9 @@ struct signupEmailView: View {
             BackButton()
                 .padding(.top, 30)
                 .padding(.bottom, 27)
-            TitleText(text: "로그인에 사용할\n아이디를 입력해 주세요")
+            TitleText(text: "해당 이메일 주소로\n인증코드를 발송했어요")
                 .padding(.bottom, 48)
-            EmailField(email: $signviewModel.signupModel.email, storedEmail: "", isCheckingMismatch: false)
+            //EmailField(email: $signviewModel.signupModel.email, storedEmail: "", isCheckingMismatch: false)
             
             Spacer()
             OkButton(title: "확인", isDisabled: false) {
@@ -36,6 +34,6 @@ struct signupEmailView: View {
 }
 
 #Preview {
-    signupEmailView()
+    VerifyCodeView()
         .environment(NavigationRouter())
 }

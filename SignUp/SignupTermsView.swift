@@ -16,6 +16,7 @@ struct SignupTermsView: View {
             TitleText(text: "wayble 이용 약관에\n동의해 주세요")
                 .padding(.bottom, 48)
             
+            //FIXME: - 토글 버튼 이미지 전환 (색)
             HStack(spacing: 0) {
                 Button(action: {}) {
                     Image("check01")
@@ -37,6 +38,7 @@ struct SignupTermsView: View {
             Spacer()
             OkButton(title: "확인", isDisabled: false) {
                 print("아이디 생성")
+                //FIXME: - 동의버튼 true로 바뀌어야 넘어가는 코드
             }
             .padding(.bottom, 54)
             
