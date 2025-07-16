@@ -19,6 +19,8 @@ struct RouterViewModifier: ViewModifier {
 //                LoginView()
             case .wayblezone:
                 WaybleZoneView()
+            case .routeDetail:
+                RouteDetail()
             }
         }
         .environment(router)

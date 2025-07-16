@@ -56,8 +56,21 @@ class RouteStep: Identifiable {
     let busTime : String? // ex: "배차간격 14분"
     var subwayLine: SubwayLine? // 지하철 색깔 표시, 버스면 nil로 표시
     var busType: BusType?         // 버스 색깔 표시
+    var isDeparture: Bool = false
+    var isFinal: Bool = false
+    var routeDetail: String? //ex:공덕역 5번 출구까지
+    var routeMeter: String? // ex: 도보 30m
+    var chair: String? //ex: "휠체어 전용석 6-1, 10-4"
+    var toilet: String? // ex: "장애인 화장실 O"
+    var elevator: String? //ex : "엘리베이터와 가까운 승강장 8-1"
+    var transfer: [String]? // ex: 마포16, 마포09 ... 여러개
+    var destFinal: Bool = false
+    var simple: Bool = false
+    var showDest: Bool = false
+    var bustitle: String? // 마을
+    var role: StepRole? // 각 단계의 역할 정보 (출발, 지하철, 버스환승, 하차 등)
     
-    init(type: RouteStepType, title: String, subTitle: String, detail: String? = nil, extra: String? = nil, Info: String? = nil, extraBus: String? = nil, busTime: String?) {
+    init(type: RouteStepType, title: String, subTitle: String, detail: String? = nil, extra: String? = nil, Info: String? = nil, extraBus: String? = nil, busTime: String?, role: StepRole? = nil, isDeparture: Bool = false, isFinal: Bool = false, routeDetail: String? = nil, routeMeter: String? = nil, chair: String? = nil,toilet: String? = nil, elevator: String? = nil, transfer: [String]? = nil, destFinal: Bool = false, simple: Bool = false, showDest: Bool = false, bustitle: String? = nil ) {
         self.type = type
         self.title = title
         self.subTitle = subTitle
@@ -66,6 +79,21 @@ class RouteStep: Identifiable {
         self.Info = Info
         self.extraBus = extraBus
         self.busTime = busTime
+        self.role = role
+        self.isDeparture = isDeparture
+        self.isFinal = isFinal
+        self.routeDetail = routeDetail
+        self.routeMeter = routeMeter
+        self.chair = chair
+        self.toilet = toilet
+        self.elevator = elevator
+        self.transfer = transfer
+        self.destFinal = destFinal
+        self.simple = simple
+        self.showDest = showDest
+        self.bustitle = bustitle
+        
+        
         
         
         
@@ -158,4 +186,15 @@ enum SubwayLine: String {
         case .line9: return Color.line9
         }
     }
+}
+
+enum StepRole {
+    case start
+    case subway
+    case bus
+    case transferBus
+    case subwayStop
+    case finalBusStop
+    case destination
+
 }
