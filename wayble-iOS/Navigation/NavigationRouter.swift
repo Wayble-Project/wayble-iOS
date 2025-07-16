@@ -36,4 +36,5 @@ enum Route: Hashable {
     case home
    // case login
     case wayblezone
+    case routeDetail
 }
