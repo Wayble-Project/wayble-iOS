@@ -16,7 +16,8 @@ struct PreviousButton: View {
                 .padding(.horizontal, 20)
                 .padding(.vertical, 15)
                 .foregroundStyle(Color.gray700)
-                .frame(width: 170, height: 50, alignment: .center)
+                .frame(maxWidth: .infinity)
+                .frame(height: 50, alignment: .center)
                 .background(Color.gray200)
                 .clipShape(RoundedRectangle(cornerRadius: 13))
             

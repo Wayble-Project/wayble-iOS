@@ -16,4 +16,8 @@ import SwiftUI
 class LoginViewModel {
     var email = ""
     var pwd = ""
+    
+    func login() {
+        print("로그인 시도: \(email), \(pwd)")
+    }
 }
