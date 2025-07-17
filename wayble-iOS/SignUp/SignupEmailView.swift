@@ -10,7 +10,7 @@
 import SwiftUI
 
 struct signupEmailView: View {
-    @State var signviewModel = SignupViewModel()
+    @State var userInfoViewModel = UserInfoViewModel()
     
     @AppStorage("email") var email: String = ""
 
@@ -23,7 +23,7 @@ struct signupEmailView: View {
                 .padding(.bottom, 27)
             TitleText(text: "로그인에 사용할\n아이디를 입력해 주세요")
                 .padding(.bottom, 48)
-            EmailField(email: $signviewModel.signupModel.email, storedEmail: "", isCheckingMismatch: false)
+            EmailField(email: $userInfoViewModel.userInfo.email, storedEmail: "", isCheckingMismatch: false)
             
             Spacer()
             OkButton(title: "확인", isDisabled: false) {

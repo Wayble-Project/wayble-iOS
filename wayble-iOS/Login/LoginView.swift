@@ -9,6 +9,13 @@ import SwiftUI
 
 
 struct LoginView: View {
+    
+    enum Field {
+        case email
+        case password
+    }
+
+    @FocusState private var focusedField: Field?
     //@State var email: String
     @State var loginViewModel = LoginViewModel()
     
@@ -22,6 +29,11 @@ struct LoginView: View {
                 storedEmail: "abc@naver.com",
                 isCheckingMismatch: false
             )
+            .submitLabel(.next)
+            .focused($focusedField, equals: .email)
+            .onSubmit {
+                focusedField = .password
+            }
             .padding(.bottom, 8)
             
             
@@ -30,8 +42,15 @@ struct LoginView: View {
                 storedPassword: "12345678",
                 isCheckingMismatch: false
             )
+            .submitLabel(.done)
+            .focused($focusedField, equals: .password)
+            .onSubmit {
+                loginViewModel.login()
+            }
             .padding(.bottom, 29)
             
+            
+            //FIXME: - 이메일 패스워드 텍스트 필드 값 따라 액션 변경
             OkButton(title: "확인", isDisabled: false) {
                 print("확인")
             }
@@ -108,7 +127,6 @@ struct LoginView: View {
         }
         .padding(.horizontal, 20)
     }
-    
     
 }
 

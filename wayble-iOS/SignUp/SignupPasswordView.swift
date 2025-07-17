@@ -18,7 +18,7 @@ import SwiftUI
 import SwiftUI
 
 struct SignupPasswordView: View {
-    @State var signviewModel = SignupViewModel()
+    @State var userInfoViewModel = UserInfoViewModel()
     @State var confirmPassword: String
     
     @State private var isPasswordMatched: Bool = false
@@ -36,7 +36,7 @@ struct SignupPasswordView: View {
             //FIXME: - PasswordField 수정
             SetPasswordField(
                 password:
-                    $signviewModel.signupModel.password,
+                    $userInfoViewModel.userInfo.password,
                 confirmPassword:
                     $confirmPassword,
                 isMatched: .constant(true),
@@ -49,7 +49,7 @@ struct SignupPasswordView: View {
             //FIXME: - setPassword 파라미터 이렇게 둬도 되나?
             SetPasswordField(
                 password: $confirmPassword,
-                confirmPassword: $signviewModel.signupModel.password,
+                confirmPassword: $userInfoViewModel.userInfo.password,
                 isMatched: $isPasswordMatched,
                 setPassword: "1",
                 content: "✓ 비밀번호 일치"

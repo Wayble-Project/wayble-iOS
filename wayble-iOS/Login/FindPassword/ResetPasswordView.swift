@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ResetPasswordView: View {
-    @State var signviewModel = SignupViewModel()
+    @State var userInfoViewModel = UserInfoViewModel()
     
     
     var body: some View {
@@ -20,10 +20,10 @@ struct ResetPasswordView: View {
                 .padding(.bottom, 48)
             
             //FIXME: - PasswordField 수정
-            PasswordField(password: $signviewModel.signupModel.password, storedPassword: "", isCheckingMismatch: false)
+            PasswordField(password: $userInfoViewModel.userInfo.password, storedPassword: "", isCheckingMismatch: false)
             
             //FIXME: - PasswordField 수정
-            PasswordField(password: $signviewModel.signupModel.password, storedPassword: "", isCheckingMismatch: false)
+            PasswordField(password: $userInfoViewModel.userInfo.password, storedPassword: "", isCheckingMismatch: false)
             
             
             
