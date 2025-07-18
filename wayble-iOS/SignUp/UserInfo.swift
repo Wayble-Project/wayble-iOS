@@ -13,7 +13,7 @@ class UserInfo {
     var password: String = ""
     var nickname: String = ""
     var gender: Gender = .none
-    //var birth: Date = Date()
+    var birth: String = "" //Date 타입으로 해야 하는지
     var hasDisability: Bool = false
     var disabilityType: [DisabilityType] = []
     var mobilityAid: MobilityAid = .none

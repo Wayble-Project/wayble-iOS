@@ -23,7 +23,6 @@ struct OnboardingBar: View {
                     .animation(.easeInOut, value: currentStep)
             }
         }
-        .padding(.horizontal)
     }
 }
 
