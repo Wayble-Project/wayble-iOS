@@ -8,8 +8,10 @@
 import SwiftUI
 
 struct PreviousButton: View {
+    let action: () -> Void
+    
     var body: some View {
-        Button(action: {print("이전")}) {
+        Button(action: action) {
             Text("이전")
                 .font(.mainTextSemibold14)
                 .tracking(-0.28)
@@ -28,5 +30,5 @@ struct PreviousButton: View {
 
 
 #Preview {
-    PreviousButton()
+    PreviousButton(action: { print("이전") })
 }

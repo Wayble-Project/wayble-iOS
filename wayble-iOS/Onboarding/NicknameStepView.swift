@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct NicknameStepView: View {
-    @State var step = 0
+    @Binding var step: Int
     @State var userInfoViewModel = UserInfoViewModel()
     
     var body: some View {
@@ -25,7 +25,7 @@ struct NicknameStepView: View {
                 keyboardType: .default
             )
             Spacer()
-            BothButton()
+            //BothButton(step: $step)
             
         } //v
         .padding(.horizontal, 20)
@@ -33,5 +33,13 @@ struct NicknameStepView: View {
 }
 
 #Preview {
-    NicknameStepView()
+    struct PreviewWrapper: View {
+        @State var step = 0
+
+        var body: some View {
+            NicknameStepView(step: $step)
+        }
+    }
+
+    return PreviewWrapper()
 }
