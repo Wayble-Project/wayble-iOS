@@ -8,22 +8,18 @@
 import SwiftUI
 
 
-
-
-
-
 //FIXME: -비밀번호 필드 컴포넌트 와프 관련 답변 대기 중
 //FIXME: - 가입 UserInfo 모델을 만들고 signviewModel 수정
 
 import SwiftUI
 
 struct SignupPasswordView: View {
-    @State var userInfoViewModel = UserInfoViewModel()
+    @State var viewModel = SignupViewModel()
     @State var confirmPassword: String
     
     @State private var isPasswordMatched: Bool = false
     
-    @AppStorage("password") var password: String = ""
+    //@AppStorage("password") var password: String = ""
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -36,7 +32,7 @@ struct SignupPasswordView: View {
             //FIXME: - PasswordField 수정
             SetPasswordField(
                 password:
-                    $userInfoViewModel.userInfo.password,
+                    $viewModel.userInfo.password,
                 confirmPassword:
                     $confirmPassword,
                 isMatched: .constant(true),
@@ -49,7 +45,7 @@ struct SignupPasswordView: View {
             //FIXME: - setPassword 파라미터 이렇게 둬도 되나?
             SetPasswordField(
                 password: $confirmPassword,
-                confirmPassword: $userInfoViewModel.userInfo.password,
+                confirmPassword: $viewModel.userInfo.password,
                 isMatched: $isPasswordMatched,
                 setPassword: "1",
                 content: "✓ 비밀번호 일치"
@@ -69,6 +65,6 @@ struct SignupPasswordView: View {
 }
 
 #Preview {
-    SignupPasswordView(confirmPassword: "")
+    SignupPasswordView(viewModel: SignupViewModel(), confirmPassword: "")
         .environment(NavigationRouter())
 }
