@@ -30,6 +30,9 @@ struct RouterViewModifier: ViewModifier {
             case .onboardingCompleted:
                 OnboardingCompletedView()
                     .navigationBarBackButtonHidden(true)
+            case .routeDetail:
+                RouteDetail()
+                    .navigationBarBackButtonHidden(true)
             }
         }
         .environment(router)

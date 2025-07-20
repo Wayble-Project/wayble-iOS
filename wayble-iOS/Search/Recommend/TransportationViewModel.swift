@@ -26,9 +26,14 @@ final class TransportationViewModel: ObservableObject {
             arrivalTime: "오후 2:30 도착",
             cost: 1450,
             steps: [
-                RouteStep(type: .subway, title: "6호선", subTitle: "상수역", detail: "엘리베이터 있음", extra: "14:56", Info: "응암행(광흥창역 방면)", extraBus: nil, busTime: nil),
-                RouteStep(type: .bus, title: "마포09", subTitle: "신촌오거리", detail: nil, extra: nil, Info: nil, extraBus: "저상버스", busTime: "배차간격 14분"),
-                RouteStep(type: .walk, title: "도착", subTitle:"홍대정문", detail: nil, extra: nil, Info: nil, extraBus: nil, busTime: nil)
+                RouteStep(type: .subway, title: "출발", subTitle: transportation.departure, detail: nil, extra: nil, Info: nil, extraBus: nil, busTime: nil, role: .start, isFinal: false, routeDetail: "공덕역 5번 출구까지", routeMeter: "도보 30m",simple: false),
+                RouteStep(type: .subway, title: "6호선", subTitle: "상수역", detail: "엘리베이터 있음", extra: "14:56", Info: "응암행(광흥창역 방면)", extraBus: nil, busTime: nil, role: .subway, isDeparture: true, chair: "휠체어 전용석 6-1, 10-4", toilet: "장애인 화장실 O",elevator: "엘리베이터와 가까운 승강장 8-1", simple: true),
+                RouteStep(type: .subway, title: "6호선", subTitle: "공덕역", detail: nil, extra: nil, Info: nil,busTime: nil,role: .subwayStop, isFinal : true, routeDetail: "공덕역 5번 출구까지", routeMeter: "도보 30m",simple: false),
+                RouteStep(type: .bus, title: "마포09", subTitle: "신촌오거리", detail: nil, extra: nil, Info: nil, extraBus: "저상버스", busTime: "배차간격 14분",role: .bus, isDeparture: true, transfer: ["마포16", "마포08"], simple: true, bustitle: "마을"),
+                RouteStep(type: .walk, title: "도착", subTitle:"홍대정문", detail: nil, extra: nil, Info: nil, extraBus: nil, busTime: nil, simple: true, showDest: true),
+                RouteStep(type: .bus, title: "마을", subTitle: "꿈나무종합타운", detail: nil, extra: nil, Info: nil, extraBus: nil, busTime: nil,role: .finalBusStop, isFinal : true, routeDetail: "공덕역 5번 출구까지", routeMeter: "도보 30m", simple: false),
+                RouteStep(type: .walk, title: "도착", subTitle: transportation.destination, detail: nil, extra: nil, Info: nil, extraBus: nil, busTime: nil, role: .destination,destFinal : true, simple: false)
+                
             ]
         )
         
@@ -37,9 +42,9 @@ final class TransportationViewModel: ObservableObject {
                 arrivalTime: "오후 2:32 도착",
                 cost: 1350,
                 steps: [
-                    RouteStep(type: .subway, title: "6호선", subTitle: "상수역", detail: "엘리베이터 있음", extra: "14:56", Info: "응암행(광흥창역 방면)", extraBus: nil, busTime: nil),
-                    RouteStep(type: .bus, title: "마포09", subTitle: "신촌오거리", detail: nil, extra: nil, Info: nil, extraBus: "저상버스", busTime: "14분 간격"),
-                    RouteStep(type: .walk, title: "도착", subTitle:"홍대정문", detail: nil, extra: nil, Info: nil, extraBus: nil, busTime: nil)
+                    RouteStep(type: .subway, title: "6호선", subTitle: "상수역", detail: "엘리베이터 있음", extra: "14:56", Info: "응암행(광흥창역 방면)", extraBus: nil, busTime: nil,simple: true),
+                    RouteStep(type: .bus, title: "마포09", subTitle: "신촌오거리", detail: nil, extra: nil, Info: nil, extraBus: "저상버스", busTime: "14분 간격",simple: true),
+                    RouteStep(type: .walk, title: "도착", subTitle:"홍대정문", detail: nil, extra: nil, Info: nil, extraBus: nil, busTime: nil,simple: true)
                 ]
             )
         
@@ -62,4 +67,21 @@ final class TransportationViewModel: ObservableObject {
     func setTab(to tab: TransportationTab) {
         transportation.selectedTab = tab
     }
+    // 요약된 previewSteps만 추출 (RouteView 용)
+    var previewRoutes: [RouteOption] {
+        return transportation.recommendedRoutes.map { route in
+            let filteredSteps = route.steps.filter { step in
+                // 출발/도착/중간하차에 해당하지 않는 것만 보여주기
+                return !(step.title.contains("출발") || step.isFinal == true || step.destFinal == true)
+            }
+            return RouteOption(
+                totalTime: route.totalTime,
+                arrivalTime: route.arrivalTime,
+                cost: route.cost,
+                steps: filteredSteps
+            )
+        }
+    }
 }
+    
+

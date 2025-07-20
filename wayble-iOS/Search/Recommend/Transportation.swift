@@ -8,15 +8,15 @@
 import SwiftUI
 
 struct Transportation: View {
+    var onBack: (() -> Void)? = nil
     @StateObject var viewModel = TransportationViewModel()
+    @State private var showDetail: Bool = false
     
     var body: some View {
-        
-        // 출발지 목적지 설정
         VStack(spacing: 0) {
+            // 파란 헤더 (출발/도착/엑스버튼)
             VStack(spacing: 0) {
                 HStack(alignment: .top) {
-                    
                     Button(action: {
                         viewModel.swapLocations()
                     }) {
@@ -83,8 +83,7 @@ struct Transportation: View {
             .frame(maxWidth: .infinity)
             .background(Color("blue-50"))
             
-            
-            // 탭 바 (대중교통 |  도보)
+            // 탭 바 (대중교통 | 도보)
             VStack(spacing: 0) {
                 HStack(alignment: .firstTextBaseline, spacing: 0) {
                     ForEach(TransportationTab.allCases.indices, id: \.self) { index in
@@ -96,8 +95,8 @@ struct Transportation: View {
                                 Spacer()
                                     .frame(height:11)
                                 Text(tab.rawValue)
-                                    .font(.headline)
-                                    .foregroundColor(viewModel.transportation.selectedTab == tab ? .black : .gray)
+                                    .font(.mainTextSemibold14)
+                                    .foregroundColor(viewModel.transportation.selectedTab == tab ? .black : .gray300)
                                     .lineLimit(1)
                                     .fixedSize()
                                     .frame(height: 22)
@@ -127,21 +126,17 @@ struct Transportation: View {
                     .frame(maxWidth: .infinity)
             }
             
-            if viewModel.transportation.selectedTab == .transit {
-                ScrollView {
-                    RouteView()
-                }
+            // 아래 영역: RouteDetail 또는 RouteView
+            if showDetail {
+                RouteDetail(onBack: { showDetail = false })
             } else {
-                // 여기에 도보 화면 넣기 ! 
-                Spacer()
-                    
+                RouteView(onRouteSelected: { showDetail = true })
             }
         }
     }
 }
 
-    
-
 #Preview {
     Transportation()
+        .environment(NavigationRouter())
 }
