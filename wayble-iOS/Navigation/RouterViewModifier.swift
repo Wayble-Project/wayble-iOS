@@ -15,10 +15,21 @@ struct RouterViewModifier: ViewModifier {
             switch route {
             case .home:
                 HomeView()
+                    .navigationBarBackButtonHidden(true)
+            case .signup:
+                SignupEmailView()
+                    .navigationBarBackButtonHidden(true)
+            case .findPassword:
+                findPasswordView()
+                    .navigationBarBackButtonHidden(true)
 //            case .login:
 //                LoginView()
             case .wayblezone:
                 WaybleZoneView()
+                    .navigationBarBackButtonHidden(true)
+            case .onboardingCompleted:
+                OnboardingCompletedView()
+                    .navigationBarBackButtonHidden(true)
             }
         }
         .environment(router)

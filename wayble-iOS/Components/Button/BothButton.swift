@@ -9,6 +9,7 @@ import SwiftUI
 
 struct BothButton: View {
     @Binding var step: Int
+    @Environment(NavigationRouter.self) private var router
 
     var body: some View {
         HStack(alignment: .center, spacing: 12) {
@@ -16,7 +17,11 @@ struct BothButton: View {
                 if step > 0 { step -= 1 }
             }
             NextButton(title: "다음") {
-                if step < 3 { step += 1 }
+                if step < 3 {
+                    step += 1
+                } else if step == 3 {
+                    router.push(.onboardingCompleted)
+                }
             }
         }
         .frame(maxWidth: .infinity, alignment: .center)
@@ -36,4 +41,5 @@ struct BothButton: View {
     }
 
     return PreviewWrapper()
+        .withRouter()
 }

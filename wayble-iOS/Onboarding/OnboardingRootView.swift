@@ -10,6 +10,7 @@ import SwiftUI
 //TODO: - case 2 뷰 수정하기 / case 3 , 완료 화면 완성하기
 
 struct OnboardingRootView: View {
+    @Environment(NavigationRouter.self) private var router
     @State private var step = 0
     @State private var selectedUserType: String? = nil
     @State private var selectedGender: String? = nil
@@ -25,7 +26,13 @@ struct OnboardingRootView: View {
                 UserTypeSelectView(step: $step,
                                    selectedItem: $selectedUserType)
             case 3:
-                DisabilityTypeSelectView(step: $step)
+                if selectedUserType == "장애인" {
+                        DisabilityTypeSelectView(step: $step)
+                    }
+                else {
+                    NonDisabledTypeSelectView(step: $step, selectedItem: $selectedUserType)
+                }
+                        
             default:
                 EmptyView()
             }
@@ -37,4 +44,5 @@ struct OnboardingRootView: View {
 
 #Preview {
     OnboardingRootView()
+        .withRouter()
 }

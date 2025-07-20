@@ -23,7 +23,7 @@ struct SignupCompletedView: View {
             
             Spacer()
             
-            OkButton(title: "확인", isDisabled: true) {
+            OkButton(title: "확인", isDisabled: false) {
                 print("appstorge 저장하는 코드")
             }
             .padding(.bottom, 54)

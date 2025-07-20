@@ -11,6 +11,8 @@ import SwiftUI
 //FIXME: - image 변경해야 함
 
 struct OnboardingCompletedView: View {
+    @Environment(NavigationRouter.self) private var router
+    
     var body: some View {
         VStack {
             Spacer()
@@ -23,14 +25,18 @@ struct OnboardingCompletedView: View {
             
             Spacer()
             
-            OkButton(title: "확인", isDisabled: true) {
-                print("appstorge 저장하는 코드")
+            OkButton(title: "확인", isDisabled: false) {
+                // TODO: appstorge 저장하는 코드 넣기
+                router.push(.home)
             }
             .padding(.bottom, 54)
         }
+        .navigationBarBackButtonHidden(true) 
     }
+    
 }
 
 #Preview {
     OnboardingCompletedView()
+        .withRouter()
 }
