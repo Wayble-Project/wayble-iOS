@@ -9,7 +9,7 @@ import SwiftUI
 
 struct GenderBirthStepView: View {
     @Binding var step: Int
-    @State var userInfoViewModel = UserInfoViewModel()
+    @Bindable var viewModel = OnboardingViewModel()
     
     @Binding var selectedItem: String?
     
@@ -28,12 +28,24 @@ struct GenderBirthStepView: View {
             CustomTextField(
                 text: "생년월일",
                 placeHolder: "YYYY-MM-DD",
-                textValue: $userInfoViewModel.userInfo.birth,
+                textValue: $viewModel.userInfo.birth,
                 keyboardType: .default
             )
             Spacer()
-            //BothButton(step: $step)
-            
+            BothButton(
+                step: $step,
+                isNextDisabled: (selectedItem == nil)||(viewModel.userInfo.birth.isEmpty),
+                onPreviousAction: {
+                    selectedItem = nil
+                    viewModel.userInfo.birth = ""
+                },
+                onNextAction: {
+                    guard let selected = selectedItem,
+                          let gender = UserInfo.Gender(rawValue: selected)
+                    else { return }
+                    viewModel.userInfo.gender = gender
+                }
+            )
         } //v
         .padding(.horizontal, 20)
     }

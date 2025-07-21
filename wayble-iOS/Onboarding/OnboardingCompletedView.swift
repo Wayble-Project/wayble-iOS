@@ -12,6 +12,7 @@ import SwiftUI
 
 struct OnboardingCompletedView: View {
     @Environment(NavigationRouter.self) private var router
+    @Environment(OnboardingViewModel.self) private var viewModel
     
     var body: some View {
         VStack {
@@ -26,17 +27,24 @@ struct OnboardingCompletedView: View {
             Spacer()
             
             OkButton(title: "확인", isDisabled: false) {
-                // TODO: appstorge 저장하는 코드 넣기
-                router.push(.home)
+                Task {
+                    let success = await viewModel.completeOnboarding()
+                    if success {
+                        router.push(.home)
+                    } else {
+                        print("온보딩 전송 실패: 홈 화면으로 이동 X")
+                    }
+                }
             }
             .padding(.bottom, 54)
         }
-        .navigationBarBackButtonHidden(true) 
+        .navigationBarBackButtonHidden(true)
     }
     
 }
 
 #Preview {
     OnboardingCompletedView()
+        .environment(OnboardingViewModel())
         .withRouter()
 }

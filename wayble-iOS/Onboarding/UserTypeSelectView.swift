@@ -5,12 +5,12 @@
 //  Created by 이서현 on 7/15/25.
 //
 
-//TODO: - 뷰 디테일 구현하기
+//TODO: - 뷰 디테일 구현하기 / BothButton 에 padding 7 주는 거 맞는지 확인
 import SwiftUI
 
 struct UserTypeSelectView: View {
     @Binding var step: Int
-    @State var userInfoViewModel = UserInfoViewModel()
+    @Bindable var viewModel = OnboardingViewModel()
     
     let options: [String] = ["장애인", "비장애인"]
     @Binding var selectedItem: String?
@@ -42,6 +42,17 @@ struct UserTypeSelectView: View {
                 }
             }
             Spacer()
+            BothButton(
+                step: $step,
+                isNextDisabled: selectedItem == nil,
+                onPreviousAction: {
+                    selectedItem = nil
+                },
+                onNextAction: {
+                    viewModel.userInfo.hasDisability = (selectedItem == "장애인")
+                }
+            )
+            .padding(.horizontal, 7)
         } //v
         .padding(.horizontal, 13)
     }
@@ -51,6 +62,7 @@ struct UserTypeSelectView: View {
 /*
 #Preview {
     PreviewWrapper()
+        .withRouter()
 }
 
 private struct PreviewWrapper: View {

@@ -10,6 +10,7 @@ import Foundation
 import Moya
 
 final class OnboardingService {
+    
     private let provider = MoyaProvider<OnboardingRouter>()
 
     func getOnboarding(email: String) async throws -> OnboardingData {

@@ -36,8 +36,8 @@ struct OnboardingRootView: View {
             default:
                 EmptyView()
             }
-            BothButton(step: $step)
-                .padding(.horizontal, 20)
+            //BothButton(step: $step)
+            //.padding(.horizontal, 20)
         }
     }
 }
