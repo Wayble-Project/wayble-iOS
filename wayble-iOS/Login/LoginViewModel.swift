@@ -14,10 +14,9 @@ import SwiftUI
 
 @Observable
 class LoginViewModel {
-    var email = ""
-    var pwd = ""
+    var userInfo = UserInfo()
     
     func login() {
-        print("로그인 시도: \(email), \(pwd)")
+        print("로그인 시도: \(userInfo.email), \(userInfo.password)")
     }
 }

@@ -36,6 +36,7 @@ enum Route: Hashable {
     case home
     case signup
     case findPassword
+    case login
     case wayblezone
     case onboardingCompleted
     case routeDetail

@@ -5,12 +5,12 @@
 //  Created by 이서현 on 7/18/25.
 //
 
-//FIXME: - rootView에서 userInfo 값이 장애인 / 비장애인 따라 다음 뷰 결정
+//FIXME: - onPreviousAction 설정
 import SwiftUI
 
 struct NonDisabledTypeSelectView: View {
     @Binding var step: Int
-    @State var userInfoViewModel = UserInfoViewModel()
+    @Bindable var viewModel = OnboardingViewModel()
     
     let options: [String] = ["동행인", "일반 사용자"]
     @Binding var selectedItem: String?
@@ -31,10 +31,12 @@ struct NonDisabledTypeSelectView: View {
             
             LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 0), count: 2), spacing: 0) {
                 ForEach(options, id: \.self) { option in
-                    MultipleSelectButton(title: option,
-                                         isSelected: selectedItem == option) {
-                        if selectedItem == option {
-                            selectedItem = nil
+                    MultipleSelectButton(
+                        title: option,
+                        isSelected: selectedItem == option
+                    ) {
+                        if selectedItem == option { //선택이 된 상태에서
+                            selectedItem = nil // 또 선택하면 선택 해제
                         } else {
                             selectedItem = option
                         }
@@ -42,6 +44,17 @@ struct NonDisabledTypeSelectView: View {
                 }
             }
             Spacer()
+            BothButton(
+                step: $step,
+                isNextDisabled: selectedItem == nil,
+                onPreviousAction: {
+                    selectedItem = nil
+                },
+                onNextAction: {
+                    viewModel.userInfo.isWithCompanion = (selectedItem == "동행인")
+                }
+            )
+            .padding(.horizontal, 7)
         } //v
         .padding(.horizontal, 13)
     }
@@ -49,6 +62,7 @@ struct NonDisabledTypeSelectView: View {
 
 #Preview {
     PreviewWrapper()
+        .withRouter()
 }
 
 private struct PreviewWrapper: View {

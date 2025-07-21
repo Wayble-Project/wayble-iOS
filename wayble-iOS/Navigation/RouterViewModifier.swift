@@ -22,8 +22,8 @@ struct RouterViewModifier: ViewModifier {
             case .findPassword:
                 findPasswordView()
                     .navigationBarBackButtonHidden(true)
-//            case .login:
-//                LoginView()
+            case .login:
+                LoginView()
             case .wayblezone:
                 WaybleZoneView()
                     .navigationBarBackButtonHidden(true)

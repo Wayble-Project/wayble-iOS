@@ -12,6 +12,7 @@ import SwiftUI
 
 struct DisabilityTypeSelectView: View {
     @Binding var step: Int
+    @Bindable var viewModel = OnboardingViewModel()
     
     @State private var selectedDisabilities: Set<String> = []
     @State private var selectedAssistTools: Set<String> = []
@@ -57,15 +58,24 @@ struct DisabilityTypeSelectView: View {
                             .padding(.horizontal, 7)
                         SelectableGridView(options: assistToolOptions, selectedItems: $selectedAssistTools)
                     }
+                    .padding(.bottom, 72)
 
                     Spacer()
+                    BothButton(
+                        step: $step,
+                        isNextDisabled: selectedDisabilities.isEmpty || selectedAssistTools.isEmpty,
+                        onNextAction: {
+                            viewModel.userInfo.disabilityType = selectedDisabilities.compactMap { UserInfo.DisabilityType(rawValue: $0) }
+                            viewModel.userInfo.mobilityAid = selectedAssistTools.compactMap { UserInfo.MobilityAid(rawValue: $0) }
+                                }
+                    )
+                    .padding(.horizontal, 7)
+                    
                 }
                 
             }
-            .padding(.horizontal, 13)
+
         }
+        .padding(.horizontal, 13)
     }
 }
-
-
-

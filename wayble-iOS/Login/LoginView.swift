@@ -18,7 +18,7 @@ struct LoginView: View {
     @Environment(NavigationRouter.self) private var router
     @FocusState private var focusedField: Field?
     //@State var email: String
-    @State var loginViewModel = LoginViewModel()
+    @Bindable var viewModel = LoginViewModel()
     
     var body: some View {
         VStack(spacing: 0) {
@@ -26,7 +26,7 @@ struct LoginView: View {
                 .padding(.bottom, 35)
             
             EmailField(
-                email: $loginViewModel.email,
+                email: $viewModel.userInfo.email,
                 storedEmail: "abc@naver.com",
                 isCheckingMismatch: false
             )
@@ -39,14 +39,14 @@ struct LoginView: View {
             
             
             PasswordField(
-                password: $loginViewModel.pwd,
+                password: $viewModel.userInfo.password,
                 storedPassword: "12345678",
                 isCheckingMismatch: false
             )
             .submitLabel(.done)
             .focused($focusedField, equals: .password)
             .onSubmit {
-                loginViewModel.login()
+                viewModel.login()
             }
             .padding(.bottom, 29)
             
