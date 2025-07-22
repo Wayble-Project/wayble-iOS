@@ -7,13 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+
+		89CBAF9B55CC5504DF221C4E /* Pods_wayble_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7251F346D58020C5FF541EA4 /* Pods_wayble_iOS.framework */; };
 		6185D4812E2D25B6007017DB /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = 6185D4802E2D25B6007017DB /* Moya */; };
 		6185D4842E2D2691007017DB /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 6185D4832E2D2691007017DB /* Alamofire */; };
 		6185D4872E2D26A1007017DB /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 6185D4862E2D26A1007017DB /* Kingfisher */; };
+
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		6E29C8BA2E1EAD3B00E69785 /* wayble-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "wayble-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7251F346D58020C5FF541EA4 /* Pods_wayble_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_wayble_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B62CD4B34F5A91399070EF47 /* Pods-wayble-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-wayble-iOS.release.xcconfig"; path = "Target Support Files/Pods-wayble-iOS/Pods-wayble-iOS.release.xcconfig"; sourceTree = "<group>"; };
+		C4B08A975215688C5005A832 /* Pods-wayble-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-wayble-iOS.debug.xcconfig"; path = "Target Support Files/Pods-wayble-iOS/Pods-wayble-iOS.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -42,20 +48,42 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+
+				89CBAF9B55CC5504DF221C4E /* Pods_wayble_iOS.framework in Frameworks */,
 				6185D4872E2D26A1007017DB /* Kingfisher in Frameworks */,
 				6185D4812E2D25B6007017DB /* Moya in Frameworks */,
 				6185D4842E2D2691007017DB /* Alamofire in Frameworks */,
+
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4C4B02159DE9E0EF9E3BE253 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				C4B08A975215688C5005A832 /* Pods-wayble-iOS.debug.xcconfig */,
+				B62CD4B34F5A91399070EF47 /* Pods-wayble-iOS.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		6E2946DAD1231891D8B17EB0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				7251F346D58020C5FF541EA4 /* Pods_wayble_iOS.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		6E29C8B12E1EAD3B00E69785 = {
 			isa = PBXGroup;
 			children = (
 				6E29C8BC2E1EAD3B00E69785 /* wayble-iOS */,
 				6E29C8BB2E1EAD3B00E69785 /* Products */,
+				4C4B02159DE9E0EF9E3BE253 /* Pods */,
+				6E2946DAD1231891D8B17EB0 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -74,9 +102,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6E29C8C82E1EAD3E00E69785 /* Build configuration list for PBXNativeTarget "wayble-iOS" */;
 			buildPhases = (
+				9FA0C7C0172927A9F61B7B4D /* [CP] Check Pods Manifest.lock */,
 				6E29C8B62E1EAD3B00E69785 /* Sources */,
 				6E29C8B72E1EAD3B00E69785 /* Frameworks */,
 				6E29C8B82E1EAD3B00E69785 /* Resources */,
+				F3BC62065E3547C7F79C5E75 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -120,9 +150,11 @@
 			mainGroup = 6E29C8B12E1EAD3B00E69785;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
+
 				6185D47F2E2D25B6007017DB /* XCRemoteSwiftPackageReference "Moya" */,
 				6185D4822E2D2691007017DB /* XCRemoteSwiftPackageReference "Alamofire" */,
 				6185D4852E2D26A1007017DB /* XCRemoteSwiftPackageReference "Kingfisher" */,
+
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 6E29C8BB2E1EAD3B00E69785 /* Products */;
@@ -143,6 +175,48 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		9FA0C7C0172927A9F61B7B4D /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-wayble-iOS-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F3BC62065E3547C7F79C5E75 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-wayble-iOS/Pods-wayble-iOS-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-wayble-iOS/Pods-wayble-iOS-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-wayble-iOS/Pods-wayble-iOS-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		6E29C8B62E1EAD3B00E69785 /* Sources */ = {
@@ -192,7 +266,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -255,7 +329,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -276,16 +350,20 @@
 		};
 		6E29C8C92E1EAD3E00E69785 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C4B08A975215688C5005A832 /* Pods-wayble-iOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"wayble-iOS/Preview Content\"";
+
 				DEVELOPMENT_TEAM = XRY42MG75P;
+
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "wayble-iOS/Info.plist";
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -306,16 +384,20 @@
 		};
 		6E29C8CA2E1EAD3E00E69785 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B62CD4B34F5A91399070EF47 /* Pods-wayble-iOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"wayble-iOS/Preview Content\"";
+
 				DEVELOPMENT_TEAM = XRY42MG75P;
+
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "wayble-iOS/Info.plist";
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
