@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+
 struct MainView: View {
     @State private var selectedIndex = 0
     @State private var router = NavigationRouter()

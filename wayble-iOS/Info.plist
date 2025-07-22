@@ -2,6 +2,13 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>Information Property List</key>
+	<dict>
+		<key>KAKAO_APP_KEY</key>
+		<string>7889a45ba2df2fdbd3171bca2dacaaa6</string>
+	</dict>
+	<key>NMFNcpKeyId</key>
+	<string>4wrbuvpxtr</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Pretendard-Black.otf</string>
