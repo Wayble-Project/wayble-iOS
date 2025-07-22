@@ -13,6 +13,9 @@
 		6185D4842E2D2691007017DB /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 6185D4832E2D2691007017DB /* Alamofire */; };
 		6185D4872E2D26A1007017DB /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 6185D4862E2D26A1007017DB /* Kingfisher */; };
 
+		6185D4812E2D25B6007017DB /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = 6185D4802E2D25B6007017DB /* Moya */; };
+		6185D4842E2D2691007017DB /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 6185D4832E2D2691007017DB /* Alamofire */; };
+		6185D4872E2D26A1007017DB /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 6185D4862E2D26A1007017DB /* Kingfisher */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -54,6 +57,9 @@
 				6185D4812E2D25B6007017DB /* Moya in Frameworks */,
 				6185D4842E2D2691007017DB /* Alamofire in Frameworks */,
 
+				6185D4872E2D26A1007017DB /* Kingfisher in Frameworks */,
+				6185D4812E2D25B6007017DB /* Moya in Frameworks */,
+				6185D4842E2D2691007017DB /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -155,6 +161,9 @@
 				6185D4822E2D2691007017DB /* XCRemoteSwiftPackageReference "Alamofire" */,
 				6185D4852E2D26A1007017DB /* XCRemoteSwiftPackageReference "Kingfisher" */,
 
+				6185D47F2E2D25B6007017DB /* XCRemoteSwiftPackageReference "Moya" */,
+				6185D4822E2D2691007017DB /* XCRemoteSwiftPackageReference "Alamofire" */,
+				6185D4852E2D26A1007017DB /* XCRemoteSwiftPackageReference "Kingfisher" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 6E29C8BB2E1EAD3B00E69785 /* Products */;
@@ -360,6 +369,7 @@
 
 				DEVELOPMENT_TEAM = XRY42MG75P;
 
+				DEVELOPMENT_TEAM = XRY42MG75P;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "wayble-iOS/Info.plist";
@@ -394,6 +404,7 @@
 
 				DEVELOPMENT_TEAM = XRY42MG75P;
 
+				DEVELOPMENT_TEAM = XRY42MG75P;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "wayble-iOS/Info.plist";
