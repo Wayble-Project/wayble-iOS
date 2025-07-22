@@ -8,15 +8,18 @@
 import SwiftUI
 
 struct PreviousButton: View {
+    let action: () -> Void
+    
     var body: some View {
-        Button(action: {print("이전")}) {
+        Button(action: action) {
             Text("이전")
                 .font(.mainTextSemibold14)
                 .tracking(-0.28)
                 .padding(.horizontal, 20)
                 .padding(.vertical, 15)
                 .foregroundStyle(Color.gray700)
-                .frame(width: 170, height: 50, alignment: .center)
+                .frame(maxWidth: .infinity)
+                .frame(height: 50, alignment: .center)
                 .background(Color.gray200)
                 .clipShape(RoundedRectangle(cornerRadius: 13))
             
@@ -27,5 +30,5 @@ struct PreviousButton: View {
 
 
 #Preview {
-    PreviousButton()
+    PreviousButton(action: { print("이전") })
 }

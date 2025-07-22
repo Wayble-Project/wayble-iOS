@@ -24,7 +24,8 @@ struct NextButtonStyle: ButtonStyle {
                 : configuration.isPressed
                     ? Color.blue200 // 버튼 눌림
                     : Color.white) // 버튼 안 눌림
-            .frame(width: 170, height: 50, alignment: .center)
+            .frame(maxWidth: .infinity)
+            .frame(height: 50, alignment: .center)
             .background(
                 isDisabled
                 ? Color.gray200 // 비활성화 색

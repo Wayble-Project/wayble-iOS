@@ -9,7 +9,7 @@ import SwiftUI
 
 struct TitleText: View {
     var text: String
-        var alignment: TextAlignment = .leading
+    var alignment: TextAlignment = .leading
 
         var body: some View {
             Text(text)

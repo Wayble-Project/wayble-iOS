@@ -11,7 +11,7 @@
 import SwiftUI
 
 struct findPasswordView: View {
-    @State var signviewModel = SignupViewModel()
+    @State var userInfoViewModel = UserInfoViewModel()
     
 
 
@@ -25,7 +25,7 @@ struct findPasswordView: View {
                 .padding(.bottom, 48)
             
             //FIXME: - EmailField 수정
-            EmailField(email: $signviewModel.signupModel.email, storedEmail: "", isCheckingMismatch: false)
+            EmailField(email: $userInfoViewModel.userInfo.email, storedEmail: "", isCheckingMismatch: false)
             
             Spacer()
             OkButton(title: "확인", isDisabled: false) {

@@ -52,7 +52,7 @@ struct PasswordField: View {
                         .foregroundStyle(Color.gray900)
                         .autocorrectionDisabled(true)
                 } else {
-                    TextField("비밀번호를 입력하세요", text: $password)
+                    TextField("8자 이상의 비밀번호", text: $password)
                         .font(.mainTextRegular14)
                         .tracking(-0.28)
                         .foregroundStyle(Color.gray900)

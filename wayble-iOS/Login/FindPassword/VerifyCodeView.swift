@@ -6,7 +6,7 @@
 //
 
 
-//TODO: - 인증코드 컴포넌트 만들기
+//TODO: - 인증코드 컴포넌트 만들기 - 인증 로직을 몰라서 텍스트필드는 아직
 
 import SwiftUI
 
@@ -25,7 +25,7 @@ struct VerifyCodeView: View {
             
             Spacer()
             OkButton(title: "확인", isDisabled: false) {
-                print("아이디 생성")
+                print("인증코드 전송")
             }
             .padding(.bottom, 54)
             

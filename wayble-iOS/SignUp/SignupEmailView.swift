@@ -9,10 +9,10 @@
 //FIXME: - 가입 UserInfo 모델? signupModel 완성하고 signviewModel 수정
 import SwiftUI
 
-struct signupEmailView: View {
-    @State var signviewModel = SignupViewModel()
+struct SignupEmailView: View {
+    @State var viewModel = SignupViewModel()
     
-    @AppStorage("email") var email: String = ""
+    //@AppStorage("email") var email: String = ""
 
 
     
@@ -23,11 +23,14 @@ struct signupEmailView: View {
                 .padding(.bottom, 27)
             TitleText(text: "로그인에 사용할\n아이디를 입력해 주세요")
                 .padding(.bottom, 48)
-            EmailField(email: $signviewModel.signupModel.email, storedEmail: "", isCheckingMismatch: false)
+            EmailField(email: $viewModel.userInfo.email, storedEmail: "", isCheckingMismatch: viewModel.isChecking)
+                .onChange(of: viewModel.userInfo.email) {
+                    viewModel.validateEmailFormat()
+                }
             
             Spacer()
-            OkButton(title: "확인", isDisabled: false) {
-                print("아이디 생성")
+            OkButton(title: "확인", isDisabled: !viewModel.isEmailValid || viewModel.isChecking) {
+                //viewModel.checkEmailDuplication()
             }
             .padding(.bottom, 54)
             
@@ -36,6 +39,6 @@ struct signupEmailView: View {
 }
 
 #Preview {
-    signupEmailView()
+    SignupEmailView()
         .environment(NavigationRouter())
 }

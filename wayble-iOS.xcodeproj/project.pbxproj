@@ -7,7 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+
 		89CBAF9B55CC5504DF221C4E /* Pods_wayble_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7251F346D58020C5FF541EA4 /* Pods_wayble_iOS.framework */; };
+		6185D4812E2D25B6007017DB /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = 6185D4802E2D25B6007017DB /* Moya */; };
+		6185D4842E2D2691007017DB /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 6185D4832E2D2691007017DB /* Alamofire */; };
+		6185D4872E2D26A1007017DB /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 6185D4862E2D26A1007017DB /* Kingfisher */; };
+
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,7 +48,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+
 				89CBAF9B55CC5504DF221C4E /* Pods_wayble_iOS.framework in Frameworks */,
+				6185D4872E2D26A1007017DB /* Kingfisher in Frameworks */,
+				6185D4812E2D25B6007017DB /* Moya in Frameworks */,
+				6185D4842E2D2691007017DB /* Alamofire in Frameworks */,
+
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -107,6 +117,9 @@
 			);
 			name = "wayble-iOS";
 			packageProductDependencies = (
+				6185D4802E2D25B6007017DB /* Moya */,
+				6185D4832E2D2691007017DB /* Alamofire */,
+				6185D4862E2D26A1007017DB /* Kingfisher */,
 			);
 			productName = "wayble-iOS";
 			productReference = 6E29C8BA2E1EAD3B00E69785 /* wayble-iOS.app */;
@@ -137,6 +150,11 @@
 			mainGroup = 6E29C8B12E1EAD3B00E69785;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
+
+				6185D47F2E2D25B6007017DB /* XCRemoteSwiftPackageReference "Moya" */,
+				6185D4822E2D2691007017DB /* XCRemoteSwiftPackageReference "Alamofire" */,
+				6185D4852E2D26A1007017DB /* XCRemoteSwiftPackageReference "Kingfisher" */,
+
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 6E29C8BB2E1EAD3B00E69785 /* Products */;
@@ -339,7 +357,9 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"wayble-iOS/Preview Content\"";
-				DEVELOPMENT_TEAM = "";
+
+				DEVELOPMENT_TEAM = XRY42MG75P;
+
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "wayble-iOS/Info.plist";
@@ -371,7 +391,9 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"wayble-iOS/Preview Content\"";
-				DEVELOPMENT_TEAM = "";
+
+				DEVELOPMENT_TEAM = XRY42MG75P;
+
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "wayble-iOS/Info.plist";
@@ -416,6 +438,51 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		6185D47F2E2D25B6007017DB /* XCRemoteSwiftPackageReference "Moya" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Moya/Moya.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 15.0.3;
+			};
+		};
+		6185D4822E2D2691007017DB /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.10.2;
+			};
+		};
+		6185D4852E2D26A1007017DB /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.5.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		6185D4802E2D25B6007017DB /* Moya */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6185D47F2E2D25B6007017DB /* XCRemoteSwiftPackageReference "Moya" */;
+			productName = Moya;
+		};
+		6185D4832E2D2691007017DB /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6185D4822E2D2691007017DB /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+		6185D4862E2D26A1007017DB /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6185D4852E2D26A1007017DB /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 6E29C8B22E1EAD3B00E69785 /* Project object */;
 }

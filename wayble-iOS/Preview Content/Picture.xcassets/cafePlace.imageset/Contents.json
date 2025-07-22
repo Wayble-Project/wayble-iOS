@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "cafePlace.pdf",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
