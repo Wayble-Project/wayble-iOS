@@ -78,5 +78,5 @@ struct PlaceReView: View {
 
 #Preview {
     PlaceReView(reviews: mockReviewListResponse.data, onWrite: {})
-        .withRouter()
+        .withRouter(selectedIndex: .constant(0))
 }

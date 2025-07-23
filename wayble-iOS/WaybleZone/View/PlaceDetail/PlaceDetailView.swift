@@ -18,5 +18,5 @@ struct CafeDetailView: View {
 }
 
 #Preview {
-    CafeDetailView().withRouter()
+    CafeDetailView().withRouter(selectedIndex: .constant(0))
 }

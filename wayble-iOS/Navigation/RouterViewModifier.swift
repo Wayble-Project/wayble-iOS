@@ -8,13 +8,14 @@ import Foundation
 import SwiftUI
 
 struct RouterViewModifier: ViewModifier {
+    @Binding var selectedIndex: Int
     @State private var router = NavigationRouter()
 
     private func routeView(for route: Route) -> some View {
         Group {
             switch route {
             case .home:
-                HomeView()
+                HomeView(selectedIndex: $selectedIndex)
                     .navigationBarBackButtonHidden(true)
             case .signup:
                 SignupEmailView()
@@ -25,13 +26,16 @@ struct RouterViewModifier: ViewModifier {
             case .login:
                 LoginView()
             case .wayblezone:
-                WaybleZoneView()
+                WaybleZoneMainView()
                     .navigationBarBackButtonHidden(true)
             case .onboardingCompleted:
                 OnboardingCompletedView()
                     .navigationBarBackButtonHidden(true)
             case .routeDetail:
                 RouteDetail()
+                    .navigationBarBackButtonHidden(true)
+            case .searchHome:
+                SearchHomeView()
                     .navigationBarBackButtonHidden(true)
             }
         }
@@ -50,8 +54,8 @@ struct RouterViewModifier: ViewModifier {
 }
 
 extension View {
-     func withRouter() -> some View {
-        modifier(RouterViewModifier())
+    func withRouter(selectedIndex: Binding<Int>) -> some View {
+        modifier(RouterViewModifier(selectedIndex: selectedIndex))
     }
 }
 
