@@ -89,7 +89,9 @@ struct HomeView: View {
                 
                 HStack(alignment: .bottom ,spacing: 0) {
                     Button(action: {
-                        selectedIndex = 3
+                        withAnimation(.default){
+                            selectedIndex = 3
+                        }
                     }) {
                         HStack(spacing: 0) {
                             Text("길찾기")
@@ -121,8 +123,9 @@ struct HomeView: View {
                     .frame(height:5)
                 // 하단 박스 (웨이블존/길찾기)
                 HStack(spacing: 10) {
-                    Button(action: {
+                    Button(action: {withAnimation(.default){
                         selectedIndex = 4
+                    }
                     }) {
                         VStack(alignment:.leading, spacing: 6) {
                             Text("웨이블존")
@@ -146,7 +149,11 @@ struct HomeView: View {
                     .buttonStyle(.plain)
 
                     Button(action : {
-                        selectedIndex = 3 // 탭 인덱스를 이동
+                        withAnimation(.default)
+                        {
+                            selectedIndex = 3 // 탭 인덱스를 이동
+                        }
+                        
                     }) {
                         VStack(alignment:.leading, spacing: 6)  {
                             Text("길찾기")
