@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import Foundation
+
 
 struct CustomTabBarView: View {
     @Environment(NavigationRouter.self) private var router
@@ -22,7 +24,9 @@ struct CustomTabBarView: View {
                 // 홈
                 VStack(spacing: 4) {
                     Button(action: {
-                        selectedIndex = 0
+                        withAnimation(.default){
+                            selectedIndex = 0
+                        }
                     }) {
                         VStack(spacing: 4) {
                             Image("home")
@@ -51,9 +55,11 @@ struct CustomTabBarView: View {
                 
                 // 내정보
                 VStack(spacing: 4) {
-                    Button {
-                        selectedIndex = 2
-                    } label: {
+                    Button(action: {
+                        withAnimation(.default) {
+                            selectedIndex = 2
+                        }
+                    }) {
                         VStack(spacing: 4) {
                             Image("user")
                                 .renderingMode(.template)
@@ -73,7 +79,9 @@ struct CustomTabBarView: View {
             .padding(.horizontal, 30)
             
             Button(action: {
-                selectedIndex = 1
+                withAnimation(.default) {
+                    selectedIndex = 1
+                }
             }) {
                 ZStack {
                     Circle()
