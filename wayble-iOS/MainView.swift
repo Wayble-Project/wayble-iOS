@@ -20,8 +20,9 @@ struct MainView: View {
                     case 0: HomeView(selectedIndex: $selectedIndex)
                     case 1: MapView()
                     case 2: ProfileView()
-                    case 3: SearchHomeView()
+                    case 3: SearchHomeView(selectedIndex: $selectedIndex)
                     case 4: WaybleZoneMainView()
+                    case 5: SearchBarView()
                     default: Text("오류!")
                     }
                 }
@@ -29,7 +30,7 @@ struct MainView: View {
                 .navigationDestination(for: Route.self) { route in
                     switch route {
                     case .searchHome:
-                        SearchHomeView()
+                        SearchHomeView(selectedIndex: $selectedIndex)
                             .navigationBarBackButtonHidden(true)
                     case .home:
                         HomeView(selectedIndex: $selectedIndex)
@@ -51,6 +52,9 @@ struct MainView: View {
                             .navigationBarBackButtonHidden(true)
                     case .routeDetail:
                         RouteDetail()
+                            .navigationBarBackButtonHidden(true)
+                    case .searchBar:
+                        SearchBarView()
                             .navigationBarBackButtonHidden(true)
                     }
                 }

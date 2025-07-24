@@ -41,5 +41,6 @@ enum Route: Hashable {
     case onboardingCompleted
     case routeDetail
     case searchHome
+    case searchBar
     
 }

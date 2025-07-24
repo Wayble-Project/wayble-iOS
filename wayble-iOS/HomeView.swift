@@ -9,6 +9,7 @@ import SwiftUI
 import Foundation
 import Observation
 
+
 struct HomeView: View {
     @Binding var selectedIndex: Int
     @Environment(NavigationRouter.self) private var router
@@ -34,6 +35,7 @@ struct HomeView: View {
             }
             .ignoresSafeArea()
            
+            
 
             VStack(alignment: .leading,spacing: 0) {
                 VStack(alignment: .leading,spacing: 0) {
