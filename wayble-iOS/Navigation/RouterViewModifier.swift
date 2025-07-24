@@ -12,34 +12,42 @@ struct RouterViewModifier: ViewModifier {
     @State private var router = NavigationRouter()
 
     private func routeView(for route: Route) -> some View {
-        Group {
-            switch route {
-            case .home:
-                HomeView(selectedIndex: $selectedIndex)
-                    .navigationBarBackButtonHidden(true)
-            case .signup:
-                SignupEmailView()
-                    .navigationBarBackButtonHidden(true)
-            case .findPassword:
-                findPasswordView()
-                    .navigationBarBackButtonHidden(true)
-            case .login:
-                LoginView()
-            case .wayblezone:
-                WaybleZoneMainView()
-                    .navigationBarBackButtonHidden(true)
-            case .onboardingCompleted:
-                OnboardingCompletedView()
-                    .navigationBarBackButtonHidden(true)
-            case .routeDetail:
-                RouteDetail()
-                    .navigationBarBackButtonHidden(true)
-            case .searchHome:
-                SearchHomeView()
-                    .navigationBarBackButtonHidden(true)
-            }
+        switch route {
+        case .home:
+            return AnyView(HomeView(selectedIndex: $selectedIndex)
+                .navigationBarBackButtonHidden(true))
+
+        case .signup:
+            return AnyView(SignupEmailView()
+                .navigationBarBackButtonHidden(true))
+
+        case .findPassword:
+            return AnyView(findPasswordView()
+                .navigationBarBackButtonHidden(true))
+
+        case .login:
+            return AnyView(LoginView())
+
+        case .wayblezone:
+            return AnyView(WaybleZoneMainView()
+                .navigationBarBackButtonHidden(true))
+
+        case .onboardingCompleted:
+            return AnyView(OnboardingCompletedView()
+                .navigationBarBackButtonHidden(true))
+
+        case .routeDetail:
+            return AnyView(RouteDetail()
+                .navigationBarBackButtonHidden(true))
+
+        case .searchHome:
+            return AnyView(SearchHomeView(selectedIndex: $selectedIndex)
+                .navigationBarBackButtonHidden(true))
+
+        case .searchBar:
+            return AnyView(SearchBarView()
+                .navigationBarBackButtonHidden(true))
         }
-        .environment(router)
     }
 
     func body(content: Content) -> some View {

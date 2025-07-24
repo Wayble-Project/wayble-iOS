@@ -6,14 +6,22 @@
 //
 
 import SwiftUI
+import Gifu
+import UIKit
+
 
 struct SearchHomeView: View {
     @State private var searchText: String = ""
+    @Binding var selectedIndex: Int
+    
 
     var body: some View {
         VStack(alignment: .leading) {
             Spacer()
                 .frame(height: 11)
+            
+            SafeGIFView(gifName: "way")
+                .frame(width: 200, height: 200)
             
             //상단
             HStack {
@@ -36,9 +44,9 @@ struct SearchHomeView: View {
             Spacer()
                 .frame(height: 20)
 
-            // 상단 홍대입구역 
+            // 상단 홍대입구역
             Button(action: {
-                // 라우터 만들어지면 작성
+            selectedIndex = 5 
             }) {
                 HStack(alignment: .center) {
                     Text("홍대입구역")
@@ -82,5 +90,6 @@ struct SearchHomeView: View {
 }
 
 #Preview {
-    SearchHomeView()
+    SearchHomeView(selectedIndex: .constant(0))
+        .withRouter(selectedIndex: .constant(0))
 }
