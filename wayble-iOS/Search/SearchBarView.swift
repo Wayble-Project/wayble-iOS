@@ -6,9 +6,43 @@
 //
 
 import SwiftUI
+import Foundation
+
+enum EntryPoint {
+    case home
+    case directions
+  
+}
+
+// MARK: - SearchRow
+struct SearchRow: View {
+    let icon: String
+    let title: String
+    let date: String
+
+    var body: some View {
+        HStack {
+            Image(icon)
+            Spacer()
+                .frame(width: 17)
+            Text(title)
+                .font(.mainTextRegular16)
+            Spacer()
+            Text(date)
+                .foregroundStyle(Color.gray700)
+        }
+        .padding(.vertical, 14)
+        .padding(.leading, 26)
+        .padding(.trailing, 20)
+    }
+}
 
 struct SearchBarView: View {
+    @Environment(NavigationRouter.self) private var router
     @State private var viewModel = SearchViewModel()
+    
+    @Binding var selectedIndex: Int
+    var entryPoint: EntryPoint
     
     var body: some View {
         
@@ -18,7 +52,14 @@ struct SearchBarView: View {
             HStack{
                 HStack() {
                     Button(action: {
-                        // 여기에 dismiss() 추가 예정
+                        withAnimation(.easeInOut(duration: 0.3)) {
+                            switch entryPoint {
+                            case .home:
+                                selectedIndex = 0
+                            case .directions:
+                                selectedIndex = 3
+                            }
+                        }
                     }) {
                         Image("back2")
                             .resizable()
@@ -27,20 +68,20 @@ struct SearchBarView: View {
                     
                     
                     ZStack(alignment: .leading) {
-                                          if viewModel.searchText.isEmpty {
-                                              Text("ex.숙대입구역 맛집")
-                                                  .foregroundColor(.gray500)
-                                                  .font(.mainTextRegular14)
-                                                  .padding(.leading, 4) // 살짝 들여쓰기 맞춰주기
-                                          }
-
-                                          TextField("", text: $viewModel.searchText)
-                                              .foregroundColor(.black)
-                                              .font(.mainTextRegular14)
-                                      }
-                        .onChange(of: viewModel.searchText) { newValue in
-                            viewModel.fetchNaverSuggestions(for: newValue)
+                        if viewModel.searchText.isEmpty {
+                            Text("ex.숙대입구역 맛집")
+                                .foregroundColor(.gray500)
+                                .font(.mainTextRegular14)
+                                .padding(.leading, 4) // 살짝 들여쓰기 맞춰주기
                         }
+                        
+                        TextField("", text: $viewModel.searchText)
+                            .foregroundColor(.black)
+                            .font(.mainTextRegular14)
+                    }
+                    .onChange(of: viewModel.searchText) { newValue in
+                        viewModel.fetchNaverSuggestions(for: newValue)
+                    }
                     
                     Spacer()
                     
@@ -106,17 +147,54 @@ struct SearchBarView: View {
             if viewModel.searchText.isEmpty {
                 SearchHistoryListView(history: viewModel.searchModels)
             } else {
-                suggestionListView
+                suggestionListView()
             }
             
             Spacer()
         }
         .padding(.top)
+        .onAppear {
+            print("✅ SearchBarView 진입!")
+        }
     }
     
-    private var suggestionListView: some View {
+    
+    
+    
+    
+    
+    // MARK: 추천어 강조 Blue700
+    private func getHighlightedText(_ suggestion: String, keyword: String) -> Text {
+        if suggestion.lowercased().hasPrefix(keyword.lowercased()) {
+            let highlightedPart = Text(String(suggestion.prefix(keyword.count)))
+                .foregroundStyle(Color.blue700)
+            let remainingPart = Text(String(suggestion.dropFirst(keyword.count)))
+                .foregroundStyle(Color.black)
+            return highlightedPart + remainingPart
+        } else {
+            return Text(suggestion)
+                .foregroundStyle(Color.black)
+        }
+    }
+    
+    
+    struct FilterTagView: View {
+        let label: String
+        
+        var body: some View {
+            Text(label)
+                .font(.mainTextSemibold14)
+                .multilineTextAlignment(.center)
+                .foregroundStyle(Color.white)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 5)
+                .background(Color.blue500)
+                .cornerRadius(40)
+        }
+    }
+    
+    private func suggestionListView() -> some View {
         VStack(spacing: 0) {
-            
             ForEach(Array(viewModel.suggestionKeywords.prefix(3).enumerated()), id: \.element) { index, keyword in
                 HStack(spacing: 11) {
                     Image("search")
@@ -128,113 +206,54 @@ struct SearchBarView: View {
                 .padding(.vertical, 18)
 
                 if index < 2 {
-                    // 3개 중 마지막 전까지만 Divider 표시
-                    Divider()
-                        .padding(.horizontal, 20)
+                    Divider().padding(.horizontal, 20)
                 }
             }
+
             Rectangle()
                 .frame(height: 3)
                 .foregroundStyle(Color.gray300)
-               
-            
-            
+
             ForEach(Array(viewModel.suggestions.prefix(4).enumerated()), id: \.element.id) { index, place in
                 VStack(alignment: .leading, spacing: 9.5) {
-                    HStack(alignment: .center, spacing: 11) {
+                    HStack(spacing: 11) {
                         Image("marker")
                             .frame(width: 24, height: 24)
                         Text(place.title.removeHTMLTags())
                             .font(.mainTextSemibold16)
-                            .foregroundStyle(Color.black)
+                            .foregroundStyle(.black)
                         Spacer()
                     }
-                    
+
                     Text(place.roadAddress)
                         .font(.mainTextRegular12)
-                        .foregroundStyle(Color.gray700)
+                        .foregroundStyle(.gray700)
                         .padding(.leading, 31)
                         .padding(.bottom, 10)
-                    
-                    
+
                     if index < viewModel.suggestions.prefix(4).count - 1 {
                         Divider()
-                            
-                            
-                            
                     }
                 }
                 .padding(.top, index == 0 ? 17 : 0)
                 .padding(.bottom, 17)
-                .padding(.horizontal,20)
+                .padding(.horizontal, 20)
                 .onTapGesture {
-                    print("선택된 장소: \(place.title)")
+                    viewModel.selectedPlace = place
+                    router.push(.mapDetail(place: place))
                 }
-                
-                
             }
         }
     }
-}
-
-// MARK: 추천어 강조 Blue700 
-private func getHighlightedText(_ suggestion: String, keyword: String) -> Text {
-    if suggestion.lowercased().hasPrefix(keyword.lowercased()) {
-        let highlightedPart = Text(String(suggestion.prefix(keyword.count)))
-            .foregroundStyle(Color.blue700)
-        let remainingPart = Text(String(suggestion.dropFirst(keyword.count)))
-            .foregroundStyle(Color.black)
-        return highlightedPart + remainingPart
-    } else {
-        return Text(suggestion)
-            .foregroundStyle(Color.black)
-    }
-}
-// 집 회사 학교 버튼 커스텀
-struct FilterTagView: View {
-    let label: String
     
-    var body: some View {
-        Text(label)
-            .font(.mainTextSemibold14)
-            .multilineTextAlignment(.center)
-            .foregroundStyle(Color.white)
-            .padding(.horizontal, 10)
-            .padding(.vertical, 5)
-            .background(Color.blue500)
-            .cornerRadius(40)
-    }
-}
+    //    #Preview {
+    //        SearchBarView(selectedIndex: .constant(0), entryPoint: .home)
+    //    }
+    //}
+    
+} // closes struct SearchBarView
 
-//밑에 검색기록
-struct SearchRow: View {
-    let icon: String
-    let title: String
-    let date: String
-
-    var body: some View {
-        HStack {
-            Image(icon)
-            Spacer()
-                .frame(width: 17)
-            Text(title)
-                .font(.mainTextRegular16)
-            Spacer()
-            Text(date)
-                .foregroundStyle(Color.gray700)
-        }
-        .padding(.vertical, 14)
-        .padding(.leading,26)
-        .padding(.trailing, 20.0)
-        
-    }
-}
-
-#Preview {
-    SearchBarView()
-}
-
-// Extension to remove HTML tags from String
+// MARK: - Helpers
 extension String {
     func removeHTMLTags() -> String {
         return self.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression)

@@ -12,7 +12,7 @@ import Observation
 
 @Observable
 class SearchViewModel {
-
+    var selectedPlace: PlaceModel? = nil
     var searchText: String = ""
     var searchModels: [SearchModel] = [
         SearchModel(icon: "search", title: "음식점", date: "06.27"),
@@ -20,9 +20,9 @@ class SearchViewModel {
     ]
     var suggestionKeywords: [String] = [
         "아임히어", "아임히드라", "아임히알루룬산"
-    ] // 자동완성 뷰모델 
+    ] // 자동완성 뷰모델
     
-    var suggestions: [Place] = []
+    var suggestions: [PlaceModel] = []
     
 // 연관검색 구현 뷰모델
         func fetchNaverSuggestions(for query: String) {
@@ -72,27 +72,5 @@ class SearchViewModel {
         }
 }
 
-// 연관검색용 모델 
 
-struct NaverPlaceResponse: Codable {
-    let places: [Place]
 
-    enum CodingKeys: String, CodingKey {
-        case places = "items"
-    }
-}
-
-struct Place: Codable, Identifiable {
-    let id = UUID()
-    let title: String
-    let roadAddress: String
-    let x: String?     // ✅ 옵셔널로 바꿈
-    let y: String?
-    
-    enum CodingKeys: String, CodingKey {
-        case title
-        case roadAddress
-        case x = "mapx"
-        case y = "mapy"
-    }
-}
