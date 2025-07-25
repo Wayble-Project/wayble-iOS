@@ -20,8 +20,6 @@ struct SearchHomeView: View {
             Spacer()
                 .frame(height: 11)
             
-            SafeGIFView(gifName: "way")
-                .frame(width: 200, height: 200)
             
             //상단
             HStack {
@@ -46,7 +44,9 @@ struct SearchHomeView: View {
 
             // 상단 홍대입구역
             Button(action: {
-            selectedIndex = 5 
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    selectedIndex = 5
+                }
             }) {
                 HStack(alignment: .center) {
                     Text("홍대입구역")
@@ -75,13 +75,12 @@ struct SearchHomeView: View {
             .buttonStyle(PlainButtonStyle())
 
             Spacer()
+                .frame(height:84)
 
-            Image("searchHome")
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(width: 402.42425537109375, height: 415)
-                .clipped()
+            SafeGIFView(gifName: "way2")
+                .frame(maxWidth: .infinity, maxHeight: 479)
                 .padding(.bottom,54)
+                .clipped()
             
                 
 

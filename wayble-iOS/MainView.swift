@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct MainView: View {
+    @State private var searchBarViewID = UUID()
     @State private var selectedIndex = 0
     @State private var router = NavigationRouter()
 
@@ -16,13 +17,15 @@ struct MainView: View {
             NavigationStack(path: $router.path) {
                 ZStack {
                     switch selectedIndex {
-                        // 밑에 추가하고 싶은 뷰 적기 
+                        // 밑에 추가하고 싶은 뷰 적기
                     case 0: HomeView(selectedIndex: $selectedIndex)
                     case 1: MapView()
                     case 2: ProfileView()
                     case 3: SearchHomeView(selectedIndex: $selectedIndex)
                     case 4: WaybleZoneMainView()
-                    case 5: SearchBarView()
+                    case 5:
+                        SearchBarView(selectedIndex: $selectedIndex, entryPoint: .directions)
+                            .id(searchBarViewID)
                     default: Text("오류!")
                     }
                 }
@@ -54,8 +57,15 @@ struct MainView: View {
                         RouteDetail()
                             .navigationBarBackButtonHidden(true)
                     case .searchBar:
-                        SearchBarView()
+                        SearchBarView(selectedIndex: $selectedIndex, entryPoint: .directions)
                             .navigationBarBackButtonHidden(true)
+                    case .mapDetail(place: let place):
+                        MapDetailView(
+                            place: place,
+                            selectedIndex: $selectedIndex,
+                            searchBarViewID: $searchBarViewID
+                        )
+                        .navigationBarBackButtonHidden(true)
                     }
                 }
             }

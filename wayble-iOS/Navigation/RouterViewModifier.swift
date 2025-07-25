@@ -45,8 +45,12 @@ struct RouterViewModifier: ViewModifier {
                 .navigationBarBackButtonHidden(true))
 
         case .searchBar:
-            return AnyView(SearchBarView()
+            return AnyView(SearchBarView(selectedIndex: $selectedIndex, entryPoint: .directions)
                 .navigationBarBackButtonHidden(true))
+        
+        case .mapDetail(let place):
+                return AnyView(MapDetailView(place: place, selectedIndex: $selectedIndex,searchBarViewID: .constant(UUID()))
+                    .navigationBarBackButtonHidden(true))
         }
     }
 
@@ -68,7 +72,12 @@ extension View {
 }
 
 
-
+extension RouterViewModifier {
+    @ViewBuilder
+    func destination(for route: Route) -> some View {
+        routeView(for: route)
+    }
+}
 
 
 //dummy
