@@ -12,6 +12,7 @@ struct MainView: View {
     @State private var selectedIndex = 0
     @State private var router = NavigationRouter()
 
+
     var body: some View {
         ZStack(alignment: .bottom) {
             NavigationStack(path: $router.path) {
@@ -26,7 +27,8 @@ struct MainView: View {
                     case 5:
                         SearchBarView(selectedIndex: $selectedIndex, entryPoint: .directions)
                             .id(searchBarViewID)
-                    default: Text("오류!")
+                    default:
+                        Text("오류!")
                     }
                 }
                 //모든 뷰에서 탭이 보이도록 설정

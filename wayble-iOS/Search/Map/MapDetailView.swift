@@ -12,6 +12,7 @@ struct MapDetailView: View {
     let place: PlaceModel
     @Binding var selectedIndex: Int
     @Binding var searchBarViewID: UUID
+    @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         ZStack(alignment: .top) {
@@ -33,11 +34,12 @@ struct MapDetailView: View {
             // 상단 검색창
             HStack {
                 Button(action: {
-                   
-                    searchBarViewID = UUID()
-                    selectedIndex = 5
-                    
-                }){
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                        selectedIndex = 5
+                        searchBarViewID = UUID()
+                        dismiss()
+                    }
+                }) {
                     Image(systemName: "chevron.left")
                         .foregroundColor(.black)
                     
