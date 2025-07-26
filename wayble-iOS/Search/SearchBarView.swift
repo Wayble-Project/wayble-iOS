@@ -153,9 +153,6 @@ struct SearchBarView: View {
             Spacer()
         }
         .padding(.top)
-        .onAppear {
-            print("✅ SearchBarView 진입!")
-        }
     }
     
     
