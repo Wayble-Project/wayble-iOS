@@ -10,21 +10,25 @@ import Foundation
 
 //연관검색
 struct NaverPlaceResponse: Codable {
+    let total: Int
+    let display: Int
     let places: [PlaceModel]
 
     enum CodingKeys: String, CodingKey {
+        case total
+        case display
         case places = "items"
     }
 }
 
 struct PlaceModel: Codable, Identifiable, Hashable {
     let id = UUID()
-    let title: String
-    let roadAddress: String
-    let x: String?
-    let y: String?
-    let category: String
-    let isWaybleZone: Bool? //웨이블존 뱃지
+    var title: String = ""
+    var roadAddress: String = ""
+    var x: String? = nil
+    var y: String? = nil
+    var category: String = ""
+    var isWaybleZone: Bool? = false
 
     enum CodingKeys: String, CodingKey {
         case title

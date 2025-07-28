@@ -21,14 +21,12 @@ struct MapDetailView: View {
                 if let mapx = Double(place.x ?? ""),
                    let mapy = Double(place.y ?? "") {
                     
-                    let lng = mapx / 10_000_000.0 - 0.00005
-                    let lat = mapy / 10_000_000.0 + 0.00006
+                    let lng = mapx / 10_000_000.0
+                    let lat = mapy / 10_000_000.0 
 
-                    NaverMapView(centerX: lng, centerY: lat)
+                    NaverMapView(centerX: lng, centerY: lat, zoomLevel: 20,showMarker: true) // 줌 레벨 지정
                 }
 
-                Image("pin11")
-                    .frame(width: 46, height: 58.78)
             }
 
             // 상단 검색창
@@ -67,14 +65,7 @@ struct MapDetailView: View {
             .padding(.top, 12)
             VStack {
                 Spacer()
-                MapBoxView(place: PlaceModel(
-                    title: "아임히어",
-                    roadAddress: "서울시 용산구 백범로 326 1층",
-                    x: "126.9650571",
-                    y: "37.5381656",
-                    category: "카페>디저트",
-                    isWaybleZone: true
-                ))
+                MapBoxView(place: place)
             }
         }
         

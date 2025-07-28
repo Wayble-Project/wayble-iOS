@@ -43,5 +43,6 @@ enum Route: Hashable {
     case searchHome
     case searchBar
     case mapDetail(place: PlaceModel)
+    case OnlyMapView
     
 }
