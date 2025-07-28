@@ -18,6 +18,7 @@ class UserInfo {
     var disabilityType: [DisabilityType] = []
     var mobilityAid: [MobilityAid] = []
     var isWithCompanion: Bool = false
+    var loginType: LoginType = .basic
     
     enum DisabilityType: String, CaseIterable, Identifiable {
         case visual = "시각장애"
@@ -45,6 +46,13 @@ class UserInfo {
         case guideDog = "안내견"
         
         var id: Self { self }
+    }
+    
+    
+    enum LoginType: String, Codable {
+        case basic = "BASIC"
+        case kakao = "KAKAO"
+        case apple = "APPLE"
     }
     
 }

@@ -10,6 +10,7 @@ import Foundation
 struct SignupData: Codable {
     let email: String
     let password: String
+    let loginType: String
 }
 
 struct SignupPatchRequest: Codable {

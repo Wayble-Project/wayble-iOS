@@ -10,4 +10,5 @@ import Foundation
 struct SignupRequest: Encodable {
     let email: String
     let password: String
+    let loginType: String
 }
