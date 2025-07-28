@@ -9,10 +9,15 @@ import SwiftUI
 import NMapsMap
 import NMapsGeometry
 
+
+
 struct NaverMapView: UIViewRepresentable {
     let centerX: Double
     let centerY: Double
     var onLocationChanged: ((Double, Double) -> Void)? = nil
+    let zoomLevel: Double
+    var showMarker: Bool = true  // mapDetailView 에서만 보여주기
+    
     
     func makeCoordinator() -> Coordinator {
             Coordinator(self)
@@ -20,20 +25,37 @@ struct NaverMapView: UIViewRepresentable {
 
     
     func makeUIView(context: Context) -> NMFMapView {
+        
         let mapView = NMFMapView()
+        let cameraLat = centerY
+        let cameraLng = centerX + 0.0029
         let cameraPosition = NMFCameraPosition(
-            NMGLatLng(lat: centerY, lng: centerX),
-            zoom: 20
+            NMGLatLng(lat: cameraLat, lng: cameraLng),
+            zoom: zoomLevel
         )
         mapView.moveCamera(NMFCameraUpdate(position: cameraPosition))
+        mapView.addCameraDelegate(delegate: context.coordinator)
+        
+        if showMarker {
+            let marker = NMFMarker()
+            marker.position = NMGLatLng(lat: centerY, lng: centerX)
+            marker.iconImage = NMFOverlayImage(name: "pin11")
+            marker.width = 46
+            marker.height = 58.78
+            marker.mapView = mapView
+            marker.anchor = CGPoint(x: 0.5, y: 1.0)
+        }
+
         return mapView
     }
     
     func updateUIView(_ uiView: NMFMapView, context: Context) {
-        // 업데이트 시 지도 다시 이동 가능
+        //사용자 입장에서 마커가 가운데에 보이게 !!
+        let cameraLat = centerY
+        let cameraLng = centerX - 0.000019
         let cameraPosition = NMFCameraPosition(
-            NMGLatLng(lat: centerY, lng: centerX),
-            zoom: 19
+            NMGLatLng(lat: cameraLat, lng: cameraLng),
+            zoom: zoomLevel
         )
         uiView.moveCamera(NMFCameraUpdate(position: cameraPosition))
     }

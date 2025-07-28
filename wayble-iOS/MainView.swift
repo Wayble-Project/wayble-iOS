@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct MainView: View {
+    @State private var place = PlaceModel() 
     @State private var searchBarViewID = UUID()
     @State private var selectedIndex = 0
     @State private var router = NavigationRouter()
@@ -27,6 +28,13 @@ struct MainView: View {
                     case 5:
                         SearchBarView(selectedIndex: $selectedIndex, entryPoint: .directions)
                             .id(searchBarViewID)
+                    case 6:
+                        OnlyMapView(
+                            place: $place,
+                            selectedIndex: $selectedIndex,
+                            searchBarViewID: $searchBarViewID
+                        )
+                       
                     default:
                         Text("오류!")
                     }
@@ -61,6 +69,10 @@ struct MainView: View {
                     case .searchBar:
                         SearchBarView(selectedIndex: $selectedIndex, entryPoint: .directions)
                             .navigationBarBackButtonHidden(true)
+                    case .OnlyMapView:
+                        SearchHomeView(selectedIndex: $selectedIndex)
+                            .navigationBarBackButtonHidden(true)
+                        
                     case .mapDetail(place: let place):
                         MapDetailView(
                             place: place,
@@ -68,15 +80,29 @@ struct MainView: View {
                             searchBarViewID: $searchBarViewID
                         )
                         .navigationBarBackButtonHidden(true)
+                    
                     }
                 }
             }
 
-            CustomTabBarView(selectedIndex: $selectedIndex)
+            if !shouldHideTabBar {
+                CustomTabBarView(selectedIndex: $selectedIndex)
+            }
         }
         .environment(router)
     }
-}
+    // 커스텀 바 안보이게 설정 !!
+    // 안 보이고 싶은곳 selectedIndex 따라서 추가하기 
+    var shouldHideTabBar: Bool {
+        switch selectedIndex {
+        case 5:
+            return true
+        case 6:
+            return true
+        default:
+            return false
+        }
+    }}
 
 #Preview {
     MainView()
