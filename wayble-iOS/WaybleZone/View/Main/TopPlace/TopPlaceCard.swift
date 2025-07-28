@@ -1,89 +1,88 @@
+
 import SwiftUI
 
 struct TopPlaceCard: View {
-    struct AccessibilityInfo: Identifiable {
-        let id = UUID()
-        let icon: String
-        let label: String
-        let isEnabled: Bool
-    }
-
-    let rank: Int = 2
-    let name: String = "아임히어"
-    let info: String = "1층 · 500m · 카페"
-    let rating: Double = 4.5
-
-    let accessibilityOptions: [AccessibilityInfo] = [
-        .init(icon: "chair04", label: "경사로", isEnabled: true),
-        .init(icon: "door", label: "문턱 없음", isEnabled: false),
-        .init(icon: "lift", label: "엘리베이터", isEnabled: false),
-        .init(icon: "table", label: "테이블석", isEnabled: true),
-        .init(icon: "chair01", label: "장애인 화장실", isEnabled: true),
-    ]
-
+    let zone: WaybleZone
+  //  let rank: rank
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(alignment: .top, spacing: 12) {
-                Text("\(rank)")
+                //  Text("\(rank)")
+                Text("\(zone.id)")
                     .font(.mainTextSemibold14)
                     .foregroundStyle(Color("gray-900"))
 
-                Image("defaultPlaceImage")
+                Image(zone.imageUrl)
                     .resizable()
-                    .scaledToFit()
+                    .scaledToFill()
                     .frame(width: 90, height: 75)
                     .clipShape(RoundedRectangle(cornerRadius: 10))
-                    
-
+                    .clipped()
+                
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(name)
+                    Text(zone.name)
                         .font(.mainTextSemibold16)
                         .foregroundStyle(Color("gray-900"))
                         .padding(.bottom, 7)
 
-                    Text(info)
+                    Text(infoText)
                         .font(.mainTextRegular12)
                         .foregroundStyle(Color("gray-900"))
 
                     HStack(spacing: 3) {
                         Image("star")
+                            .resizable()
+                            .frame(width: 12, height: 12)
                             .foregroundStyle(Color("gray-900"))
                          
-                        Text(String(format: "%.1f", rating))
+                        Text(String(format: "%.1f", zone.rating))
                             .font(.mainTextRegular12)
                             .foregroundStyle(Color("gray-900"))
                     }
                 }
-
+                
                 Spacer()
             }
 
             HStack(spacing: 0) {
-                ForEach(accessibilityOptions) { option in
+                ForEach(facilityItems, id: \.label) { item in
                     VStack(spacing: 4) {
-                        Image(option.icon)
+                        Image(item.icon)
                             .resizable()
+                            .renderingMode(.template)
                             .frame(width: 24, height: 24)
-                            .foregroundStyle(option.isEnabled ? Color("blue-700") : Color("gray-500"))
+                            .foregroundStyle(item.isAvailable ? Color("blue-700") : Color("gray-500"))
 
-                        Text(option.label)
+                        Text(item.label)
                             .font(.mainTextSemibold10)
-                            .foregroundStyle(option.isEnabled ? Color("blue-700") : Color("gray-500"))
+                            .foregroundStyle(item.isAvailable ? Color("blue-700") : Color("gray-500"))
                     }
                     .frame(maxWidth: .infinity)
                 }
             }
         }
         .padding(.vertical, 10)
-        //.background(Color.white)
-        //.clipShape(RoundedRectangle(cornerRadius: 12))
-        //.shadow(color: .black.opacity(0.05), radius: 4, x: 0, y: 2)
         .padding(.horizontal)
         
         Divider().padding(.vertical, 5)
     }
 }
 
+private extension TopPlaceCard {
+    var facilityItems: [FacilityUtils.FacilityItem] {
+            FacilityUtils.cardFacilityItems(from: zone.facilities)
+        }
+    
+    var infoText: String {
+//        "\(zone.facilities.floorInfo) · \(zone.address.components(separatedBy: " ").last ?? "") · \(zone.category)"
+        
+        "\(zone.facilities.floorInfo) · 500m · \(zone.category)"
+    }
+}
+
 #Preview {
-    TopPlaceCard()
+    TopPlaceCard(zone: mockWaybleZoneResponse.data
+     //            ,rank:rank
+    )
 }

@@ -2,21 +2,24 @@ import SwiftUI
 
 struct ReviewCardView: View {
     let review: Review
-
+    
+    private let cardHeight: CGFloat = 130
+    private let innerHeight: CGFloat = 104
+    
     var body: some View {
         HStack(alignment: .top, spacing: 13) {
-            VStack(alignment: .leading, spacing: 10) {
+            VStack(alignment: .leading, spacing: 3) {
                 HStack(alignment: .top, spacing: 8) {
                     Image("profile1")
                         .resizable()
                         .clipShape(Circle())
                         .frame(width: 39, height: 39)
-
+                    
                     VStack(alignment: .leading, spacing: 4) {
                         Text(review.userNickname)
                             .font(.mainTextSemibold12)
                             .foregroundStyle(Color("gray-900"))
-
+                        
                         HStack(spacing: 2) {
                             ForEach(0..<5) { i in
                                 Image(systemName: i < Int(review.rating) ? "star.fill" : "star")
@@ -24,61 +27,71 @@ struct ReviewCardView: View {
                                     .frame(width: 10, height: 10)
                                     .foregroundStyle(Color("blue-500"))
                             }
-
+                            
                             Rectangle()
                                 .frame(width: 0.8, height: 7)
                                 .foregroundStyle(Color("gray-500"))
                                 .padding(.horizontal, 4)
-
-                            Text(DayUtils.formatter.string(from: review.visitDate))
+                            
+//                            Text(DayUtils.formatter.string(from: review.visitDate))
+//                                .font(.mainTextMedium10)
+//                                .foregroundStyle(Color("gray-500"))
+                            
+                            Text(review.visitDate)
                                 .font(.mainTextMedium10)
                                 .foregroundStyle(Color("gray-500"))
                         }
                     }
-                }
-
+                }.padding(.bottom, 10)
+                
+                
                 Text(review.content)
                     .font(.mainTextRegular10)
                     .foregroundStyle(Color("gray-700"))
                     .lineLimit(3)
-                    //.truncationMode(.tail) //넘치는 텍스트
-                    .frame(maxHeight: 42)
+                    .fixedSize(horizontal: false, vertical: true)
                     .layoutPriority(1)
-                   
+                    .padding(.bottom, 8)
+                
                 
                 Spacer(minLength: 0)
-
+                
+                
                 HStack(spacing: 4) {
                     Image("thumbsUp")
                     Text("\(review.likes)")
                         .font(.mainTextRegular09)
                         .foregroundStyle(Color("gray-900"))
                 }
-            }.frame(height: 104)
-           
-
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .frame(height: innerHeight)
+            
+            
             if let imageName = review.images.first {
                 Image(imageName)
                     .resizable()
                     .aspectRatio(contentMode: .fill)
-                    .frame(width: 104, height: 104)
+                    .frame(width: innerHeight, height: innerHeight)
                     .clipShape(RoundedRectangle(cornerRadius: 15))
                     .clipped()
             }
         }
+        .frame(maxWidth: .infinity)
+        .frame(height: cardHeight)
         .padding(10)
         .background(
             RoundedRectangle(cornerRadius: 16)
-                .stroke(Color("gray-200"), lineWidth: 1)
-                .background(
-                    RoundedRectangle(cornerRadius: 15)
-                        .fill(Color.white)
+                .fill(Color.white)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 16)
+                        .stroke(Color("gray-200"), lineWidth: 1)
                 )
         )
-        .frame(width: 350, height: 130)
         .padding(.horizontal, 20)
     }
 }
+
 #Preview {
-    ReviewCardView(review:mockReviewListResponse.data[1])
+    ReviewCardView(review: mockReviewListResponse.data[1])
 }

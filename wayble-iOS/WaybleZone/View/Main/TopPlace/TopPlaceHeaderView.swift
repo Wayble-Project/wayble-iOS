@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct TopHeaderView: View {
+struct TopPlaceView: View {
     
     enum Category: String, CaseIterable, Identifiable {
         case favorite = "즐겨찾기 순"
@@ -12,7 +12,7 @@ struct TopHeaderView: View {
     @Namespace private var underlineNamespace
 
     let favoriteTop3 = ["카페1", "카페2", "카페3"]
-    let searchTop3 = ["카페A", "카페B", "카페C"]
+    let searchTop3 = ["카페1", "카페2", "카페3"]
 
     var selectedTop3: [String] {
         switch selected {
@@ -66,13 +66,19 @@ struct TopHeaderView: View {
             //MARK: TOP3 CARD
 
             ForEach(selectedTop3, id: \.self) { name in
-                TopPlaceCard()
-                    .padding(.horizontal, 10)
+                TopPlaceCard(zone: mockWaybleZoneResponse.data)
+                    .padding(.horizontal, 3)
             }
+            
+//            ForEach(Array(selectedTop3.enumerated()), id: \.element) { index, name in
+//                TopPlaceCard(zone: mockWaybleZoneResponse.data, rank: index + 1)
+//                    .padding(.horizontal, 3)
+//            }
+
         }
     }
 }
 
 #Preview {
-    TopHeaderView()
+    TopPlaceView()
 }
