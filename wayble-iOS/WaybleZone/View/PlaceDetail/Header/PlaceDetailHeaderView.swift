@@ -64,5 +64,5 @@ struct PlaceDetailHeaderView: View {
 }
 
 #Preview {
-    PlaceDetailHeaderView().withRouter()
+    PlaceDetailHeaderView().withRouter(selectedIndex: .constant(0))
 }

@@ -10,5 +10,7 @@ target 'wayble-iOS' do
 
   # ✅ 네이버 지도 SDK
   pod 'NMapsMap'
+
+  pod 'Gifu'
 end
 

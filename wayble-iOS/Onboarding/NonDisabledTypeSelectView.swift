@@ -62,7 +62,7 @@ struct NonDisabledTypeSelectView: View {
 
 #Preview {
     PreviewWrapper()
-        .withRouter()
+        .withRouter(selectedIndex: .constant(0))
 }
 
 private struct PreviewWrapper: View {

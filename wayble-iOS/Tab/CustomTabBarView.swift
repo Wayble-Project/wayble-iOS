@@ -6,8 +6,11 @@
 //
 
 import SwiftUI
+import Foundation
+
 
 struct CustomTabBarView: View {
+    @Environment(NavigationRouter.self) private var router
     @Binding var selectedIndex: Int
     
     var body: some View {
@@ -15,15 +18,16 @@ struct CustomTabBarView: View {
             CurvedTabBarShape()
                 .fill(Color.white)
                 .frame(width: 349, height:64)
-                .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: -7)
                 .cornerRadius(15)
-
+            
             HStack {
                 // 홈
                 VStack(spacing: 4) {
-                    Button {
-                        selectedIndex = 0
-                    } label: {
+                    Button(action: {
+                        withAnimation(.default){
+                            selectedIndex = 0
+                        }
+                    }) {
                         VStack(spacing: 4) {
                             Image("home")
                                 .renderingMode(.template)
@@ -33,13 +37,13 @@ struct CustomTabBarView: View {
                         }
                     }
                     .buttonStyle(.plain)
-
+                    
                     Text("홈")
                         .font(.mainTextRegular12)
                         .foregroundStyle(selectedIndex == 0 ? Color("darkblue-500") : .gray500)
                 }
                 .frame(maxWidth: .infinity)
-
+                
                 // 지도
                 VStack(spacing: 4) {
                     Spacer().frame(height: 24) // 위에 버튼 공간 확보만
@@ -48,12 +52,14 @@ struct CustomTabBarView: View {
                         .foregroundStyle(selectedIndex == 1 ? Color("darkblue-500") : .gray500)
                 }
                 .frame(maxWidth: .infinity)
-
+                
                 // 내정보
                 VStack(spacing: 4) {
-                    Button {
-                        selectedIndex = 2
-                    } label: {
+                    Button(action: {
+                        withAnimation(.default) {
+                            selectedIndex = 2
+                        }
+                    }) {
                         VStack(spacing: 4) {
                             Image("user")
                                 .renderingMode(.template)
@@ -63,7 +69,7 @@ struct CustomTabBarView: View {
                         }
                     }
                     .buttonStyle(.plain)
-
+                    
                     Text("내정보")
                         .font(.mainTextRegular12)
                         .foregroundStyle(selectedIndex == 2 ? Color("darkblue-500") : .gray500)
@@ -71,24 +77,28 @@ struct CustomTabBarView: View {
                 .frame(maxWidth: .infinity)
             }
             .padding(.horizontal, 30)
-
+            
             Button(action: {
-                selectedIndex = 1
+                withAnimation(.default) {
+                    selectedIndex = 1
+                }
             }) {
                 ZStack {
                     Circle()
                         .fill(Color("darkblue-500"))
                         .frame(width: 52, height: 52)
                         .shadow(color: .black.opacity(0.2), radius: 8, x: 0, y: 4)
-
+                    
                     Image("map01")
-                               .resizable()
-                               .frame(width: 24, height: 24)                }
+                        .resizable()
+                    .frame(width: 24, height: 24)                }
             }
             .offset(y: -35)
-        }    }
-    
-    
+        }
+        .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: -7)
+        .offset(y: -26)
+        
+    }
     
 }
 
@@ -97,4 +107,5 @@ struct CustomTabBarView: View {
         .previewLayout(.sizeThatFits)
         .padding()
         .background(Color.gray.opacity(0.1))
+        .withRouter(selectedIndex: .constant(0))
 }

@@ -50,9 +50,6 @@
 				6185D4872E2D26A1007017DB /* Kingfisher in Frameworks */,
 				6185D4812E2D25B6007017DB /* Moya in Frameworks */,
 				6185D4842E2D2691007017DB /* Alamofire in Frameworks */,
-				6185D4872E2D26A1007017DB /* Kingfisher in Frameworks */,
-				6185D4812E2D25B6007017DB /* Moya in Frameworks */,
-				6185D4842E2D2691007017DB /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -149,9 +146,6 @@
 			mainGroup = 6E29C8B12E1EAD3B00E69785;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				6185D47F2E2D25B6007017DB /* XCRemoteSwiftPackageReference "Moya" */,
-				6185D4822E2D2691007017DB /* XCRemoteSwiftPackageReference "Alamofire" */,
-				6185D4852E2D26A1007017DB /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				6185D47F2E2D25B6007017DB /* XCRemoteSwiftPackageReference "Moya" */,
 				6185D4822E2D2691007017DB /* XCRemoteSwiftPackageReference "Alamofire" */,
 				6185D4852E2D26A1007017DB /* XCRemoteSwiftPackageReference "Kingfisher" */,
@@ -371,6 +365,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -403,6 +398,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
