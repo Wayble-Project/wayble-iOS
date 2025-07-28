@@ -61,6 +61,25 @@ struct OpeningHours: Codable {
     let close: String
 }
 
+//MARK: SavedPlaces
+
+struct SavedPlace: Identifiable, Codable {
+    let placeID: Int
+    let title: String
+    let color: String
+    let waybleZone: WaybleZone
+    
+    var id: Int { placeID }
+
+    enum CodingKeys: String, CodingKey {
+        case placeID = "place_id"
+        case title
+        case color
+        case waybleZone = "wayble_zone"
+    }
+}
+
+
 
 //MARK: REVIEW
 
@@ -75,7 +94,8 @@ struct Review: Identifiable, Codable {
     let userNickname: String
     let rating: Int
     let content: String
-    let visitDate: Date
+//    let visitDate: Date
+    let visitDate: String
     let likes: Int
     let images: [String]
 

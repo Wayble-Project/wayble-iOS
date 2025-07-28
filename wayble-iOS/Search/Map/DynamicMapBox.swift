@@ -1,14 +1,19 @@
 //
-//  MapBoxView.swift
+//  DynamicMapBox.swift
 //  wayble-iOS
 //
-//  Created by 신민정 on 7/25/25.
+//  Created by 신민정 on 7/27/25.
 //
 
 import SwiftUI
 
-struct MapBoxView: View {
+
+struct DynamicMapBoxView: View {
     let place: PlaceModel
+    @Binding var title: String
+    @Binding var roadAddress: String
+    @Binding var category: String
+
 
     var body: some View {
        ZStack() {
@@ -21,21 +26,21 @@ struct MapBoxView: View {
                HStack{
                    VStack(alignment: .leading, spacing: 7) {
                    HStack(alignment: .firstTextBaseline, spacing: 10) {
-                       Text(place.title.htmlStripped)
+                       Text(title.htmlStripped)
                            .font(.mainTextSemibold20)
                            .fixedSize(horizontal: true, vertical: false) //필요한 넓이만 차지
 
-                     Text(place.category.components(separatedBy: ">").dropFirst().joined(separator: ">"))
+                     Text(category.components(separatedBy: ">").dropFirst().joined(separator: ">"))
                          .font(.mainTextRegular12)
                          .fixedSize()
                    }
-                   Text(place.roadAddress)
+                   Text(roadAddress)
                        .font(.mainTextRegular12)
                        .foregroundStyle(Color("gray96"))
                        .frame(maxWidth: .infinity, alignment: .leading)
 
                }
-               Spacer()
+                   Spacer()
                    if place.isWaybleZone ?? false {
                        Image("badge")
                    }
@@ -60,34 +65,4 @@ struct MapBoxView: View {
     }
 }
 
-struct RoundedCorner: Shape {
-    var radius: CGFloat = 20
-    var corners: UIRectCorner = [.topLeft, .topRight]
 
-    func path(in rect: CGRect) -> Path {
-        let path = UIBezierPath(
-            roundedRect: rect,
-            byRoundingCorners: corners,
-            cornerRadii: CGSize(width: radius, height: radius)
-        )
-        return Path(path.cgPath)
-    }
-}
-
-//<b> 와 같은 html 표시 없애주기
-extension String {
-    var htmlStripped: String {
-        self.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression)
-    }
-}
-#Preview {
-    let sample = PlaceModel(
-        title: "아임히어",
-        roadAddress: "서울시 용산구 백범로 326 1층",
-        x: "1269650571",
-        y: "375381656",
-        category: "음식점>카페,디저트",
-        isWaybleZone: true
-    )
-    MapBoxView(place: sample)
-}

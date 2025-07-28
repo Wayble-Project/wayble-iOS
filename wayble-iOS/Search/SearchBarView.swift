@@ -40,6 +40,7 @@ struct SearchRow: View {
 struct SearchBarView: View {
     @Environment(NavigationRouter.self) private var router
     @State private var viewModel = SearchViewModel()
+    @FocusState private var isFocused: Bool
     
     @Binding var selectedIndex: Int
     var entryPoint: EntryPoint
@@ -78,6 +79,10 @@ struct SearchBarView: View {
                         TextField("", text: $viewModel.searchText)
                             .foregroundColor(.black)
                             .font(.mainTextRegular14)
+                            .focused($isFocused)
+                    }
+                    .onTapGesture {
+                        isFocused = true // 빈공간 눌러도 텍스트 서치 가능 
                     }
                     .onChange(of: viewModel.searchText) { newValue in
                         viewModel.fetchNaverSuggestions(for: newValue)
@@ -100,7 +105,9 @@ struct SearchBarView: View {
                     .frame(width:10)
                 
                 //누르면 지도 펼쳐짐
-                Button(action: {}) {
+                Button(action: {
+                    selectedIndex = 6
+                }) {
                     Image("map02")
                         .padding(.horizontal, 12)
                         .padding(.vertical, 15)

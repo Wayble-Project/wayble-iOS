@@ -48,9 +48,14 @@ struct RouterViewModifier: ViewModifier {
             return AnyView(SearchBarView(selectedIndex: $selectedIndex, entryPoint: .directions)
                 .navigationBarBackButtonHidden(true))
         
+        case .OnlyMapView:
+            return AnyView(SearchBarView(selectedIndex: $selectedIndex, entryPoint: .directions)
+                .navigationBarBackButtonHidden(true))
+            
         case .mapDetail(let place):
                 return AnyView(MapDetailView(place: place, selectedIndex: $selectedIndex,searchBarViewID: .constant(UUID()))
                     .navigationBarBackButtonHidden(true))
+        
         }
     }
 

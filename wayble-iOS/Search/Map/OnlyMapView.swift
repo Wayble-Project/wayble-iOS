@@ -1,0 +1,165 @@
+//
+//  OnlyMapView.swift
+//  wayble-iOS
+//
+//  Created by 신민정 on 7/27/25.
+//
+
+import SwiftUI
+import NMapsMap
+
+//지도만 보기 + 줌 이동 X + 다른 장소로 이동하면 그 장소 title, category,roadAddress 보여주기
+struct OnlyMapView: View {
+    @Binding var place: PlaceModel
+    @Binding var selectedIndex: Int
+    @Binding var searchBarViewID: UUID
+    @Environment(\.dismiss) private var dismiss
+
+    @State private var placeTitle: String = ""
+    @State private var placeRoadAddress: String = ""
+    @State private var placeCategory: String = ""
+
+    @StateObject private var locationManager = LocationManager()
+    struct MapCenter: Equatable {
+        var latitude: Double
+        var longitude: Double
+    }
+    @State private var mapCenter: MapCenter = {
+        #if targetEnvironment(simulator)
+        // 시뮬레이터일 때는 서울
+        return MapCenter(latitude: 37.5665, longitude: 126.9780)
+        #else
+        // 실제 기기는 초기값 0.0으로 시작 후 locationManager로 업데이트
+        return MapCenter(latitude: 0.0, longitude: 0.0)
+        #endif
+    }()
+
+    @State private var viewModel = SearchViewModel()
+
+    var body: some View {
+        ZStack(alignment: .top) {
+            // 지도 + 고정 핀
+            
+            ZStack() {
+                NaverMapView(
+                    centerX: centerLng,
+                    centerY: centerLat,
+                    onLocationChanged: { newLat, newLng in
+                        mapCenter = MapCenter(latitude: newLat, longitude: newLng)
+                    },
+                    zoomLevel: 16,
+                    showMarker: false
+                    
+                )
+                
+                Image("pin11")
+                    .frame(width: 46, height: 58.78)
+            }
+            
+            // 상단 검색창
+            HStack {
+                Button(action: {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                        selectedIndex = 5
+                        searchBarViewID = UUID()
+                        dismiss()
+                    }
+                }) {
+                    Image(systemName: "chevron.left")
+                        .foregroundColor(.black)
+                    
+                    Text("ex.숙대입구역 맛집")
+                        .foregroundColor(.gray500)
+                        .font(.mainTextRegular14)
+                        .padding(.leading, 4)
+                }
+                
+                
+                Spacer()
+                
+            }
+            .padding(.horizontal, 20)
+            .padding(.vertical, 15)
+            .frame(maxWidth: .infinity, maxHeight: 50)
+            .background(Color.white)
+            .cornerRadius(15)
+            .overlay(
+                RoundedRectangle(cornerRadius: 15)
+                    .inset(by: 0.5)
+                    .stroke(Color.gray300, lineWidth: 1)
+            )
+            .padding(.horizontal, 20)
+            .padding(.top, 12)
+            VStack {
+                Spacer()
+                DynamicMapBoxView(
+                    place: place,
+                    title: $placeTitle,
+                    roadAddress: $placeRoadAddress,
+                    category: $placeCategory
+                )
+            }
+        }
+        .onAppear {
+            #if !targetEnvironment(simulator)
+            if let coord = locationManager.currentLocation?.coordinate {
+                mapCenter = MapCenter(latitude: coord.latitude, longitude: coord.longitude)
+            }
+            #endif
+        }
+        .onChange(of: mapCenter) { newCenter in
+            viewModel.callReverseGeocodeAPI(lat: newCenter.latitude, lng: newCenter.longitude) { roadAddress in
+                print("📍 역지오코딩 주소: \(roadAddress)")
+                
+                print("🧭 suggestions 개수: \(viewModel.suggestions.count)")
+                placeTitle = ""
+                placeCategory = ""
+                placeRoadAddress = ""
+
+                // 자동 검색 시작
+                self.viewModel.fetchNaverSuggestions(for: roadAddress)
+
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    if let matched = viewModel.suggestions.first(where: {
+                        roadAddress.contains($0.roadAddress) || $0.roadAddress.contains(roadAddress)
+                    }) {
+                        place.title = matched.title
+                        place.category = matched.category
+                        place.roadAddress = matched.roadAddress
+                        placeTitle = matched.title
+                        placeCategory = matched.category
+                        placeRoadAddress = matched.roadAddress
+                        print("✅ 일치하는 장소: \(matched.title)")
+                    } else {
+                        print("❌ 일치하는 장소 없음")
+                    }
+                }
+            }
+        }
+    }
+}
+
+extension OnlyMapView {
+    private var centerLat: Double {
+        return mapCenter.latitude
+    }
+    
+    private var centerLng: Double {
+        return mapCenter.longitude
+    }
+}
+
+#Preview {
+    OnlyMapView(
+        place: .constant(PlaceModel(
+            title: "아임히어",
+            roadAddress: "서울시 용산구 백범로 326 1층",
+            x: "1269650571",
+            y: "375381656",
+            category: "카페>디저트>카페",
+            isWaybleZone: true
+        )),
+        selectedIndex: .constant(0),
+        searchBarViewID: .constant(UUID())
+    )
+}

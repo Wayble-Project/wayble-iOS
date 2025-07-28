@@ -99,6 +99,7 @@ struct HomeView: View {
                             Text("길찾기")
                                 .font(.mainTextSemibold14)
                                 .foregroundStyle(Color.white)
+                                .fixedSize()
                                 
                             Image("right")
                         }

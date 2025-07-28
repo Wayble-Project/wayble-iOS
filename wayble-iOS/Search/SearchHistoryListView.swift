@@ -1,7 +1,7 @@
 //
 //  SearchHistoryListView.swift
 //  wayble-iOS
-//
+//5
 //  Created by 신민정 on 7/25/25.
 //
 
