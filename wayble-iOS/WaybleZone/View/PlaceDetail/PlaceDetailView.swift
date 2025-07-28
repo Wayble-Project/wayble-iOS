@@ -28,5 +28,5 @@ struct PlaceDetailView: View {
 }
 
 #Preview {
-    PlaceDetailView().withRouter()
+    CafeDetailView().withRouter(selectedIndex: .constant(0))
 }

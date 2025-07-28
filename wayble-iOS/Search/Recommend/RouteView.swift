@@ -213,5 +213,5 @@ struct RouteView: View {
 
 #Preview {
     RouteView()
-        .environment(NavigationRouter())   // ✅ 이거 추가
+        .environment(NavigationRouter())   //  이거 추가
 }

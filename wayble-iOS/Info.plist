@@ -2,13 +2,21 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key></key>
+	<string></string>
 	<key>Information Property List</key>
 	<dict>
 		<key>KAKAO_APP_KEY</key>
 		<string>7889a45ba2df2fdbd3171bca2dacaaa6</string>
 	</dict>
+	<key>NAVER_CLIENT_ID</key>
+	<string>BgYZd4nAU9SODxHpQJIt</string>
+	<key>NAVER_CLIENT_SECRET</key>
+	<string>pNjVsZ2VWl</string>
 	<key>NMFNcpKeyId</key>
 	<string>4wrbuvpxtr</string>
+	<key>NMFNcpKeySecret</key>
+	<string>4kJh9HLYZKTovSsyoukGILkBwFAyjHgPop5kR91f</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Pretendard-Black.otf</string>

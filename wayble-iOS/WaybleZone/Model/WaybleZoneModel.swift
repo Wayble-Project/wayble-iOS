@@ -1,6 +1,8 @@
 // MARK: PLACEINFO
 
 import Foundation
+import Observation
+
 
 struct WaybleZoneResponse: Codable {
     let data: WaybleZone

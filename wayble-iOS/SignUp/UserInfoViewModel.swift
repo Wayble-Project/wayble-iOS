@@ -6,6 +6,7 @@
 //
 import Foundation
 import SwiftUI
+import Observation
 
 
 
@@ -43,4 +44,3 @@ class UserInfoViewModel {
         //pwd = userInfo.password
     }
 }
-

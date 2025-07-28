@@ -7,7 +7,7 @@
 
  import SwiftUI
 
- enum EmailFieldState {
+ enum FieldState {
      case `default`
      case focused
      case completed
@@ -22,7 +22,7 @@
      var storedEmail: String             // 저장된 이메일
      var isCheckingMismatch: Bool          // 확인 버튼 눌렸는지 여부
 
-     private var fieldState: EmailFieldState {
+     private var fieldState: FieldState {
          if isCheckingMismatch && email != storedEmail {
              return .mismatched
          } else if isFocused {
@@ -61,7 +61,7 @@
      }
      
 
-     private func borderColor(for state: EmailFieldState) -> Color {
+     private func borderColor(for state: FieldState) -> Color {
          switch state {
          case .default:
              return Color.gray200
@@ -75,7 +75,7 @@
          }
      }
 
-     private func textColor(for state: EmailFieldState) -> Color {
+     private func textColor(for state: FieldState) -> Color {
          switch state {
          case .default:
              return Color(red: 150/255, green: 150/255, blue: 150/255) // #969696

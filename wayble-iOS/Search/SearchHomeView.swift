@@ -6,14 +6,20 @@
 //
 
 import SwiftUI
+import Gifu
+import UIKit
+
 
 struct SearchHomeView: View {
     @State private var searchText: String = ""
+    @Binding var selectedIndex: Int
+    
 
     var body: some View {
         VStack(alignment: .leading) {
             Spacer()
                 .frame(height: 11)
+            
             
             //상단
             HStack {
@@ -36,9 +42,11 @@ struct SearchHomeView: View {
             Spacer()
                 .frame(height: 20)
 
-            // 상단 홍대입구역 
+            // 상단 홍대입구역
             Button(action: {
-                // 라우터 만들어지면 작성
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    selectedIndex = 5
+                }
             }) {
                 HStack(alignment: .center) {
                     Text("홍대입구역")
@@ -67,13 +75,12 @@ struct SearchHomeView: View {
             .buttonStyle(PlainButtonStyle())
 
             Spacer()
+                .frame(height:84)
 
-            Image("searchHome")
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(width: 402.42425537109375, height: 415)
-                .clipped()
+            SafeGIFView(gifName: "way2")
+                .frame(maxWidth: .infinity, maxHeight: 479)
                 .padding(.bottom,54)
+                .clipped()
             
                 
 
@@ -82,5 +89,6 @@ struct SearchHomeView: View {
 }
 
 #Preview {
-    SearchHomeView()
+    SearchHomeView(selectedIndex: .constant(0))
+        .withRouter(selectedIndex: .constant(0))
 }

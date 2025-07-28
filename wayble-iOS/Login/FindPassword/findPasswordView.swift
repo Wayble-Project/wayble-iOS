@@ -14,7 +14,6 @@ struct findPasswordView: View {
     @State var userInfoViewModel = UserInfoViewModel()
     
 
-
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {

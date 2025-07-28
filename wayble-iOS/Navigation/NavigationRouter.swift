@@ -1,4 +1,3 @@
-
 //  wayble-iOS
 //
 //  Created by 햄무 on 7/11/25.
@@ -7,6 +6,7 @@
 import SwiftUI
 import Foundation
 import Observation
+
 
 @Observable
 class NavigationRouter {
@@ -40,4 +40,9 @@ enum Route: Hashable {
     case wayblezone
     case onboardingCompleted
     case routeDetail
+    case searchHome
+    case searchBar
+    case mapDetail(place: PlaceModel)
+    case OnlyMapView
+    
 }
