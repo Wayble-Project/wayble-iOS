@@ -20,6 +20,17 @@ enum DayUtils {
         }
     }
     
+    static func BusinessHourDisplay(from businessHours: [String: OpeningHours]) -> [(label: String, hours: OpeningHours)] {
+        dayOrder.compactMap { day in
+            if let hours = businessHours[day] {
+                return (Kday(day), hours)
+            } else {
+                return nil
+            }
+        }
+    }
+
+    
     static let formatter: DateFormatter = {
         let df = DateFormatter()
         df.dateFormat = "yyyy.MM.dd"

@@ -1,27 +1,25 @@
 import SwiftUI
 
 struct PlaceDetailHeaderView: View {
-    let imageName = "cafeMockImage"
-    let cafeName = "아임히어"
-    let category = "카페"
-    let rating: Double = 4.5
+    let waybleZone: WaybleZone
+    
     let isOpen = true
 
     var body: some View {
-        PlaceToolbar(onBack: {}, onShare: {}, onLike: {}).padding(.bottom, 8)
+        PlaceToolbar(onBack: {}, onShare: {}).padding(.bottom, 8)
         
         ZStack(alignment: .top) {
-            
-            Image(imageName)
+            //TODO: AsyncImage로 변경, 영업 중 로직
+            Image(waybleZone.imageUrl)
                 .resizable()
                 .scaledToFill()
                 .frame(height: 342)
                 .overlay(
                     VStack(alignment: .leading, spacing: 6) {
-                        Text(category)
+                        Text(waybleZone.category)
                             .font(.mainTextSemibold14)
                             .foregroundStyle(Color("blue-200"))
-                        Text(cafeName)
+                        Text(waybleZone.name)
                             .font(.mainTextSemibold24)
                             .foregroundStyle(.white)
                     }
@@ -31,7 +29,7 @@ struct PlaceDetailHeaderView: View {
                 .overlay(
                     HStack(spacing: 4) {
                         Image("whiteStar")
-                        Text(String(format: "%.1f", rating))
+                        Text(String(format: "%.1f", waybleZone.rating))
                             .font(.mainTextSemibold20)
                             .foregroundStyle(.white)
                     }
@@ -64,5 +62,5 @@ struct PlaceDetailHeaderView: View {
 }
 
 #Preview {
-    PlaceDetailHeaderView().withRouter()
+    PlaceDetailHeaderView(waybleZone: mockWaybleZoneResponse.data).withRouter()
 }

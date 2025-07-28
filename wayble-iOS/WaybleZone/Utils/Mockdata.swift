@@ -19,9 +19,10 @@ let mockWaybleZoneResponse = WaybleZoneResponse(
             floorInfo: "1층"
         ),
         businessHours: [
-            "mon_thu": OpeningHours(open: "11:30", close: "22:00"),
-            "fri_sat": OpeningHours(open: "12:00", close: "22:00"),
-            "sun": OpeningHours(open: "12:00", close: "20:00")
+            "monday": OpeningHours(open: "11:30", close: "22:00"),
+            "tuesday": OpeningHours(open: "10:30", close: "22:00"),
+            "friday": OpeningHours(open: "12:00", close: "22:00"),
+            "sunday": OpeningHours(open: "12:00", close: "20:00")
         ],
         photos: [
             "mockreview1",
@@ -29,6 +30,12 @@ let mockWaybleZoneResponse = WaybleZoneResponse(
         ]
     )
 )
+
+let mockSavedPlaces: [SavedPlace] = [
+    SavedPlace(placeID: 1, title: "학교 근처 카페", color: "Red", waybleZone: mockWaybleZoneResponse.data),
+    SavedPlace(placeID: 2, title: "카공 카페", color: "Yellow", waybleZone: mockWaybleZoneResponse.data),
+    SavedPlace(placeID: 3, title: "남남",color: "Green", waybleZone: mockWaybleZoneResponse.data)
+]
 
 
 let mockReviewListResponse = ReviewListResponse(
@@ -38,7 +45,7 @@ let mockReviewListResponse = ReviewListResponse(
             userNickname: "눈송이",
             rating: 5,
             content: "너무너무 좋았어요 ~ ! 음식이 다 맛있었어요 그런데 문이 손잡이가 좀 높아서 밀기 힘들었습니다ㅠㅠ 그것만 빼면 좋아요 괜찮았어요",
-            visitDate: ISO8601DateFormatter().date(from: "2024-06-21T00:00:00Z") ?? Date(),
+            visitDate: "2025-06-30",
             likes: 120,
             images: ["mockreview1"]
         ),
@@ -47,7 +54,8 @@ let mockReviewListResponse = ReviewListResponse(
             userNickname: "달빛조각",
             rating: 4,
             content: "분위기 좋고 조용해서 공부하기도 좋아요. 커피도 괜찮았습니다.",
-            visitDate: ISO8601DateFormatter().date(from: "2024-06-20T00:00:00Z") ?? Date(),
+            //visitDate: ISO8601DateFormatter().date(from: "2024-06-20T00:00:00Z") ?? Date(),
+            visitDate: "2025-06-30",
             likes: 95,
             images: ["mockreview2"]
         )

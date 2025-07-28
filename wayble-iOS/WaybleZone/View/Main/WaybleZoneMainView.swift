@@ -10,9 +10,9 @@ struct WaybleZoneMainView: View {
          
                     WaybleZoneHeaderCardsView().padding(.bottom, 59)
                     
-                    TopHeaderView()
+                    TopPlaceView()
 
-                    SavedPlacesGroupView()
+                    SavedPlacesGroupView(collections: mockSavedPlaces)
                     
                     //tabView
 

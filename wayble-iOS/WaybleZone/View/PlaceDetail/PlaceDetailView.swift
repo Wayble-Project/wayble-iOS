@@ -1,22 +1,32 @@
 import SwiftUI
 
-struct CafeDetailView: View {
-
+struct PlaceDetailView: View {
+    @Bindable private var vm = PlaceDetailViewModel()
+    
     var body: some View {
         ScrollView {
             VStack() {
-               PlaceDetailHeaderView()
-               PlaceInfoView()
-                //PlaceReView()
                 
-             
-
+                if let zone = vm.waybleZone {
+                    PlaceDetailHeaderView(waybleZone: zone)
+                    PlaceInfoView(waybleZone: zone)
+                    PlaceReView(reviews: vm.reviews, onWrite: {})
+                } else {
+                    ProgressView("정보를 불러오는 중...")
+                }
+                
             }
         }
-        
+        .task {
+            await vm.fetchPlaceDetail()
+            if let zone = vm.waybleZone {
+                await vm.fetchReviews(zoneID: zone.id)
+            }
+            
+        }
     }
 }
 
 #Preview {
-    CafeDetailView().withRouter()
+    PlaceDetailView().withRouter()
 }

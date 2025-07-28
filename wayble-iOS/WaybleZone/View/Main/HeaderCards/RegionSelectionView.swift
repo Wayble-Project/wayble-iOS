@@ -40,7 +40,6 @@ struct RegionSelectionView: View {
                     dongDict: dongDict
                 )
                 .presentationDetents([.fraction(0.6)])
-                .presentationDragIndicator(.visible)
             }
             
                 .font(.subheadline)
@@ -60,6 +59,12 @@ struct RegionSheetView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
+            
+            Capsule()
+                .frame(width: 98, height: 6)
+                .foregroundColor(Color("gray-300"))
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 14)
  
             Text("관심 지역 설정")
                 .font(.mainTextSemibold20)
