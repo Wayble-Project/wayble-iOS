@@ -9,6 +9,7 @@ import SwiftUI
 
 
 //FIXME: - image 변경해야 함
+//FIXME: - OkButton - isDisabled 바꾸기
 
 struct SignupCompletedView: View {
     var body: some View {
@@ -24,7 +25,7 @@ struct SignupCompletedView: View {
             Spacer()
             
             OkButton(title: "확인", isDisabled: false) {
-                print("appstorge 저장하는 코드")
+                //api -> 서버에 저장된 후에 키체인 저장
             }
             .padding(.bottom, 54)
         }
