@@ -26,7 +26,7 @@ struct CheckPasswordField: View {
     @State private var showPassword: Bool = true // 패스워드 공개 버튼
     var isPasswordSame: Bool          // 설정한 패스워드와 같은지
 
-    private var fieldState: PasswordFieldState {
+    private var fieldState: FieldState {
         if isPasswordSame && password != setPassword {
             return .mismatched
         } else if isFocused {
@@ -94,7 +94,7 @@ struct CheckPasswordField: View {
     
     
 
-    private func borderColor(for state: PasswordFieldState) -> Color {
+    private func borderColor(for state: FieldState) -> Color {
         switch state {
         case .default:
             return Color.gray200
@@ -108,7 +108,7 @@ struct CheckPasswordField: View {
         }
     }
 
-    private func textColor(for state: PasswordFieldState) -> Color {
+    private func textColor(for state: FieldState) -> Color {
         switch state {
         case .default:
             return Color(red: 150/255, green: 150/255, blue: 150/255) // #969696
