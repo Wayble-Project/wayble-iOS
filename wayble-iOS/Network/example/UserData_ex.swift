@@ -5,6 +5,8 @@
 //  Created by 이서현 on 7/20/25.
 //
 
+
+/*
 import Foundation
 
 struct UserData: Codable {
@@ -28,4 +30,5 @@ struct UserPatchRequest: Codable {
     let disabledTool: String?
     
 }
+ */
 

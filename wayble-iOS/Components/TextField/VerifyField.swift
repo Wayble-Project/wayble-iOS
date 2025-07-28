@@ -1,28 +1,32 @@
 //
-//  PasswordField.swift
+//  VerifyField.swift
 //  wayble-iOS
 //
-//  Created by 이서현 on 7/13/25.
+//  Created by 이서현 on 7/28/25.
 //
 
 import SwiftUI
 
 
-//FIXME: - isCheckingMismatch 타입 변경
 
-struct PasswordField: View {
-    @Binding var password: String            // 외부에서 상태 바인딩
+//FIXME: - isCheckingMismatch 타입 변경?
+//FIXME: - 재요청 -> 타이머 발동
+
+struct VerifyField: View {
+    @Binding var inputCode: String            // 외부에서 상태 바인딩
     @FocusState private var isFocused: Bool  // 포커스 상태
-    var storedPassword: String             // 저장된 패스워드
-    @State private var showPassword: Bool = true // 패스워드 공개 버튼
+    var storedCode: String             // 인증코드
     var isCheckingMismatch: Bool          // 확인 버튼 눌렸는지 여부
 
+    
+    @Binding var showPopup: Bool
+    
     private var fieldState: FieldState {
-        if isCheckingMismatch && password != storedPassword {
+        if isCheckingMismatch && inputCode != storedCode {
             return .mismatched
         } else if isFocused {
             return .focused
-        } else if !password.isEmpty {
+        } else if !inputCode.isEmpty {
             return .completed
         } else {
             return .default
@@ -31,34 +35,36 @@ struct PasswordField: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text("비밀번호")
+            Text("인증코드")
                 .font(.mainTextSemibold14)
                 .foregroundStyle(Color.gray900)
                 .tracking(-0.28)
                 .padding(.bottom, 5)
             
             HStack(spacing: 0) {
-                if !showPassword {
-                    SecureField("8자 이상의 비밀번호", text: $password)
-                        .font(.mainTextRegular14)
-                        .tracking(-0.28)
-                        .foregroundStyle(Color.gray900)
-                        .autocorrectionDisabled(true)
-                } else {
-                    TextField("8자 이상의 비밀번호", text: $password)
-                        .font(.mainTextRegular14)
-                        .tracking(-0.28)
-                        .foregroundStyle(Color.gray900)
-                        .autocorrectionDisabled(true)
-                }
+                TextField("인증코드를 입력해주세요", text: $inputCode)
+                    .font(.mainTextRegular14)
+                    .tracking(-0.28)
+                    .foregroundStyle(Color.gray900)
+                    .autocorrectionDisabled(true)
+                    .keyboardType(.numberPad)
+                
+                Text("00:50")
+                    .font(.mainTextSemibold14)
+                    .foregroundStyle(.gray700)
+                    .padding(.trailing, 11)
                 
                 Button(action: {
-                    showPassword.toggle()
+                    showPopup = true
                 }) {
-                    Image("eyeClosed")
-                        .resizable()
-                        .frame(width: 24, height: 24)
-                        .opacity(showPassword ? 1.0 : 0.5)
+                    Text("재요청")
+                        .font(.mainTextSemibold14)
+                        .foregroundStyle(.gray700)
+                        .padding(7)
+                        .background(
+                            Color.gray200
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
+                            )
                 }
 
             }//h
@@ -72,7 +78,7 @@ struct PasswordField: View {
             .focused($isFocused)
             
             
-            Text("5회 로그인 실패시, 로그인이 10분 동안 제한됩니다.(1/5)")
+            Text("인증코드가 올바르지 않습니다.")
                 .font(.mainTextRegular12)
                 .foregroundStyle(fieldState == .mismatched ? Color.error : Color.white) //틀렸을 때만 보이게
                 .tracking(-0.24)
@@ -112,7 +118,7 @@ struct PasswordField: View {
     
     //MARK: - 비밀번호 8자 이상 , 저장 기능
     private func checkPasswordLength() -> Bool {
-        password.count >= 8
+        inputCode.count >= 8
     }
     
     private func savePassword() {
@@ -133,4 +139,14 @@ struct PasswordField: View {
     )
 }
 
+*/
+
+
+
+
+
+/*
+#Preview {
+    VerifyField()
+}
 */

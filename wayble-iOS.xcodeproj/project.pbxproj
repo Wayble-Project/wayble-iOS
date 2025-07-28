@@ -7,15 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-
+		6185D4812E2D25B6007017DB /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = 6185D4802E2D25B6007017DB /* Moya */; };
+		6185D4842E2D2691007017DB /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 6185D4832E2D2691007017DB /* Alamofire */; };
+		6185D4872E2D26A1007017DB /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 6185D4862E2D26A1007017DB /* Kingfisher */; };
 		89CBAF9B55CC5504DF221C4E /* Pods_wayble_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7251F346D58020C5FF541EA4 /* Pods_wayble_iOS.framework */; };
-		6185D4812E2D25B6007017DB /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = 6185D4802E2D25B6007017DB /* Moya */; };
-		6185D4842E2D2691007017DB /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 6185D4832E2D2691007017DB /* Alamofire */; };
-		6185D4872E2D26A1007017DB /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 6185D4862E2D26A1007017DB /* Kingfisher */; };
-
-		6185D4812E2D25B6007017DB /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = 6185D4802E2D25B6007017DB /* Moya */; };
-		6185D4842E2D2691007017DB /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 6185D4832E2D2691007017DB /* Alamofire */; };
-		6185D4872E2D26A1007017DB /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 6185D4862E2D26A1007017DB /* Kingfisher */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,12 +46,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-
 				89CBAF9B55CC5504DF221C4E /* Pods_wayble_iOS.framework in Frameworks */,
 				6185D4872E2D26A1007017DB /* Kingfisher in Frameworks */,
 				6185D4812E2D25B6007017DB /* Moya in Frameworks */,
 				6185D4842E2D2691007017DB /* Alamofire in Frameworks */,
-
 				6185D4872E2D26A1007017DB /* Kingfisher in Frameworks */,
 				6185D4812E2D25B6007017DB /* Moya in Frameworks */,
 				6185D4842E2D2691007017DB /* Alamofire in Frameworks */,
@@ -156,11 +149,9 @@
 			mainGroup = 6E29C8B12E1EAD3B00E69785;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-
 				6185D47F2E2D25B6007017DB /* XCRemoteSwiftPackageReference "Moya" */,
 				6185D4822E2D2691007017DB /* XCRemoteSwiftPackageReference "Alamofire" */,
 				6185D4852E2D26A1007017DB /* XCRemoteSwiftPackageReference "Kingfisher" */,
-
 				6185D47F2E2D25B6007017DB /* XCRemoteSwiftPackageReference "Moya" */,
 				6185D4822E2D2691007017DB /* XCRemoteSwiftPackageReference "Alamofire" */,
 				6185D4852E2D26A1007017DB /* XCRemoteSwiftPackageReference "Kingfisher" */,
@@ -216,9 +207,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-wayble-iOS/Pods-wayble-iOS-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-wayble-iOS/Pods-wayble-iOS-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -366,9 +361,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"wayble-iOS/Preview Content\"";
-
-				DEVELOPMENT_TEAM = XRY42MG75P;
-
 				DEVELOPMENT_TEAM = XRY42MG75P;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -401,9 +393,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"wayble-iOS/Preview Content\"";
-
-				DEVELOPMENT_TEAM = XRY42MG75P;
-
 				DEVELOPMENT_TEAM = XRY42MG75P;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;

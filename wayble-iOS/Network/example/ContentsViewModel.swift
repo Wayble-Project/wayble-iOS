@@ -8,6 +8,8 @@
 
 //TODO: - logger?
 //TODO: - 응답 이후 이어지는 로직이 많아진다” 싶으면 async/await 도입하기 (week7)
+
+/*
 import Foundation
 import Moya
 
@@ -107,3 +109,5 @@ class ContentsViewModel {
         }
     }
 }
+
+*/
