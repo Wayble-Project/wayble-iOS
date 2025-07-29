@@ -19,6 +19,7 @@ struct WaybleZoneMainView: View {
                 }
                
             }.ignoresSafeArea(edges: .top)
+            .contentMargins(.bottom, 180, for: .scrollContent)
 
     }
 }

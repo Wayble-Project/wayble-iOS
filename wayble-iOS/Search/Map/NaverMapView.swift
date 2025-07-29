@@ -68,9 +68,8 @@ struct NaverMapView: UIViewRepresentable {
         
         func mapViewCameraIdle(_ mapView: NMFMapView) {
             let center = mapView.cameraPosition.target
-            let adjustedLat = center.lat + 0.0001
-            let adjustedLng = center.lng - 0.0001
-            parent.onLocationChanged?(adjustedLat, adjustedLng)
+            parent.onLocationChanged?(center.lat, center.lng)
+            // 추후 추가할 로직 예: viewModel.callReverseGeocodeAPI(lat: center.lat, lng: center.lng)
         }
     }
     

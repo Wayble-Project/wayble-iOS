@@ -1,24 +1,3 @@
-PODS:
-  - Gifu (3.5.1)
-  - NMapsGeometry (1.0.2)
-  - NMapsMap (3.22.0):
-    - NMapsGeometry
-
-DEPENDENCIES:
-  - Gifu
-  - NMapsMap
-
-SPEC REPOS:
-  https://github.com/CocoaPods/Specs.git:
-    - Gifu
-    - NMapsGeometry
-    - NMapsMap
-
-SPEC CHECKSUMS:
-  Gifu: 9f7e52357d41c0739709019eb80a71ad9aab1b6d
-  NMapsGeometry: 4e02554fa9880ef02ed96b075dc84355d6352479
-  NMapsMap: 11190b621c8050069e4f41efa9e3973f855cd7e3
-
-PODFILE CHECKSUM: 84b57148351eeff3d0cdd9777440a27a9ac474e0
+PODFILE CHECKSUM: 6d9a2e2dbbc4ef7e1005e97a1361dc002bf5bb42
 
 COCOAPODS: 1.16.2

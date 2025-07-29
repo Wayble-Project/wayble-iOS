@@ -14,7 +14,7 @@ struct NewPasswordCompletedView: View {
         VStack {
             Spacer()
             
-            Image("check02")
+            Image(.check02)
                 .resizable()
                 .frame(width: 33, height: 33)
                 .padding(.bottom, 50.4)
