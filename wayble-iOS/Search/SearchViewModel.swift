@@ -22,7 +22,7 @@ class SearchViewModel {
     
     var suggestions: [PlaceModel] = []
     
-    // ✅ 연관검색
+    //  연관검색 , 검색 api 연결
     func fetchNaverSuggestions(for query: String) {
         guard !query.isEmpty else {
             self.suggestions = []
@@ -32,16 +32,15 @@ class SearchViewModel {
         let clientID = Bundle.main.object(forInfoDictionaryKey: "NAVER_CLIENT_ID") as? String ?? ""
         let clientSecret = Bundle.main.object(forInfoDictionaryKey: "NAVER_CLIENT_SECRET") as? String ?? ""
         let encodedQuery = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
-        let urlString = "https://openapi.naver.com/v1/search/local.json?query=\(encodedQuery)&display=5"
-
+        let urlString = "https://openapi.naver.com/v1/search/local.json?query=\(encodedQuery)&display=5&output=json"
         guard let url = URL(string: urlString) else {
             print("❌ URL 생성 실패")
             return
         }
 
         var request = URLRequest(url: url)
-        request.addValue(clientID, forHTTPHeaderField: "X-NCP-APIGW-API-KEY-ID")
-        request.addValue(clientSecret, forHTTPHeaderField: "X-NCP-APIGW-API-KEY")
+        request.addValue(clientID, forHTTPHeaderField: "X-Naver-Client-Id")
+        request.addValue(clientSecret, forHTTPHeaderField: "X-Naver-Client-Secret")
         request.addValue("application/json", forHTTPHeaderField: "Accept")
 
         URLSession.shared.dataTask(with: request) { data, _, error in
@@ -50,9 +49,8 @@ class SearchViewModel {
                 return
             }
 
-            if let data = data,
-               let jsonString = String(data: data, encoding: .utf8) {
-                print("📦 응답 JSON:\n\(jsonString)")
+            if let data = data {
+                print("✅ 응답 JSON: \(String(data: data, encoding: .utf8) ?? "읽기 실패")")
             }
 
             guard let data = data else { return }
@@ -69,20 +67,20 @@ class SearchViewModel {
         }.resume()
     }
 
-    // ✅ 연관검색 결과에서 도로명 주소로 장소 매칭
+    // 연관검색 결과에서 도로명 주소로 장소 매칭
     func matchPlaceFromSuggestions(using roadName: String) {
         if let matchedPlace = suggestions.first(where: { $0.roadAddress.contains(roadName) }) {
-            print("✅ 매칭된 장소: \(matchedPlace.title)")
+            print("매칭된 장소: \(matchedPlace.title)")
             self.selectedPlace = matchedPlace
         } else {
             print("❌ 일치하는 장소 없음")
         }
     }
 
-    // ✅ 역지오코딩 함수 - 바깥으로 뺐음!
+    //  역지오코딩 함수 - 바깥으로 뺐음! / 지도 api 사용
     func callReverseGeocodeAPI(lat: Double, lng: Double, completion: @escaping (String) -> Void) {
-        let clientID = Bundle.main.object(forInfoDictionaryKey: "NMFNcpKeyId") as? String ?? ""
-        let clientSecret = Bundle.main.object(forInfoDictionaryKey: "NMFNcpKeySecret") as? String ?? ""
+        let mapClientID = Bundle.main.object(forInfoDictionaryKey: "NMFNcpKeyId") as? String ?? ""
+        let mapClientSecret = Bundle.main.object(forInfoDictionaryKey: "NMFNcpKeySecret") as? String ?? ""
 
         let coord = "\(lng),\(lat)"
         let urlString = "https://maps.apigw.ntruss.com/map-reversegeocode/v2/gc?coords=\(lng),\(lat)&output=json&orders=roadaddr"
@@ -93,8 +91,8 @@ class SearchViewModel {
         }
 
         var request = URLRequest(url: url)
-        request.addValue(clientID, forHTTPHeaderField: "X-NCP-APIGW-API-KEY-ID")
-        request.addValue(clientSecret, forHTTPHeaderField: "X-NCP-APIGW-API-KEY")
+        request.addValue(mapClientID, forHTTPHeaderField: "X-NCP-APIGW-API-KEY-ID")
+        request.addValue(mapClientSecret, forHTTPHeaderField: "X-NCP-APIGW-API-KEY")
         request.addValue("application/json", forHTTPHeaderField: "Accept")
 
         URLSession.shared.dataTask(with: request) { data, _, error in

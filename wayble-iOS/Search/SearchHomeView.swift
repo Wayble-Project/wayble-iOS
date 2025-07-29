@@ -6,8 +6,7 @@
 //
 
 import SwiftUI
-import Gifu
-import UIKit
+import AVKit
 
 
 struct SearchHomeView: View {
@@ -76,12 +75,13 @@ struct SearchHomeView: View {
 
             Spacer()
                 .frame(height:84)
-
-            SafeGIFView(gifName: "way2")
-                .frame(maxWidth: .infinity, maxHeight: 479)
-                .padding(.bottom,54)
-                .clipped()
-            
+            GeometryReader { geo in
+                MP4View(filename: "Search", fileExtension: "mp4", size: geo.size)
+                    .frame(height: 479)
+                    .padding(.bottom, 54)
+                    .clipped()
+            }
+            .frame(height: 479)
                 
 
         }

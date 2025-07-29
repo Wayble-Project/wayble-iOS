@@ -46,6 +46,33 @@ struct OnlyMapView: View {
                     centerY: centerLat,
                     onLocationChanged: { newLat, newLng in
                         mapCenter = MapCenter(latitude: newLat, longitude: newLng)
+
+                        viewModel.callReverseGeocodeAPI(lat: newLat, lng: newLng) { roadAddress in
+                            print("📍 역지오코딩 주소: \(roadAddress)")
+
+                            // 초기화
+                            placeTitle = ""
+                            placeCategory = ""
+                            placeRoadAddress = ""
+
+                            viewModel.fetchNaverSuggestions(for: roadAddress)
+
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                if let matched = viewModel.suggestions.first(where: {
+                                    roadAddress.contains($0.roadAddress) || $0.roadAddress.contains(roadAddress)
+                                }) {
+                                    place.title = matched.title
+                                    place.category = matched.category
+                                    place.roadAddress = matched.roadAddress
+                                    placeTitle = matched.title
+                                    placeCategory = matched.category
+                                    placeRoadAddress = matched.roadAddress
+                                    print("✅ 일치하는 장소: \(matched.title)")
+                                } else {
+                                    print("❌ 일치하는 장소 없음")
+                                }
+                            }
+                        }
                     },
                     zoomLevel: 16,
                     showMarker: false
@@ -100,41 +127,21 @@ struct OnlyMapView: View {
                 )
             }
         }
+        .toolbar(content: {
+            ToolbarItem(placement: .topBarLeading, content: {
+                
+            })
+            
+            ToolbarItem(placement: .principal, content: {
+                
+            })
+        })
         .onAppear {
             #if !targetEnvironment(simulator)
             if let coord = locationManager.currentLocation?.coordinate {
                 mapCenter = MapCenter(latitude: coord.latitude, longitude: coord.longitude)
             }
             #endif
-        }
-        .onChange(of: mapCenter) { newCenter in
-            viewModel.callReverseGeocodeAPI(lat: newCenter.latitude, lng: newCenter.longitude) { roadAddress in
-                print("📍 역지오코딩 주소: \(roadAddress)")
-                
-                print("🧭 suggestions 개수: \(viewModel.suggestions.count)")
-                placeTitle = ""
-                placeCategory = ""
-                placeRoadAddress = ""
-
-                // 자동 검색 시작
-                self.viewModel.fetchNaverSuggestions(for: roadAddress)
-
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    if let matched = viewModel.suggestions.first(where: {
-                        roadAddress.contains($0.roadAddress) || $0.roadAddress.contains(roadAddress)
-                    }) {
-                        place.title = matched.title
-                        place.category = matched.category
-                        place.roadAddress = matched.roadAddress
-                        placeTitle = matched.title
-                        placeCategory = matched.category
-                        placeRoadAddress = matched.roadAddress
-                        print("✅ 일치하는 장소: \(matched.title)")
-                    } else {
-                        print("❌ 일치하는 장소 없음")
-                    }
-                }
-            }
         }
     }
 }
