@@ -130,7 +130,11 @@ struct Transportation: View {
             if showDetail {
                 RouteDetail(onBack: { showDetail = false })
             } else {
-                RouteView(onRouteSelected: { showDetail = true })
+                if viewModel.transportation.selectedTab == .walking {
+                    WalkingView() // 도보 탭일 때 
+                } else {
+                    RouteView(onRouteSelected: { showDetail = true })
+                }
             }
         }
     }

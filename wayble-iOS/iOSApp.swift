@@ -17,8 +17,9 @@ struct iOSApp: App {
 
     var body: some Scene {
         WindowGroup {
-            MainView()
-                .withRouter(selectedIndex: $selectedIndex)
+            WalkingView()
+          //  MainView()
+            //    .withRouter(selectedIndex: $selectedIndex)
         }
     }
 }
