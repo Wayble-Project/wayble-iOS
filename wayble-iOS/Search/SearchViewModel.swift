@@ -7,6 +7,7 @@
 
 import Foundation
 import Observation
+import CoreLocation
 
 @Observable
 class SearchViewModel {
@@ -21,6 +22,8 @@ class SearchViewModel {
     ]
     
     var suggestions: [PlaceModel] = []
+
+    private var lastRequestedCoordinate: CLLocationCoordinate2D?
     
     //  연관검색 , 검색 api 연결
     func fetchNaverSuggestions(for query: String) {
@@ -37,6 +40,8 @@ class SearchViewModel {
             print("❌ URL 생성 실패")
             return
         }
+        
+        print("📡 요청 URL: \(url)")
 
         var request = URLRequest(url: url)
         request.addValue(clientID, forHTTPHeaderField: "X-Naver-Client-Id")
@@ -58,8 +63,8 @@ class SearchViewModel {
             do {
                 let decoded = try JSONDecoder().decode(NaverPlaceResponse.self, from: data)
                 DispatchQueue.main.async {
-                    print("받은 결과 개수: \(decoded.places.count)")
-                    self.suggestions = decoded.places
+                    print("받은 결과 개수: \(decoded.items?.count ?? 0)")
+                    self.suggestions = decoded.items ?? []
                 }
             } catch {
                 print("디코딩 에러: \(error)")
@@ -74,6 +79,28 @@ class SearchViewModel {
             self.selectedPlace = matchedPlace
         } else {
             print("❌ 일치하는 장소 없음")
+        }
+    }
+
+    // 중심 좌표 기준 가장 가까운 장소 하나 매칭
+    func matchNearestPlace(to center: CLLocationCoordinate2D) {
+        guard !suggestions.isEmpty else {
+            print("❌ 장소 리스트 비어있음")
+            return
+        }
+
+        let nearest = suggestions.min(by: {
+            let loc1 = CLLocation(latitude: $0.latitude, longitude: $0.longitude)
+            let loc2 = CLLocation(latitude: $1.latitude, longitude: $1.longitude)
+            let target = CLLocation(latitude: center.latitude, longitude: center.longitude)
+            return loc1.distance(from: target) < loc2.distance(from: target)
+        })
+
+        if let place = nearest {
+            print("✅ 가장 가까운 장소: \(place.title)")
+            self.selectedPlace = place
+        } else {
+            print("❌ 가까운 장소 못 찾음")
         }
     }
 
@@ -106,20 +133,120 @@ class SearchViewModel {
 
             do {
                 let decoded = try JSONDecoder().decode(NaverReverseGeoResponse.self, from: data)
-
                 let results = decoded.results
-                if let land = results.first?.land,
-                   let name = land.name {
+
+                // ✅ 여기에 붙여!
+                let region = results.first?.region
+                let land = results.first?.land
+
+                if let area1 = region?.area1.name,
+                   let area2 = region?.area2.name,
+                   let area3 = region?.area3.name,
+                   let roadName = land?.name,
+                   let number1 = land?.number1 {
+
+                    let fullAddress = "\(area1) \(area2) \(area3) \(roadName) \(number1)"
                     DispatchQueue.main.async {
-                        completion(name)
+                        completion(fullAddress)
                     }
                 } else {
-                    print("❌ 역지오코딩 결과 없음!")
+                    print("❌ 역지오코딩 결과 부족")
                 }
             } catch {
                 print("❌ 역지오코딩 디코딩 에러: \(error)")
             }
         }.resume()
+    }
+    
+    func fetchKakaoNearbyPlace(lat: Double, lng: Double, address: String, completion: @escaping (PlaceModel?) -> Void) {
+        let kakaoKey = Bundle.main.object(forInfoDictionaryKey: "KAKAO_REST_API_KEY") as? String ?? ""
+        let query = address.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+        let urlStr = "https://dapi.kakao.com/v2/local/search/keyword.json?query=\(query)&x=\(lng)&y=\(lat)&radius=50&sort=distance"
+
+        guard let url = URL(string: urlStr) else {
+            completion(nil)
+            return
+        }
+
+        var request = URLRequest(url: url)
+        request.addValue("KakaoAK \(kakaoKey)", forHTTPHeaderField: "Authorization")
+
+        URLSession.shared.dataTask(with: request) { data, _, error in
+            if let error = error {
+                print("❌ 카카오 장소 요청 실패: \(error)")
+                completion(nil)
+                return
+            }
+
+            guard let data = data else {
+                completion(nil)
+                return
+            }
+
+            do {
+                let decoded = try JSONDecoder().decode(KakaoPlaceResponse.self, from: data)
+                if let first = decoded.documents.first {
+                    let place = PlaceModel(
+                        title: first.place_name,
+                        roadAddress: first.road_address_name,
+                        x: first.x,
+                        y: first.y,
+                        category: first.category_name
+                    )
+                    completion(place)
+                } else {
+                    completion(nil)
+                }
+            } catch {
+                print("❌ 카카오 디코딩 오류: \(error)")
+                completion(nil)
+            }
+        }.resume()
+    }
+    // 중심 좌표가 바뀌었을 때 → 역지오코딩 → 카카오 장소 검색 → selectedPlace 세팅
+    func handleCenterChanged(lat: Double, lng: Double) {
+        let currentCoord = CLLocationCoordinate2D(latitude: lat, longitude: lng)
+
+        // 이미 비슷한 좌표로 요청했는지 확인 (10미터 이내면 중복으로 간주)
+        if let lastCoord = lastRequestedCoordinate {
+            let distance = CLLocation(latitude: lat, longitude: lng).distance(from: CLLocation(latitude: lastCoord.latitude, longitude: lastCoord.longitude))
+            if distance < 10 {
+                print("🛑 너무 가까운 위치 - 중복 호출 방지됨 (\(distance)m)")
+                return
+            }
+        }
+
+        lastRequestedCoordinate = currentCoord
+        print("📍 중심 좌표 변경됨: (\(lat), \(lng))")
+
+        // 1. 네이버 역지오코딩 → 도로명 주소 받아오기
+        callReverseGeocodeAPI(lat: lat, lng: lng) { [weak self] address in
+            guard let self = self else { return }
+
+            print("📬 역지오코딩 주소: \(address)")
+
+            // 2. 카카오 장소 검색
+            self.fetchKakaoNearbyPlace(lat: lat, lng: lng, address: address) { place in
+                if let place = place {
+                    DispatchQueue.main.async {
+                        self.selectedPlace = place
+                        print("✅ 최종 선택된 장소 (카카오): \(place.title)")
+                    }
+                } else {
+                    let dummy = PlaceModel(
+                        title: "이 위치의 장소",
+                        roadAddress: address,
+                        x: "\(lng)",
+                        y: "\(lat)",
+                        category: "기타"
+                    )
+                    DispatchQueue.main.async {
+                        self.selectedPlace = dummy
+                        print("✅ 최종 선택된 장소 (더미): \(dummy.title)")
+                    }
+                }
+            }
+        }
     }
 }
 

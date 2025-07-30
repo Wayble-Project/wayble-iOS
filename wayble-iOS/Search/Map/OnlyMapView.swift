@@ -24,15 +24,7 @@ struct OnlyMapView: View {
         var latitude: Double
         var longitude: Double
     }
-    @State private var mapCenter: MapCenter = {
-        #if targetEnvironment(simulator)
-        // 시뮬레이터일 때는 서울
-        return MapCenter(latitude: 37.5665, longitude: 126.9780)
-        #else
-        // 실제 기기는 초기값 0.0으로 시작 후 locationManager로 업데이트
-        return MapCenter(latitude: 0.0, longitude: 0.0)
-        #endif
-    }()
+    @State private var mapCenter: NMGLatLng = NMGLatLng(lat: 37.5665, lng: 126.9780)
 
     @State private var viewModel = SearchViewModel()
 
@@ -45,34 +37,8 @@ struct OnlyMapView: View {
                     centerX: centerLng,
                     centerY: centerLat,
                     onLocationChanged: { newLat, newLng in
-                        mapCenter = MapCenter(latitude: newLat, longitude: newLng)
-
-                        viewModel.callReverseGeocodeAPI(lat: newLat, lng: newLng) { roadAddress in
-                            print("📍 역지오코딩 주소: \(roadAddress)")
-
-                            // 초기화
-                            placeTitle = ""
-                            placeCategory = ""
-                            placeRoadAddress = ""
-
-                            viewModel.fetchNaverSuggestions(for: roadAddress)
-
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                if let matched = viewModel.suggestions.first(where: {
-                                    roadAddress.contains($0.roadAddress) || $0.roadAddress.contains(roadAddress)
-                                }) {
-                                    place.title = matched.title
-                                    place.category = matched.category
-                                    place.roadAddress = matched.roadAddress
-                                    placeTitle = matched.title
-                                    placeCategory = matched.category
-                                    placeRoadAddress = matched.roadAddress
-                                    print("✅ 일치하는 장소: \(matched.title)")
-                                } else {
-                                    print("❌ 일치하는 장소 없음")
-                                }
-                            }
-                        }
+                        mapCenter = NMGLatLng(lat: newLat, lng: newLng)
+                        viewModel.handleCenterChanged(lat: newLat, lng: newLng)
                     },
                     zoomLevel: 16,
                     showMarker: false
@@ -138,21 +104,31 @@ struct OnlyMapView: View {
         })
         .onAppear {
             #if !targetEnvironment(simulator)
-            if let coord = locationManager.currentLocation?.coordinate {
-                mapCenter = MapCenter(latitude: coord.latitude, longitude: coord.longitude)
+            if let coord = locationManager.currentCoordinate {
+                mapCenter = NMGLatLng(lat: coord.latitude, lng: coord.longitude)
             }
             #endif
+        }
+        .onChange(of: viewModel.selectedPlace) { newPlace in
+            guard let place = newPlace, place != self.place else { return }
+
+            DispatchQueue.main.async {
+                self.place = place
+                self.placeTitle = place.title
+                self.placeRoadAddress = place.roadAddress
+                self.placeCategory = place.category.components(separatedBy: ">").last ?? place.category
+            }
         }
     }
 }
 
 extension OnlyMapView {
     private var centerLat: Double {
-        return mapCenter.latitude
+        return mapCenter.lat
     }
     
     private var centerLng: Double {
-        return mapCenter.longitude
+        return mapCenter.lng
     }
 }
 
