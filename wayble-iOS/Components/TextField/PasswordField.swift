@@ -8,13 +8,6 @@
 import SwiftUI
 
 
-enum PasswordFieldState {
-    case `default`
-    case focused
-    case completed
-    case mismatched
-}
-
 //FIXME: - isCheckingMismatch 타입 변경
 
 struct PasswordField: View {
@@ -24,7 +17,7 @@ struct PasswordField: View {
     @State private var showPassword: Bool = true // 패스워드 공개 버튼
     var isCheckingMismatch: Bool          // 확인 버튼 눌렸는지 여부
 
-    private var fieldState: PasswordFieldState {
+    private var fieldState: FieldState {
         if isCheckingMismatch && password != storedPassword {
             return .mismatched
         } else if isFocused {
@@ -46,7 +39,7 @@ struct PasswordField: View {
             
             HStack(spacing: 0) {
                 if !showPassword {
-                    SecureField("비밀번호를 입력하세요", text: $password)
+                    SecureField("8자 이상의 비밀번호", text: $password)
                         .font(.mainTextRegular14)
                         .tracking(-0.28)
                         .foregroundStyle(Color.gray900)
@@ -92,7 +85,7 @@ struct PasswordField: View {
     
     
 
-    private func borderColor(for state: PasswordFieldState) -> Color {
+    private func borderColor(for state: FieldState) -> Color {
         switch state {
         case .default:
             return Color.gray200
@@ -106,7 +99,7 @@ struct PasswordField: View {
         }
     }
 
-    private func textColor(for state: PasswordFieldState) -> Color {
+    private func textColor(for state: FieldState) -> Color {
         switch state {
         case .default:
             return Color(red: 150/255, green: 150/255, blue: 150/255) // #969696

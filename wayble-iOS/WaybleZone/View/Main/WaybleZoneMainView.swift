@@ -23,11 +23,12 @@ struct WaybleZoneMainView: View {
                 }
                
             }.ignoresSafeArea(edges: .top)
+            .contentMargins(.bottom, 180, for: .scrollContent)
 
     }
 }
 
 #Preview {
     //WaybleZoneView(vm: WaybleZoneViewModel())
-    WaybleZoneMainView(vm: TopPlaceViewModel()).withRouter()
+    WaybleZoneMainView(vm: TopPlaceViewModel()).withRouter(selectedIndex: .constant(0))
 }

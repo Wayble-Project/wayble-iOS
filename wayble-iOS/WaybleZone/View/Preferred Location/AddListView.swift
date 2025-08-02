@@ -100,5 +100,5 @@ struct AddListView: View {
 }
 
 #Preview {
-    AddListView().withRouter()
+    AddListView().withRouter(selectedIndex: .constant(0))
 }

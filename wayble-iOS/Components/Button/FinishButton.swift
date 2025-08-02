@@ -17,7 +17,9 @@ struct FinishButton: View {
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 12)
+
             .frame(width: 110, height: 44, alignment: .center)
+
             .background(
                 RoundedRectangle(cornerRadius: 24)
                     .fill(Color.blue500)

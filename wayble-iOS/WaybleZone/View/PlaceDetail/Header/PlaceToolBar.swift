@@ -41,5 +41,5 @@ struct PlaceToolbar: View {
     }
 }
 #Preview {
-    PlaceToolbar(onBack: {}, onShare: {}).withRouter()
+    PlaceToolbar(onBack: {}, onShare: {}).withRouter(selectedIndex: .constant(0))
 }

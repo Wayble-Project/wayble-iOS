@@ -58,7 +58,7 @@ struct TopPlaceView: View {
 }
 
 #Preview {
-    TopPlaceView(vm: TopPlaceViewModel()).withRouter()
+    TopPlaceView(vm: TopPlaceViewModel()).withRouter(selectedIndex: .constant(0))
 }
 
 //import SwiftUI

@@ -62,5 +62,5 @@ struct PlaceDetailHeaderView: View {
 }
 
 #Preview {
-    PlaceDetailHeaderView(waybleZone: mockWaybleZoneResponse.data).withRouter()
+    PlaceDetailHeaderView(waybleZone: mockWaybleZoneResponse.data).withRouter(selectedIndex: .constant(0))
 }

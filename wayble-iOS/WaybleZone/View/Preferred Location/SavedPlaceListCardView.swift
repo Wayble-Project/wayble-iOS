@@ -67,5 +67,5 @@ struct SavedPlaceListCardView: View {
 
 
 #Preview {
-    SavedPlaceListCardView(place: mockSavedPlaces[0]).withRouter()
+    SavedPlaceListCardView(place: mockSavedPlaces[0]).withRouter(selectedIndex: .constant(0))
 }

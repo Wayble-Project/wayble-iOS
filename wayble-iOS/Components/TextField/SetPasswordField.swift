@@ -18,6 +18,7 @@ enum PasswordFieldState {
 
 
 //FIXME: - isCheckingMismatch 타입 변경
+//FIXME: - 비밀번호 일치 (불일치해도 형식이 Valid 하면 통과됨 -> 로직 수정
 
 struct SetPasswordField: View {
     @Binding var password: String            // 외부에서 상태 바인딩
@@ -30,7 +31,7 @@ struct SetPasswordField: View {
     var content: String
     var shouldCheckMatch: Bool = true
     
-    private var fieldState: PasswordFieldState {
+    private var fieldState: FieldState {
         if isFocused {
             return .focused
         } else if !isPasswordValid() {
@@ -116,7 +117,7 @@ struct SetPasswordField: View {
     
     
 
-    private func borderColor(for state: PasswordFieldState) -> Color {
+    private func borderColor(for state: FieldState) -> Color {
         switch state {
         case .focused:
             return Color(red: 1/255, green: 32/255, blue: 50/255)
@@ -127,7 +128,7 @@ struct SetPasswordField: View {
     }
 
     // TODO: - 와프 요청해야 함!!
-    private func textColor(for state: PasswordFieldState) -> Color {
+    private func textColor(for state: FieldState) -> Color {
         switch state {
         case .default:
             return Color(red: 150/255, green: 150/255, blue: 150/255) // #969696

@@ -100,5 +100,5 @@ struct EditListView: View {
 }
 
 #Preview {
-    EditListView().withRouter()
+    EditListView().withRouter(selectedIndex: .constant(0))
 }

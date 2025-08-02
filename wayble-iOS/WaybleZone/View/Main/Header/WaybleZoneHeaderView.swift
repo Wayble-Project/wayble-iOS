@@ -39,6 +39,6 @@ struct WaybleZoneHeaderView: View {
 
 
 #Preview {
-    WaybleZoneHeaderView().withRouter()
+    WaybleZoneHeaderView().withRouter(selectedIndex: .constant(0))
 }
 

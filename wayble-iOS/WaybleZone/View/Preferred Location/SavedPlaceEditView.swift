@@ -145,5 +145,5 @@ struct SavedPlaceEditView: View {
 
 #Preview {
     SavedPlaceEditView(savedPlace: mockSavedPlaces[0])
-        .withRouter()
+        .withRouter(selectedIndex: .constant(0))
 }

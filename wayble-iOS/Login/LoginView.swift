@@ -51,7 +51,7 @@ struct LoginView: View {
             .padding(.bottom, 29)
             
             
-            //FIXME: - 이메일 패스워드 텍스트 필드 값 따라 액션 변경
+            //FIXME: - isDisabled 수정
             OkButton(title: "확인", isDisabled: false) {
                 print("확인")
                 router.push(.home)
@@ -162,5 +162,5 @@ struct SNSloginButtonView : View {
 
 #Preview {
     LoginView()
-        .withRouter()
+        .withRouter(selectedIndex: .constant(0))
 }

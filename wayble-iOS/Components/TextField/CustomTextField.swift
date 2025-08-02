@@ -7,25 +7,9 @@
 
 import SwiftUI
 
-//
-//  EmailField.swift
-//  wayble-iOS
-//
-//  Created by 이서현 on 7/12/25.
-//
-
-import SwiftUI
-
-/*
-enum EmailFieldState {
-    case `default`
-    case focused
-    case completed
-    case mismatched
-}
- */
 
 //FIXME: - isCheckingMismatch 타입 변경
+//FIXME: - 에러 메시지 띄우기
 
 struct CustomTextField: View {
     var text: String

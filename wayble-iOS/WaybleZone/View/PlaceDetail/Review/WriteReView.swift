@@ -142,5 +142,5 @@ struct WriteReView: View {
 
 
 #Preview {
-    WriteReView(viewModel: FacilitySelectionViewModel()).withRouter()
+    WriteReView(viewModel: FacilitySelectionViewModel()).withRouter(selectedIndex: .constant(0))
 }

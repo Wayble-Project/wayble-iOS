@@ -7,14 +7,16 @@
 
 
 //FIXME: -파라미터 확인하기
+
+/*
 import Foundation
 import Moya
 
 enum UserRouter {
     case getPerson(email: String) //파라미터 확인
-    case postPerson(userData: UserData)
+    case postPerson(userData: UserData2)
     case patchPerson(patchData: UserPatchRequest)
-    case putPerson(UserData: UserData)
+    case putPerson(UserData: UserData2)
     case deletePerson(email: String) //파라미터 확인
 }
 
@@ -49,3 +51,5 @@ extension UserRouter: APITargetType {
         }
     }
 }
+
+*/

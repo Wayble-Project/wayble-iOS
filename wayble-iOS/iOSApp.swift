@@ -6,12 +6,19 @@
 //
 
 import SwiftUI
+import Observation
+import Foundation
 
 @main
 struct iOSApp: App {
+    @State private var selectedIndex = 0
+    @State var userInfo = UserInfo()
+    
+
     var body: some Scene {
         WindowGroup {
-          MainView().withRouter()
+            WalkingView()
+
         }
     }
 }

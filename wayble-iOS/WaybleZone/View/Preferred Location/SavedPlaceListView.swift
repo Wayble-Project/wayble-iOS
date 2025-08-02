@@ -87,5 +87,5 @@ struct SavedPlaceListView: View {
 
 
 #Preview {
-    SavedPlaceListView(collections: mockSavedPlaces).withRouter()
+    SavedPlaceListView(collections: mockSavedPlaces).withRouter(selectedIndex: .constant(0))
 }
