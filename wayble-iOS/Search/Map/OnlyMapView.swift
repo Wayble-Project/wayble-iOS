@@ -19,7 +19,7 @@ struct OnlyMapView: View {
     @State private var placeRoadAddress: String = ""
     @State private var placeCategory: String = ""
 
-    @StateObject private var locationManager = LocationManager()
+    let locationManager = LocationManager.shared
     struct MapCenter: Equatable {
         var latitude: Double
         var longitude: Double
@@ -110,15 +110,14 @@ struct OnlyMapView: View {
             #endif
         }
         .onChange(of: viewModel.selectedPlace) { newPlace in
-            guard let place = newPlace, place != self.place else { return }
+            guard newPlace != self.place else { return }
 
             DispatchQueue.main.async {
-                self.place = place
-                self.placeTitle = place.title
-                self.placeRoadAddress = place.roadAddress
-                self.placeCategory = place.category.components(separatedBy: ">").last ?? place.category
-            }
-        }
+                self.place = newPlace
+                self.placeTitle = newPlace.title
+                self.placeRoadAddress = newPlace.roadAddress
+                self.placeCategory = newPlace.category.components(separatedBy: ">").last ?? newPlace.category
+            }        }
     }
 }
 

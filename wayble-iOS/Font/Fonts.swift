@@ -145,5 +145,8 @@ extension Font{
     static var mainTextSemibold11: Font {
         return .pretend(type: .semibold, size: 11)
     }
+    static var mainTextSemibold9: Font {
+        return .pretend(type: .semibold, size: 9)
+    }
 
 }

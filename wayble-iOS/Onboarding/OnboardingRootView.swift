@@ -44,5 +44,5 @@ struct OnboardingRootView: View {
 
 #Preview {
     OnboardingRootView()
-        .withRouter(selectedIndex: .constant(0))
+        .withRouter(selectedIndex: .constant(0),router: NavigationRouter())
 }

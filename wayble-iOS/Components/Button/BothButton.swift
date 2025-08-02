@@ -46,5 +46,5 @@ struct BothButton: View {
     }
 
     return PreviewWrapper()
-        .withRouter(selectedIndex: .constant(0))
+        .withRouter(selectedIndex: .constant(0),router: NavigationRouter())
 }

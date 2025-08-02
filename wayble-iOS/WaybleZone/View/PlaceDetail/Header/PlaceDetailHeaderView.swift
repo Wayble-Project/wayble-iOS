@@ -1,11 +1,16 @@
 import SwiftUI
+import Foundation
 
 struct PlaceDetailHeaderView: View {
     let waybleZone: WaybleZone
     
     let isOpen = true
+    @Environment(NavigationRouter.self) private var router
+    let locationManager = LocationManager.shared
+    let place: PlaceModel
 
     var body: some View {
+
         PlaceToolbar(onBack: {}, onShare: {}).padding(.bottom, 8)
         
         ZStack(alignment: .top) {
@@ -54,13 +59,34 @@ struct PlaceDetailHeaderView: View {
         
         HStack(spacing:10) {
             StartButton()
-            FinishButton()
+            FinishButton {
+                locationManager.requestLocation { coordinate in
+                    if let coord = coordinate {
+                        let departure = PlaceModel(
+                            title: "현재 위치",
+                            roadAddress: "",
+                            x: "\(coord.longitude)",
+                            y: "\(coord.latitude)",
+                            category: "기타"
+                        )
+                        router.push(
+                            .transportation(
+                                entryType: .destination,
+                                selectedArrival: place,
+                                selectedDeparture: departure
+                            )
+                        )
+                    } else {
+                        print("현재 위치 가져오기 실패")
+                    }
+                }
+            }
         }.padding(.vertical, 20)
         
         Divider()
     }
 }
 
-#Preview {
-    PlaceDetailHeaderView().withRouter(selectedIndex: .constant(0))
-}
+//#Preview {
+  //  PlaceDetailHeaderView().withRouter(selectedIndex: .constant(0))
+//}

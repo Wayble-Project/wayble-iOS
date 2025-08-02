@@ -5,15 +5,32 @@
 //  Created by 신민정 on 7/13/25.
 //
 
+import Foundation
 import SwiftUI
+import CoreLocation
+
+enum EntryType {
+    case departure
+    case destination
+}
 
 struct Transportation: View {
-    var onBack: (() -> Void)? = nil
-    @StateObject var viewModel = TransportationViewModel()
+    @Binding var selectedIndex: Int
+    @State private var searchBarViewID = UUID()
+    @Environment(NavigationRouter.self) private var router
     @State private var showDetail: Bool = false
+    var entryType: EntryType
+    @Binding var selectedArrival: PlaceModel?
+    @Binding var selectedDeparture: PlaceModel?
+    var onBack: (() -> Void)? = nil
+    
+    var viewModel: TransportationViewModel
+    @Binding var searchViewModel: SearchViewModel
+    var transportation: TransportationModel
     
     var body: some View {
         VStack(spacing: 0) {
+            
             // 파란 헤더 (출발/도착/엑스버튼)
             VStack(spacing: 0) {
                 HStack(alignment: .top) {
@@ -29,13 +46,19 @@ struct Transportation: View {
                     
                     Spacer()
                         .frame(width: 5)
+                    
                     VStack(spacing: 0) {
-                        HStack(alignment: .center) {
-                            Text(viewModel.transportation.departure)
-                                .foregroundStyle(Color("darkblue-500"))
-                                .font(.mainTextSemibold14)
-                            
-                            Spacer()
+                        Button(action: {
+                            searchViewModel.entryType = .departure  // ✅ 출발지 클릭
+                            searchBarViewID = UUID()
+                            selectedIndex = 5
+                        })  {
+                            HStack(alignment: .center) {
+                                Text(selectedDeparture?.title.htmlStripped ?? "출발지 없음")
+                                    .foregroundStyle(Color("darkblue-500"))
+                                    .font(.mainTextSemibold14)
+                                Spacer()
+                            }
                         }
                         .padding(.horizontal, 20)
                         .frame(width: 269, height: 51)
@@ -47,11 +70,17 @@ struct Transportation: View {
                                 .stroke(Color.gray200, lineWidth: 1)
                         )
                         
-                        HStack() {
-                            Text(viewModel.transportation.destination)
-                                .foregroundStyle(Color("darkblue-500"))
-                                .font(.mainTextSemibold14)
-                            Spacer()
+                        Button(action: {
+                            searchViewModel.entryType = .destination  // ✅ 도착지 클릭
+                            searchBarViewID = UUID()
+                            selectedIndex = 5
+                        }) {
+                            HStack() {
+                                Text(selectedArrival?.title.htmlStripped ?? "")
+                                    .foregroundStyle(Color("darkblue-500"))
+                                    .font(.mainTextSemibold14)
+                                Spacer()
+                            }
                         }
                         .padding(.horizontal, 20)
                         .frame(width: 269, height: 51)
@@ -105,7 +134,6 @@ struct Transportation: View {
                                 Rectangle()
                                     .frame(width: 130, height: 2)
                                     .foregroundColor(viewModel.transportation.selectedTab == tab ? .black : .clear)
-                                
                             }
                             .frame(maxWidth: .infinity)
                         }
@@ -131,9 +159,50 @@ struct Transportation: View {
                 RouteDetail(onBack: { showDetail = false })
             } else {
                 if viewModel.transportation.selectedTab == .walking {
-                    WalkingView() // 도보 탭일 때 
+                    if let start = selectedDeparture, let end = selectedArrival,
+                       let startX = Double(start.x ?? ""), let startY = Double(start.y ?? ""),
+                       let endX = Double(end.x ?? ""), let endY = Double(end.y ?? "") {
+                        
+                        let distance = CLLocation(latitude: startY, longitude: startX)
+                            .distance(from: CLLocation(latitude: endY, longitude: endX))
+                        
+                        if distance > 30000 {
+                            longView()
+                        } else {
+                            WalkingView(viewModel: viewModel.walkViewModel)
+                        }
+                    } else {
+                        WalkingView(viewModel: viewModel.walkViewModel)
+                    }
                 } else {
                     RouteView(onRouteSelected: { showDetail = true })
+                }
+            }
+        }
+        .onAppear {
+            
+            if selectedDeparture == nil {
+                LocationManager.shared.requestLocation { coordinate in
+                    guard let coordinate = coordinate else { return }
+
+                    Task {
+                        do {
+                            let (title, roadAddress) = try await SearchViewModel.shared.callReverseGeocodeAPI(
+                                lat: coordinate.latitude,
+                                lng: coordinate.longitude
+                            )
+
+                            selectedDeparture = PlaceModel(
+                                title: title,
+                                roadAddress: roadAddress,
+                                x: String(coordinate.longitude),
+                                y: String(coordinate.latitude)
+                            )
+                            print(" 현재 위치 기반 출발지 설정 완료: \(title)")
+                        } catch {
+                            print("역지오코딩 실패: \(error.localizedDescription)")
+                        }
+                    }
                 }
             }
         }
@@ -141,6 +210,14 @@ struct Transportation: View {
 }
 
 #Preview {
-    Transportation()
-        .environment(NavigationRouter())
+    Transportation(
+        selectedIndex: .constant(0),
+        entryType: .departure,
+        selectedArrival: .constant(nil),
+        selectedDeparture: .constant(nil),
+        viewModel: TransportationViewModel(),
+        searchViewModel: .constant(SearchViewModel.shared),
+        transportation: SearchViewModel.shared.transportation
+    )
+    .environment(NavigationRouter())
 }

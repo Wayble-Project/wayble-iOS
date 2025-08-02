@@ -39,5 +39,5 @@ struct SearchBar: View {
 
 
 #Preview {
-    SearchBar().withRouter(selectedIndex: .constant(0))
+    SearchBar().withRouter(selectedIndex: .constant(0),router: NavigationRouter())
 }

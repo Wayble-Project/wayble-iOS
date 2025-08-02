@@ -39,11 +39,13 @@ struct SearchRow: View {
 
 struct SearchBarView: View {
     @Environment(NavigationRouter.self) private var router
-    @State private var viewModel = SearchViewModel()
+    @Bindable var viewModel: SearchViewModel
     @FocusState private var isFocused: Bool
-    
+    @State private var mapDetailViewID = UUID()
+    @Binding var place: PlaceModel
     @Binding var selectedIndex: Int
-    var entryPoint: EntryPoint
+    var entryPoint: EntryPoint = .directions
+    var entryType: EntryType? = nil // 출발/도착 구분 필요 시만 사용
     
     var body: some View {
         
@@ -56,9 +58,9 @@ struct SearchBarView: View {
                         withAnimation(.easeInOut(duration: 0.3)) {
                             switch entryPoint {
                             case .home:
-                                selectedIndex = 0
+                                $selectedIndex.wrappedValue = 0
                             case .directions:
-                                selectedIndex = 3
+                                $selectedIndex.wrappedValue = 3
                             }
                         }
                     }) {
@@ -82,10 +84,12 @@ struct SearchBarView: View {
                             .focused($isFocused)
                     }
                     .onTapGesture {
-                        isFocused = true // 빈공간 눌러도 텍스트 서치 가능 
+                        isFocused = true // 빈공간 눌러도 텍스트 서치 가능
                     }
                     .onChange(of: viewModel.searchText) { newValue in
-                        viewModel.fetchNaverSuggestions(for: newValue)
+                        Task {
+                            try? await viewModel.fetchNaverSuggestions(for: newValue)
+                        }
                     }
                     
                     Spacer()
@@ -106,7 +110,7 @@ struct SearchBarView: View {
                 
                 //누르면 지도 펼쳐짐
                 Button(action: {
-                    selectedIndex = 6
+                    $selectedIndex.wrappedValue = 6
                 }) {
                     Image("map02")
                         .padding(.horizontal, 12)
@@ -218,7 +222,8 @@ struct SearchBarView: View {
                 .frame(height: 3)
                 .foregroundStyle(Color.gray300)
 
-            ForEach(Array(viewModel.suggestions.prefix(4).enumerated()), id: \.element.id) { index, place in
+            let suggestions = Array(viewModel.suggestions.prefix(4).enumerated())
+            ForEach(suggestions, id: \.element.id) { index, place in
                 VStack(alignment: .leading, spacing: 9.5) {
                     HStack(spacing: 11) {
                         Image("marker")
@@ -243,8 +248,15 @@ struct SearchBarView: View {
                 .padding(.bottom, 17)
                 .padding(.horizontal, 20)
                 .onTapGesture {
+                    print("선택한 장소: \(place.title), x: \(place.x ?? "nil"), y: \(place.y ?? "nil")")
                     viewModel.selectedPlace = place
-                    router.push(.mapDetail(place: place))
+                    self.place = place 
+                    self.mapDetailViewID = UUID()
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        $selectedIndex.wrappedValue = 8
+                        print("✅ selectedIndex set to 8")
+                    }
                 }
             }
         }
