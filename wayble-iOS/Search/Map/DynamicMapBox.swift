@@ -6,9 +6,11 @@
 //
 
 import SwiftUI
-
+import Foundation
 
 struct DynamicMapBoxView: View {
+    @Environment(NavigationRouter.self) private var router
+    let locationManager = LocationManager.shared
     let place: PlaceModel
     @Binding var title: String
     @Binding var roadAddress: String
@@ -50,7 +52,28 @@ struct DynamicMapBoxView: View {
                HStack {
                    HStack(spacing: 10) {
                         StartButton()
-                        FinishButton()
+                       FinishButton {
+                           locationManager.requestLocation { coordinate in
+                               if let coord = coordinate {
+                                   let departure = PlaceModel(
+                                       title: "현재 위치",
+                                       roadAddress: "",
+                                       x: "\(coord.longitude)",
+                                       y: "\(coord.latitude)",
+                                       category: "기타"
+                                   )
+                                   router.push(
+                                       .transportation(
+                                           entryType: .destination,
+                                           selectedArrival: place,
+                                           selectedDeparture: departure
+                                       )
+                                   )
+                               } else {
+                                   print("현재 위치 가져오기 실패")
+                               }
+                           }
+                       }
                     }
                     Spacer()
                 }

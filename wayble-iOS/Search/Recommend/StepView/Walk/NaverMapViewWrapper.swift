@@ -9,42 +9,42 @@ import SwiftUI
 import NMapsMap
 
 struct NaverMapViewWrapper: UIViewRepresentable {
-    var lat: Double
-    var lng: Double
+    var route: RouteData
     func makeUIView(context: Context) -> NMFMapView {
         let mapView = NMFMapView()
+        
 
-        let start = SampleRoute.path.first!
-        let end = SampleRoute.path.last!
+        let start = route.path.first!
+        let end = route.path.last!
         let center = NMGLatLng(lat: (start.lat + end.lat) / 2, lng: (start.lng + end.lng) / 2)
         let zoom = calculateZoomLevel(start: start, end: end)
         let cameraPosition = NMFCameraPosition(center, zoom: zoom, tilt: 0, heading: 0)
         let cameraUpdate = NMFCameraUpdate(position: cameraPosition)
         mapView.moveCamera(cameraUpdate)
 
-        // ✅ 출발/도착 마커
-        addMarker(imageName: "start2", position: SampleRoute.path.first!, mapView: mapView)
-        addMarker(imageName: "fin2", position: SampleRoute.path.last!, mapView: mapView)
+        // 출발/도착 마커
+        addMarker(imageName: "start2", position: route.path.first!, mapView: mapView)
+        addMarker(imageName: "fin2", position: route.path.last!, mapView: mapView)
 
-        // ✅ 휠체어 마커
-        for point in SampleRoute.wheelchairPoints {
+        // 휠체어 마커
+        for point in route.wheelchairPoints ?? [] {
             addMarker(imageName: "icon1", position: point, mapView: mapView)
         }
 
-        // ✅ 엘리베이터 마커
-        for point in SampleRoute.elevatorPoints {
+        // 엘리베이터 마커
+        for point in route.elevatorPoints ?? [] {
             addMarker(imageName: "icon2", position: point, mapView: mapView)
         }
 
-        // 1. Solid base line (blue-700)
+        // 경로 그리기
         let pathOverlay = NMFPath()
-        pathOverlay.path = NMGLineString(points: SampleRoute.path)
-        pathOverlay.width = 15
-        pathOverlay.color = UIColor(named: "blue-700") ?? .systemBlue
+        pathOverlay.path = NMGLineString(points: route.path)
+        pathOverlay.width = 12
+        pathOverlay.color = route.lineColor
+        pathOverlay.patternIcon = NMFOverlayImage(name: "dot")
+        pathOverlay.patternInterval = 4
         pathOverlay.outlineColor = .white
         pathOverlay.outlineWidth = 2
-        pathOverlay.patternIcon = NMFOverlayImage(name: "")
-        pathOverlay.patternInterval = 30
         pathOverlay.mapView = mapView
 
         return mapView
@@ -75,8 +75,6 @@ struct NaverMapViewWrapper: UIViewRepresentable {
 }
 #Preview {
     NaverMapViewWrapper(
-        lat: SampleRoute.path.first!.lat,
-        lng: SampleRoute.path.first!.lng
-        // zoomLevel 생략해도 자동으로 20!
+        route: SampleRoutes.wayble
     )
 }

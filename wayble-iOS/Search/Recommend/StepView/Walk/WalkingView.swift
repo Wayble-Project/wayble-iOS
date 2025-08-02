@@ -8,16 +8,40 @@
 import SwiftUI
 
 struct WalkingView: View {
+    @Bindable var viewModel: WalkViewModel
     var body: some View {
-        ZStack {
-            NaverMapViewWrapper(lat: SampleRoute.path.first!.lat,
-                                lng: SampleRoute.path.first!.lng)
+        
+        ZStack(alignment: .bottom) {
+            NaverMapViewWrapper(route: viewModel.selectedRoute)
+                .id(viewModel.mapRefreshTrigger)
                 .edgesIgnoringSafeArea(.all)
+                
 
-          
+            VStack {
+                Spacer()
+                HStack(spacing: 12) {
+                    ForEach(viewModel.routes) { route in
+                        WalkBox(
+                            route: route,
+                            onTap: {
+                                print("✅ \(route.title) 선택됨")
+                                viewModel.selectRoute(route)
+                            },
+                            isSelected: .constant(viewModel.selectedRoute.title == route.title)
+                        )
+                    }
+                }
+                
+                .padding(.bottom, 56)
+                
+            }
+         
+            
         }
     }
 }
+
+
 #Preview {
-    WalkingView()
+    WalkingView(viewModel: WalkViewModel())
 }

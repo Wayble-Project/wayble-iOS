@@ -1,3 +1,4 @@
+
 //  wayble-iOS
 //
 //  Created by 햄무 on 7/12/25.
@@ -11,32 +12,31 @@ struct RouterViewModifier: ViewModifier {
     @State private var router = NavigationRouter()
     @Bindable var signupViewModel: SignupViewModel
     @Bindable var onboardingViewModel: OnboardingViewModel
-
+    
+    @State private var searchViewModel = SearchViewModel()
+    @State private var place: PlaceModel = PlaceModel()
+    
+    
     private func routeView(for route: Route) -> some View {
-        
         switch route {
         case .home:
             return AnyView(HomeView(selectedIndex: $selectedIndex)
                 .navigationBarBackButtonHidden(true))
+            
+            
         case .signupEmail:
             return AnyView(SignupEmailView(viewModel: signupViewModel, selectedIndex: $selectedIndex)
                 .navigationBarBackButtonHidden(true))
+            
         case .findPassword:
             return AnyView(findPasswordView()
                 .navigationBarBackButtonHidden(true))
+            
         case .login:
             return AnyView(LoginView(selectedIndex: $selectedIndex))
+            
         case .wayblezone:
             return AnyView(WaybleZoneMainView(vm: TopPlaceViewModel())
-                .navigationBarBackButtonHidden(true))
-        case .waybleZoneSearch:
-            return AnyView(WaybleZoneSearchView()
-                .navigationBarBackButtonHidden(true))
-        case .placeDetailView:
-            return  AnyView(PlaceDetailView()
-                .navigationBarBackButtonHidden(true))
-        case .writeReview:
-            return AnyView(WriteReView(viewModel: FacilitySelectionViewModel())
                 .navigationBarBackButtonHidden(true))
             
         case .onboardingCompleted:
@@ -51,18 +51,6 @@ struct RouterViewModifier: ViewModifier {
             return AnyView(SearchHomeView(selectedIndex: $selectedIndex)
                 .navigationBarBackButtonHidden(true))
             
-        case .searchBar:
-            return AnyView(SearchBarView(selectedIndex: $selectedIndex, entryPoint: .directions)
-                .navigationBarBackButtonHidden(true))
-            
-        case .OnlyMapView:
-            return AnyView(SearchBarView(selectedIndex: $selectedIndex, entryPoint: .directions)
-                .navigationBarBackButtonHidden(true))
-            
-        case .mapDetail(let place):
-                return AnyView(MapDetailView(place: place, selectedIndex: $selectedIndex,searchBarViewID: .constant(UUID()))
-                    .navigationBarBackButtonHidden(true))
-        
         case .splashView:
             return AnyView(SplashView(selectedIndex: $selectedIndex)
                 .navigationBarBackButtonHidden(true))
@@ -74,12 +62,97 @@ struct RouterViewModifier: ViewModifier {
         case .onboardingRoot:
             return AnyView(OnboardingRootView(viewModel: onboardingViewModel, selectedIndex: $selectedIndex)
                 .navigationBarBackButtonHidden(true))
-        
+            
         case .signupTerm:
             return AnyView(SignupTermsView(selectedIndex: $selectedIndex)
                 .navigationBarBackButtonHidden(true))
+            
+        case .waybleZoneSearch:
+            return AnyView(WaybleZoneSearchView()
+                .navigationBarBackButtonHidden(true))
+            
+        //TODO: - 여기 에러 나서 잡긴 했는데 흠.. 제대로 수정된 건진 모르겠습니다...
+        
+        /*case .placeDetailView(let zone): // let zone 넣고
+            return  AnyView(PlaceDetailView(zone: zone) //여기에 zone 넣었어요..
+                .navigationBarBackButtonHidden(true))
+         */
+            /// NavigationRouter 에 case placeDetailView 를 case placeDetailView(let zone)으로 넣음
+            /// 그리고 RouterViewModifier 에 있는 case .placeDetailView(안에 let zone) 넣고 파라미터로 zone: zone 넣음
+            
+            
+        case .writeReview:
+            return AnyView(WriteReView(viewModel: FacilitySelectionViewModel())
+                .navigationBarBackButtonHidden(true))
+            
+        case let .searchBar(entryType):
+            return AnyView(
+                SearchBarView(
+                    viewModel: searchViewModel,
+                    place: $place,
+                    selectedIndex: $selectedIndex,
+                    entryPoint: .directions,
+                    entryType: entryType
+                )
+                .navigationBarBackButtonHidden(true)
+            )
+            /*
+             case .searchBar:
+             return AnyView(SearchBarView(selectedIndex: $selectedIndex, entryPoint: .directions)
+             .navigationBarBackButtonHidden(true))
+             */
+            
+        case .OnlyMapView:
+            return AnyView(
+                SearchBarView(
+                    viewModel: searchViewModel, place: $place,
+                    selectedIndex: $selectedIndex,
+                    entryPoint: .directions
+                )
+                .navigationBarBackButtonHidden(true)
+            )
+            /*
+             case .OnlyMapView:
+             return AnyView(SearchBarView(selectedIndex: $selectedIndex, entryPoint: .directions)
+             .navigationBarBackButtonHidden(true))
+             */
+            
+        case .mapDetail:
+            return AnyView(
+                MapDetailView(
+                    place: place,
+                    selectedIndex: $selectedIndex,
+                    searchBarViewID: .constant(UUID()),
+                    selectedDeparture: .constant(nil),
+                    selectedArrival: .constant(nil)
+                )
+                .navigationBarBackButtonHidden(true)
+            )
+            /*
+             case .mapDetail(let place):
+             return AnyView(MapDetailView(place: place, selectedIndex: $selectedIndex,searchBarViewID: .constant(UUID()))
+             .navigationBarBackButtonHidden(true))
+             
+             */
+            
+        case .transportation(let entryType, let arrivalPlace, let departurePlace):
+            return AnyView(
+                Transportation(
+                    selectedIndex: $selectedIndex,
+                    entryType: entryType,
+                    selectedArrival: .constant(arrivalPlace),
+                    selectedDeparture: .constant(departurePlace),
+                    viewModel: TransportationViewModel(),
+                    searchViewModel: $searchViewModel,
+                    transportation: searchViewModel.transportation
+                )
+                .navigationBarBackButtonHidden(true)
+            )
+            
+            
         }
     }
+    
     
     func body(content: Content) -> some View {
         NavigationStack(path: $router.path) {
@@ -93,10 +166,27 @@ struct RouterViewModifier: ViewModifier {
 }
 
 extension View {
-    func withRouter(selectedIndex: Binding<Int>, signupViewModel: SignupViewModel = SignupViewModel(), onboardingViewModel: OnboardingViewModel = OnboardingViewModel()) -> some View {
-        modifier(RouterViewModifier(selectedIndex: selectedIndex, signupViewModel: signupViewModel, onboardingViewModel: onboardingViewModel))
+    func withRouter(
+        selectedIndex: Binding<Int>,
+        router: NavigationRouter = NavigationRouter(),
+        signupViewModel: SignupViewModel = SignupViewModel(),
+        onboardingViewModel: OnboardingViewModel = OnboardingViewModel()
+    ) -> some View {
+        self
+            .modifier(RouterViewModifier(
+                selectedIndex: selectedIndex,
+                signupViewModel: signupViewModel,
+                onboardingViewModel: onboardingViewModel
+            ))
+            .environment(router)
+            .navigationDestination(for: Route.self) { route in
+                RouterViewModifier(
+                    selectedIndex: selectedIndex,
+                    signupViewModel: signupViewModel,
+                    onboardingViewModel: onboardingViewModel
+                ).destination(for: route)
+            }
     }
-     
 }
 
 
@@ -107,8 +197,8 @@ extension RouterViewModifier {
     }
 }
 
-
 //dummy
 struct WaybleZoneView: View {
     var body: some View { Text("WaybleZone") }
 }
+

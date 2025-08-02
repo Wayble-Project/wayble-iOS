@@ -10,7 +10,7 @@ import SwiftUI
 struct RouteDetail: View {
     var onBack: (() -> Void)? = nil
     @Environment(\.dismiss) private var dismiss
-    @StateObject var viewModel = TransportationViewModel()
+    @Bindable var viewModel = TransportationViewModel()
     @State private var isSimpleMode = false
     
     var body: some View {

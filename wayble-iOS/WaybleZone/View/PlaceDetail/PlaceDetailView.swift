@@ -1,14 +1,29 @@
 import SwiftUI
 
 struct PlaceDetailView: View {
-    @Bindable private var vm = PlaceDetailViewModel()
+    @Bindable private var vm: PlaceDetailViewModel
+
+    init(zone: WaybleZone) {
+        let vm = PlaceDetailViewModel()
+        vm.waybleZone = zone
+        self.vm = vm
+    }
     
     var body: some View {
         ScrollView {
             VStack() {
                 
                 if let zone = vm.waybleZone {
-                    PlaceDetailHeaderView(waybleZone: zone)
+                    PlaceDetailHeaderView(
+                        waybleZone: zone,
+                        place: PlaceModel(
+                            title: zone.name,
+                            roadAddress: zone.address,
+                            x: "\(zone.longitude)",  // ← 실제 좌표
+                            y: "\(zone.latitude)",
+                            category: zone.category
+                        )
+                    )
                     PlaceInfoView(waybleZone: zone)
                     PlaceReView(reviews: vm.reviews)
                 } else {
@@ -27,8 +42,10 @@ struct PlaceDetailView: View {
     }
 }
 
+
 /*
 #Preview {
     PlaceDetailView().withRouter(selectedIndex: .constant(0))
 }
 */
+

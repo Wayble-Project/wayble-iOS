@@ -9,7 +9,7 @@ import SwiftUI
 
 struct BusStepView: View {
     let step: RouteStep
-    @StateObject var viewModel = TransportationViewModel()
+    @Bindable var viewModel = TransportationViewModel()
     @State private var isSimpleMode = false
     
     var body: some View {

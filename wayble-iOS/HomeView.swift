@@ -12,6 +12,9 @@ import AVKit
 
 
 struct HomeView: View {
+    @Bindable var WaybleviewModel = FacilitySelectionViewModel()
+    @State private var selectedArrival: PlaceModel? = nil
+    @State private var selectedDeparture: PlaceModel? = nil
     @Binding var selectedIndex: Int
     @Environment(NavigationRouter.self) private var router
     @Bindable var viewModel = OnboardingViewModel()
@@ -32,7 +35,7 @@ struct HomeView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 30))
                     
                 }
-                .frame(width: 350, height: 343)
+                .frame(width: 360, height: 343)
                 
                 VStack(alignment: .leading,spacing: 0) {
                     
@@ -58,36 +61,83 @@ struct HomeView: View {
                                     .font(.mainTextSemibold24)
                             )
                         }
-                        .padding(.horizontal,30)
+                        .padding(.horizontal,25)
+                        
                         
                         Spacer()
                             .frame(height:6)
                         
                         // 아이콘 웨이블존 껄로 다시
-                        HStack(spacing: 0) {
-                            ForEach(0..<5) { _ in
+                        let facilityItems = FacilityUtils.cardFacilityItems(from: WaybleviewModel.facilities)
+
+                        HStack(spacing: 32) {
+                            ForEach(facilityItems, id: \.label) { item in
                                 VStack(spacing: 5.6) {
-                                    Image("chair01") // 임시 아이콘
+                                    Image(item.icon)
+                                        .renderingMode(.template)
+                                        .resizable()
                                         .frame(width: 23, height: 23)
-                                    Text("경사로")
-                                        .font(.mainTextSemibold11)
+                                        .foregroundStyle(item.isAvailable ? Color("blue-800") : Color("gray-500"))
+
+                                    Text(item.label)
+                                        .font(.mainTextSemibold9)
+                                        .lineLimit(1)
+                                        .foregroundStyle(item.isAvailable ? Color("blue-800") : Color("gray-500"))
                                 }
-                                .frame(maxWidth: .infinity)
                             }
-                            
                         }
+                        .padding(.leading, 25)
                         
                         
                     }
                     
                     
                     Spacer()
-                        .frame(height:154)
+                        .frame(height:163)
                     
                     HStack() {
                         Button(action: {
-                            withAnimation(.default){
-                                selectedIndex = 3
+                            withAnimation(.default) {
+                                let zone = WaybleviewModel.mockZone
+
+                                let arrival = PlaceModel(
+                                    title: selectedDeparture?.title ?? zone.name,
+                                    roadAddress: zone.address,
+                                    x: "\(zone.longitude)",
+                                    y: "\(zone.latitude)",
+                                    category: zone.category
+                                )
+
+                                LocationManager.shared.requestLocation { coordinate in
+                                    guard let coordinate = coordinate else { return }
+
+                                    Task {
+                                        do {
+                                            let (title, roadAddress) = try await SearchViewModel.shared.callReverseGeocodeAPI(
+                                                lat: coordinate.latitude,
+                                                lng: coordinate.longitude
+                                            )
+
+                                            let departure = PlaceModel(
+                                                title: title,
+                                                roadAddress: roadAddress,
+                                                x: "\(coordinate.longitude)",
+                                                y: "\(coordinate.latitude)",
+                                                category: "기타"
+                                            )
+
+                                            router.push(
+                                                .transportation(
+                                                    entryType: .destination,
+                                                    selectedArrival: arrival,
+                                                    selectedDeparture: departure
+                                                )
+                                            )
+                                        } catch {
+                                            print("❌ 역지오코딩 실패: \(error)")
+                                        }
+                                    }
+                                }
                             }
                         }) {
                             HStack(spacing: 0) {
@@ -105,12 +155,11 @@ struct HomeView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 20))
                         }
                         .buttonStyle(.plain)
-                   
                     }
                     .padding(.leading, 20)
                     
                     Spacer()
-                        .frame(height: 59)
+                        .frame(height: 45)
 
                     HStack(spacing: 10) {
                         Button(action: {withAnimation(.default){
@@ -178,15 +227,32 @@ struct HomeView: View {
                     Spacer()
                 }
             }
-            .padding(.horizontal,10)
+            .padding(.horizontal,5)
         }
         .padding(.horizontal,20)
         .padding(.top, 12)
+        .onAppear {
+            WaybleviewModel.loadMockData()
+        }
     }
       
 }
 
 #Preview {
     HomeView(selectedIndex: .constant(0))
-        .withRouter(selectedIndex: .constant(0))
+        .withRouter(selectedIndex: .constant(0),router: NavigationRouter())
+}
+
+// MARK: - Facilities Extension
+extension Facilities {
+    func value(for option: FacilityOption) -> Bool {
+        switch option {
+        case .hasSlope: return hasSlope
+        case .hasNoDoorStep: return hasNoDoorStep
+        case .hasElevator: return hasElevator
+        case .hasTableSeat: return hasTableSeat
+        case .hasDisabledToilet: return hasDisabledToilet
+        default: return false
+        }
+    }
 }

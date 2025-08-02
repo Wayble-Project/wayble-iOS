@@ -23,7 +23,7 @@ struct OnlyMapView: View {
     @State private var placeRoadAddress: String = ""
     @State private var placeCategory: String = ""
 
-    @StateObject private var locationManager = LocationManager()
+    let locationManager = LocationManager.shared
     struct MapCenter: Equatable {
         var latitude: Double
         var longitude: Double
@@ -116,16 +116,26 @@ struct OnlyMapView: View {
         }
          */
         .onChange(of: viewModel.selectedPlace) { newPlace in
-            guard let place = newPlace, place != self.place else { return }
-
+            guard newPlace != self.place else { return }
+            
             DispatchQueue.main.async {
-                self.place = place
-                self.placeTitle = place.title
-                self.placeRoadAddress = place.roadAddress
-                self.placeCategory = place.category.components(separatedBy: ">").last ?? place.category
+                /*
+                 <<<<<<< HEAD
+                 self.place = place
+                 self.placeTitle = place.title
+                 self.placeRoadAddress = place.roadAddress
+                 self.placeCategory = place.category.components(separatedBy: ">").last ?? place.category
+                 }
+                 }
+                 // TODO: - 둘 중에 어떤 코드가 최신인지 몰라서 살려둠
+                 =======
+                 */
+                self.place = newPlace
+                self.placeTitle = newPlace.title
+                self.placeRoadAddress = newPlace.roadAddress
+                self.placeCategory = newPlace.category.components(separatedBy: ">").last ?? newPlace.category
             }
         }
-
     }
 }
 

@@ -74,7 +74,7 @@ struct SearchHomeView: View {
             .buttonStyle(PlainButtonStyle())
 
             Spacer()
-                .frame(height:84)
+                .frame(height:80)
             GeometryReader { geo in
                 MP4View(filename: "Search", fileExtension: "mp4", size: geo.size)
                     .frame(height: 479)
@@ -82,13 +82,12 @@ struct SearchHomeView: View {
                     .clipped()
             }
             .frame(height: 479)
-                
-
         }
+       
     }
 }
 
 #Preview {
     SearchHomeView(selectedIndex: .constant(0))
-        .withRouter(selectedIndex: .constant(0))
+        .withRouter(selectedIndex: .constant(0),router: NavigationRouter())
 }

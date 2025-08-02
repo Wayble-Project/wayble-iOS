@@ -10,7 +10,7 @@ import SwiftUI
 
 struct RouteView: View {
     var onRouteSelected: (() -> Void)? = nil
-    @StateObject var viewModel = TransportationViewModel()
+    @Bindable var viewModel = TransportationViewModel()
     @Environment(NavigationRouter.self) var router
     
     var body: some View {

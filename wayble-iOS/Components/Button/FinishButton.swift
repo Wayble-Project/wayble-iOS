@@ -8,8 +8,12 @@
 import SwiftUI
 
 struct FinishButton: View {
+    var onTap: () -> Void
+
     var body: some View {
-        Button(action : {}) {
+        Button(action: {
+            onTap()
+        }) {
             HStack(alignment: .center) {
                 Text("도착")
                     .font(.mainTextSemibold16)
@@ -30,5 +34,10 @@ struct FinishButton: View {
 }
 
 #Preview {
-    FinishButton()
+    FinishButton {
+        // 예시 호출
+        let lat = 37.5665
+        let lng = 126.9780
+        SearchViewModel().handleCenterChanged(lat: lat, lng: lng)
+    }
 }

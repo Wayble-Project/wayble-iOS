@@ -68,6 +68,7 @@ struct OnboardingCompletedView: View {
 }
 
 
+
  #Preview {
     struct PreviewWrapper: View {
         @State var selectedIndex = 0

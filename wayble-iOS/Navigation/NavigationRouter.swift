@@ -39,17 +39,21 @@ enum Route: Hashable {
     case login
     case wayblezone
     case waybleZoneSearch
-    case placeDetailView
+    //case placeDetailView(WaybleZone) // git 수정
     case writeReview
     case onboardingCompleted
     case routeDetail
     case searchHome
-    case searchBar
+    case searchBar(entryType: EntryType)
     case mapDetail(place: PlaceModel)
     case OnlyMapView
     case splashView
     case signupCompleted
     case onboardingRoot
     case signupTerm
-    
+    case transportation(
+        entryType: EntryType,
+        selectedArrival: PlaceModel?,
+        selectedDeparture: PlaceModel?
+    )
 }
