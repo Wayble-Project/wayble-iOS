@@ -2,7 +2,7 @@
 import SwiftUI
 
 struct TopPlaceCard: View {
-    let zone: WaybleZone
+    let zone: FavWaybleZoneInfo
   //  let rank: rank
     
     var body: some View {
@@ -13,7 +13,7 @@ struct TopPlaceCard: View {
                     .font(.mainTextSemibold14)
                     .foregroundStyle(Color("gray-900"))
 
-                Image(zone.imageUrl)
+                Image(zone.imageUrl ?? "something")
                     .resizable()
                     .scaledToFill()
                     .frame(width: 90, height: 75)
@@ -82,7 +82,7 @@ private extension TopPlaceCard {
 }
 
 #Preview {
-    TopPlaceCard(zone: mockWaybleZoneResponse.data
+    TopPlaceCard(zone: mockFavoritesZones[0].waybleZoneInfo
      //            ,rank:rank
     )
 }

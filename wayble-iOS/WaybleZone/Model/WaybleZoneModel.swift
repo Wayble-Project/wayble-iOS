@@ -21,16 +21,16 @@ struct WaybleZone: Codable, Identifiable {
 
     // JSON 키가 Swift 변수 이름과 다를 때
     enum CodingKeys: String, CodingKey {
-        case id = "wayble_zone_id"
+        case id = "waybleZoneId"
         case name
         case category
         case address
         case rating
-        case reviewCount = "review_count"
-        case contactNumber = "contact_number"
-        case imageUrl = "image_url"
+        case reviewCount
+        case contactNumber
+        case imageUrl
         case facilities
-        case businessHours = "business_hours"
+        case businessHours
         case photos
     }
 }
@@ -44,12 +44,12 @@ struct Facilities: Codable {
     let floorInfo: String
 
     enum CodingKeys: String, CodingKey {
-        case hasSlope = "has_slope"
-        case hasNoDoorStep = "has_no_door_step"
-        case hasElevator = "has_elevator"
-        case hasTableSeat = "has_table_seat"
-        case hasDisabledToilet = "has_disabled_toilet"
-        case floorInfo = "floor_info"
+        case hasSlope = "hasSlope"
+        case hasNoDoorStep = "hasNoDoorStep"
+        case hasElevator = "hasElevator"
+        case hasTableSeat = "hasTableSeat"
+        case hasDisabledToilet = "hasDisabledToilet"
+        case floorInfo = "floorInfo"
     }
 }
 
@@ -65,7 +65,7 @@ struct SavedPlace: Identifiable, Codable {
     let placeID: Int
     let title: String
     let color: String
-    let waybleZone: WaybleZone
+    let waybleZone: [WaybleZone]
     
     var id: Int { placeID }
 
@@ -108,3 +108,46 @@ struct Review: Identifiable, Codable {
     }
 }
 
+//MARK: TOP 3
+
+struct FavoritesWaybleZoneResponse: Decodable {
+    let data: [FavoritesWaybleZone]
+}
+
+//테이블 따로 만드신듯
+//struct FavoritesWaybleZone: Decodable {
+//    let waybleZoneInfo: WaybleZone
+//    // visitCount, likes는 UI에서 사용x 무시 가능
+//}
+
+
+struct FavoritesWaybleZone: Decodable {
+    let waybleZoneInfo: FavWaybleZoneInfo
+}
+
+
+struct FavWaybleZoneInfo: Decodable, Identifiable {
+    let id: Int
+    let name: String
+    let category: String
+    let imageUrl: String?
+    let address: String
+    let latitude: Double
+    let longitude: Double
+    let rating: Double
+    let reviewCount: Int
+    let facilities: Facilities
+
+    enum CodingKeys: String, CodingKey {
+        case id = "zoneId"
+        case name = "zoneName"
+        case category = "zoneType"
+        case imageUrl = "thumbnailImageUrl"
+        case address
+        case latitude
+        case longitude
+        case rating = "averageRating"
+        case reviewCount
+        case facilities = "facility"
+    }
+}

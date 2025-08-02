@@ -38,6 +38,9 @@ enum Route: Hashable {
     case findPassword
     case login
     case wayblezone
+    case waybleZoneSearch
+    case placeDetailView
+    case writeReview
     case onboardingCompleted
     case routeDetail
 }

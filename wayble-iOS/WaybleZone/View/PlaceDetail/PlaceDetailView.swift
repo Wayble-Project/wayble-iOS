@@ -10,7 +10,7 @@ struct PlaceDetailView: View {
                 if let zone = vm.waybleZone {
                     PlaceDetailHeaderView(waybleZone: zone)
                     PlaceInfoView(waybleZone: zone)
-                    PlaceReView(reviews: vm.reviews, onWrite: {})
+                    PlaceReView(reviews: vm.reviews)
                 } else {
                     ProgressView("정보를 불러오는 중...")
                 }

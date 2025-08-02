@@ -7,3 +7,7 @@ protocol WaybleZoneServiceProtocol {
 protocol ReviewServiceProtocol {
     func fetchReviews(for zoneID: Int, sort: ReviewSort) async throws -> [Review]
 }
+
+protocol FavoritesWaybleZoneServiceProtocol {
+    func fetchFavoritesZones(in district: String) async throws -> [FavoritesWaybleZone]
+}

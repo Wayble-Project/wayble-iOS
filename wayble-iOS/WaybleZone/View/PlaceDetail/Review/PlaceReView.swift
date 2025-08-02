@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct PlaceReView: View {
+    @Environment(NavigationRouter.self) var router
     
     @State private var selected = "추천순"
     
@@ -9,7 +10,6 @@ struct PlaceReView: View {
     @State private var showSortMenu: Bool = false
     
     let reviews: [Review]
-    let onWrite: () -> Void
     
     var body: some View {
         ZStack(alignment: .topLeading) {
@@ -31,7 +31,9 @@ struct PlaceReView: View {
                 }
                 .padding(.horizontal, 20)
                 
-                Button(action: onWrite) {
+                Button {
+                    router.push(.writeReview)
+                } label: {
                     HStack(spacing: 4) {
                         Text("리뷰 작성하기")
                             .font(.mainTextSemibold14)
@@ -46,6 +48,7 @@ struct PlaceReView: View {
                 }
                 .padding(.horizontal, 20)
                 .padding(.vertical, 15)
+
                 
                 
                 
@@ -85,6 +88,7 @@ struct PlaceReView: View {
                             .background(Color("gray-100"))
                             .clipShape(Capsule())
                         }
+                        .padding(.vertical, 20)
                     }
                 }
             }
@@ -95,5 +99,5 @@ struct PlaceReView: View {
 }
 
 #Preview {
-    PlaceReView(reviews: mockReviewListResponse.data, onWrite: {})
+    PlaceReView(reviews: mockReviewListResponse.data).withRouter()
 }

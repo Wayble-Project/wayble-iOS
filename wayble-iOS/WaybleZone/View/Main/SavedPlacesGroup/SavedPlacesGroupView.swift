@@ -2,6 +2,7 @@ import SwiftUI
 
 struct SavedPlacesGroupView: View {
     @State var collections: [SavedPlace]
+
     @State private var showAll: Bool = false
     @State private var selected = "최신순"
 

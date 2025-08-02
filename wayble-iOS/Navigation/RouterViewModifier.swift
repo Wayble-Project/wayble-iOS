@@ -27,12 +27,24 @@ struct RouterViewModifier: ViewModifier {
             case .wayblezone:
                 WaybleZoneView()
                     .navigationBarBackButtonHidden(true)
+            case .waybleZoneSearch:
+                WaybleZoneSearchView()
+                    .navigationBarBackButtonHidden(true)
+            case .placeDetailView:
+                PlaceDetailView()
+                    .navigationBarBackButtonHidden(true)
+            case .writeReview:
+                WriteReView(viewModel: FacilitySelectionViewModel())
+                    .navigationBarBackButtonHidden(true)
+                
             case .onboardingCompleted:
                 OnboardingCompletedView()
                     .navigationBarBackButtonHidden(true)
             case .routeDetail:
                 RouteDetail()
                     .navigationBarBackButtonHidden(true)
+            @unknown default:
+                    EmptyView()
             }
         }
         .environment(router)

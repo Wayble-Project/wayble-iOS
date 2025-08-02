@@ -54,66 +54,26 @@ class FacilitySelectionViewModel {
 
 
 
-//@Observable
-//final class PlaceDetailViewModel2 {
-//    var waybleZone: WaybleZone? = nil
-//    
-//    //    func getPlaceDetail() async throws -> WaybleZone {
-//    //        let url = URL(string: "")!
-//    //        let (data, _) = try await URLSession.shared.data(from: url)
-//    //        let wrapper = try JSONDecoder().decode(WaybleZoneResponse.self, from: data)
-//    //        return wrapper.items[0]
-//    //    }
-//    
-//    func fetchPlaceDetail() async {
-//        do {
-//            self.waybleZone = try await getPlaceDetail()
-//        } catch {
-//            print("Error fetching detail: \(error.localizedDescription)")
-//        }
-//    }
-//    
-//    func getPlaceDetail() async throws -> WaybleZone {
-//        guard let url = URL(string: "http://localhost:8080/wayble-zone?city=일산&category=카페") else {
-//            throw URLError(.badURL)
-//        }
-//        
-//        var request = URLRequest(url: url)
-//        request.httpMethod = "GET"
-//        request.setValue("Bearer valid_jwt_token", forHTTPHeaderField: "Authorization")
-//        
-//        let (data, response) = try await URLSession.shared.data(for: request)
-//        
-//        if let httpResponse = response as? HTTPURLResponse {
-//            guard (200..<300).contains(httpResponse.statusCode) else {
-//                throw NSError(domain: "HTTP Error", code: httpResponse.statusCode)
-//            }
-//        }
-//        
-//        let wrapper = try JSONDecoder().decode(WaybleZoneResponse.self, from: data)
-//        return wrapper.data
-//    }
-//    
-//}
-
-
-
 @Observable
 @MainActor
 final class PlaceDetailViewModel {
     var waybleZone: WaybleZone? = nil
     var reviews: [Review] = []
+    var FavoritesZones: [FavoritesWaybleZone] = []
     //var isLoadingReviews: Bool = false
     //var reviewErrorMessage: String? = nil
     
     private let zoneService: any WaybleZoneServiceProtocol
+    private let FavoritesZonesService: any FavoritesWaybleZoneServiceProtocol
     private let reviewService: any ReviewServiceProtocol
     
-    init(service: any WaybleZoneServiceProtocol = WaybleZoneService(),
-         reviewService: any ReviewServiceProtocol = ReviewService()
+    init(zoneService: any WaybleZoneServiceProtocol = WaybleZoneService(),
+         reviewService: any ReviewServiceProtocol = ReviewService(),
+         FavoritesZonesService: any FavoritesWaybleZoneServiceProtocol = FavoritesWaybleZoneService()
     ) {
-        self.zoneService = service
+        self.zoneService = zoneService
         self.reviewService = reviewService
+        self.FavoritesZonesService = FavoritesZonesService
     }
     
     func fetchPlaceDetail(city: String = "일산", category: String = "카페") async {
@@ -123,6 +83,15 @@ final class PlaceDetailViewModel {
             print("Error fetching detail: \(error.localizedDescription)")
         }
     }
+    
+    //제거 예정 다른 뷰모델로
+    func fetchFavoritesZones(district: String = "마포구") async {
+            do {
+                self.FavoritesZones = try await FavoritesZonesService.fetchFavoritesZones(in: district)
+            } catch {
+                print("Error fetching Favorites zones: \(error.localizedDescription)")
+            }
+        }
     
     func fetchReviews(zoneID: Int, sort: ReviewSort = .latest) async {
         //isLoadingReviews = true
@@ -136,4 +105,47 @@ final class PlaceDetailViewModel {
         }
     }
     
+}
+
+
+
+
+@Observable
+final class TopPlaceViewModel {
+    enum Category: String, CaseIterable, Identifiable {
+        case favorite = "즐겨찾기 순"
+        case search = "검색순"
+        var id: Self { self }
+    }
+    
+  //  var favoritesTop3: [FavWaybleZoneInfo] = []
+
+       private let FavoritesZonesService: any FavoritesWaybleZoneServiceProtocol
+
+       init(FavoritesZonesService: any FavoritesWaybleZoneServiceProtocol = FavoritesWaybleZoneService()) {
+           self.FavoritesZonesService = FavoritesZonesService
+       }
+
+    var selected: Category = .favorite {
+        willSet {
+            Task { await fetchTop3(for: newValue) }
+        }
+    }
+
+    var top3Zones: [FavWaybleZoneInfo] = []
+
+    func fetchTop3(for category: Category) async {
+        do {
+            switch category {
+            case .favorite:
+                let result = try await FavoritesZonesService.fetchFavoritesZones(in: "마포구")
+                self.top3Zones = result.prefix(3).map { $0.waybleZoneInfo }
+            case .search:
+                //TODO: 검색순
+                self.top3Zones = []
+            }
+        } catch {
+            print("Top3 fetch Error: \(error)")
+        }
+    }
 }

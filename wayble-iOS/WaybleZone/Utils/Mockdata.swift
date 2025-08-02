@@ -32,9 +32,9 @@ let mockWaybleZoneResponse = WaybleZoneResponse(
 )
 
 let mockSavedPlaces: [SavedPlace] = [
-    SavedPlace(placeID: 1, title: "학교 근처 카페", color: "Red", waybleZone: mockWaybleZoneResponse.data),
-    SavedPlace(placeID: 2, title: "카공 카페", color: "Yellow", waybleZone: mockWaybleZoneResponse.data),
-    SavedPlace(placeID: 3, title: "남남",color: "Green", waybleZone: mockWaybleZoneResponse.data)
+    SavedPlace(placeID: 1, title: "학교 근처 카페", color: "Red", waybleZone: [mockWaybleZoneResponse.data, mockWaybleZoneResponse.data]),
+    SavedPlace(placeID: 2, title: "카공 카페", color: "Yellow", waybleZone: [mockWaybleZoneResponse.data]),
+    SavedPlace(placeID: 3, title: "남남",color: "Green", waybleZone: [mockWaybleZoneResponse.data])
 ]
 
 
@@ -62,3 +62,68 @@ let mockReviewListResponse = ReviewListResponse(
     ]
 )
 
+let mockFavoritesZones: [FavoritesWaybleZone] = [
+    FavoritesWaybleZone(
+        waybleZoneInfo: FavWaybleZoneInfo(
+            id: 1,
+            name: "아임히어",
+            category: "카페",
+            imageUrl: "cafeMockImage",
+            address: "서울 용산구 백범로 326 1층",
+            latitude: 37.5442,
+            longitude: 127.0563,
+            rating: 4.5,
+            reviewCount: 128,
+            facilities: Facilities(
+                hasSlope: true,
+                hasNoDoorStep: true,
+                hasElevator: false,
+                hasTableSeat: true,
+                hasDisabledToilet: false,
+                floorInfo: "1층"
+            )
+        )
+    ),
+    FavoritesWaybleZone(
+        waybleZoneInfo: FavWaybleZoneInfo(
+            id: 2,
+            name: "투썸플레이스 효창점",
+            category: "음식점",
+            imageUrl: "cafeMockImage",
+            address: "서울 강남구 테헤란로 212",
+            latitude: 37.4981,
+            longitude: 127.0276,
+            rating: 4.3,
+            reviewCount: 98,
+            facilities: Facilities(
+                hasSlope: true,
+                hasNoDoorStep: false,
+                hasElevator: true,
+                hasTableSeat: true,
+                hasDisabledToilet: true,
+                floorInfo: "2층"
+            )
+        )
+    ),
+    FavoritesWaybleZone(
+        waybleZoneInfo: FavWaybleZoneInfo(
+            id: 3,
+            name: "이디야커피 효창점",
+            category: "카페",
+            imageUrl: "cafeMockImage",
+            address: "서울 마포구 연남동 227-15",
+            latitude: 37.5648,
+            longitude: 126.9221,
+            rating: 4.0,
+            reviewCount: 76,
+            facilities: Facilities(
+                hasSlope: false,
+                hasNoDoorStep: true,
+                hasElevator: false,
+                hasTableSeat: true,
+                hasDisabledToilet: false,
+                floorInfo: "지상 1층"
+            )
+        )
+    )
+]
