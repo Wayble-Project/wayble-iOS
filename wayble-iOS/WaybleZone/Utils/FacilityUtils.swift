@@ -15,7 +15,7 @@ enum FacilityUtils {
             .init(icon: "table", label: "테이블석", isAvailable: facilities.hasTableSeat),
             .init(icon: "door", label: "문턱 없음", isAvailable: facilities.hasNoDoorStep),
             .init(icon: "1F", label: facilities.floorInfo, isAvailable: facilities.floorInfo == "1층"),
-            .init(icon: "elevator", label: "엘리베이터", isAvailable: facilities.hasElevator)
+            .init(icon: "lift", label: "엘리베이터", isAvailable: facilities.hasElevator)
         ]
     }
     

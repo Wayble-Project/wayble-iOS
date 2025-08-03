@@ -46,5 +46,5 @@ struct OnboardingCompletedView: View {
 #Preview {
     OnboardingCompletedView()
         .environment(OnboardingViewModel())
-        .withRouter(selectedIndex: .constant(0))
+        .withRouter(selectedIndex: .constant(0),router: NavigationRouter())
 }

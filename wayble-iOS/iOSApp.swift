@@ -11,15 +11,17 @@ import Foundation
 
 @main
 struct iOSApp: App {
+    let router = NavigationRouter()
     @State private var selectedIndex = 0
     @State var userInfo = UserInfo()
     
 
     var body: some Scene {
         WindowGroup {
-            WalkingView()
-          //  MainView()
-            //    .withRouter(selectedIndex: $selectedIndex)
+        //    WalkingView()
+            MainView(selectedIndex: $selectedIndex)
+                .withRouter(selectedIndex: $selectedIndex, router: router)
+                .environment(router)
         }
     }
 }

@@ -162,5 +162,5 @@ struct SNSloginButtonView : View {
 
 #Preview {
     LoginView()
-        .withRouter(selectedIndex: .constant(0))
+        .withRouter(selectedIndex: .constant(0),router: NavigationRouter())
 }

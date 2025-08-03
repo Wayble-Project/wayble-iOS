@@ -141,6 +141,6 @@ struct WriteReView: View {
 
 
 
-#Preview {
-    WriteReView(viewModel: FacilitySelectionViewModel()) .withRouter()
-}
+//#Preview {
+  //  WriteReView(viewModel: FacilitySelectionViewModel()) .withRouter()
+//}
