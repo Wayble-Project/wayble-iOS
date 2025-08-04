@@ -90,7 +90,7 @@ struct PlaceDetailHeaderView: View {
 
 /*
 #Preview {
-    PlaceDetailHeaderView().withRouter(selectedIndex: .constant(0))
+    PlaceDetailHeaderView(waybleZone: mockWaybleZoneResponse.data).withRouter(selectedIndex: .constant(0))
 }
 */
 

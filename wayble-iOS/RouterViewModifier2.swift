@@ -7,6 +7,7 @@
 import Foundation
 import SwiftUI
 
+
 struct RouterViewModifier2: ViewModifier {
     @State private var searchViewModel = SearchViewModel()
     @Binding var selectedIndex: Int

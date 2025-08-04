@@ -1,3 +1,4 @@
+
 //
 //  MainView.swift
 //  wayble_iOS
@@ -32,7 +33,7 @@ struct MainView: View {
                     case 1: MapView()
                     case 2: ProfileView()
                     case 3: SearchHomeView(selectedIndex: $selectedIndex)
-                    case 4: WaybleZoneMainView()
+                    case 4: WaybleZoneMainView(vm: TopPlaceViewModel())
                     case 5:
                         SearchBarView(viewModel: searchViewModel, place: $place, selectedIndex: $selectedIndex, entryPoint: .directions)
                             .id(searchBarViewID)
@@ -110,7 +111,18 @@ struct MainView: View {
                         LoginView(selectedIndex: $selectedIndex)
                             .navigationBarBackButtonHidden(true)
                     case .wayblezone:
-                        WaybleZoneMainView()
+                        WaybleZoneMainView(vm: TopPlaceViewModel())
+                            .navigationBarBackButtonHidden(true)
+                    case .waybleZoneSearch:
+                        WaybleZoneSearchView()
+                            .navigationBarBackButtonHidden(true)
+                    /*
+                    case .placeDetailView:
+                        PlaceDetailView()
+                            .navigationBarBackButtonHidden(true)
+                     */
+                    case .writeReview:
+                        WriteReView(viewModel: FacilitySelectionViewModel())
                             .navigationBarBackButtonHidden(true)
                     case .signupCompleted:
                         SignupCompletedView(viewModel: signupViewModel, selectedIndex: $selectedIndex)

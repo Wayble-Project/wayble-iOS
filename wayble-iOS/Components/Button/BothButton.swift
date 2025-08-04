@@ -36,4 +36,3 @@ struct BothButton: View {
     }
 }
 
-

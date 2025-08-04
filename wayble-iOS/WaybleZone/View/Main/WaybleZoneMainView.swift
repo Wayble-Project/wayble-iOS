@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct WaybleZoneMainView: View {
-   // @Bindable var vm: WaybleZoneViewModel
+    @Bindable var vm: TopPlaceViewModel
     
     var body: some View {
             ScrollView {
@@ -10,11 +10,15 @@ struct WaybleZoneMainView: View {
          
                     WaybleZoneHeaderCardsView().padding(.bottom, 59)
                     
-                    TopPlaceView()
+
+                    TopPlaceView(vm: TopPlaceViewModel())
+                    
+                    //TopPlaceView(favWaybleZones: mockFavoritesZones)
 
                     SavedPlacesGroupView(collections: mockSavedPlaces)
                     
-                    //tabView
+                    
+                   // CustomTabBarView(selectedIndex: .constant(1))
 
                 }
                
@@ -26,5 +30,5 @@ struct WaybleZoneMainView: View {
 
 #Preview {
     //WaybleZoneView(vm: WaybleZoneViewModel())
-    WaybleZoneMainView()
+    WaybleZoneMainView(vm: TopPlaceViewModel()).withRouter(selectedIndex: .constant(0))
 }

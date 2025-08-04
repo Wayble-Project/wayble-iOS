@@ -25,7 +25,7 @@ struct PlaceDetailView: View {
                         )
                     )
                     PlaceInfoView(waybleZone: zone)
-                    PlaceReView(reviews: vm.reviews, onWrite: {})
+                    PlaceReView(reviews: vm.reviews)
                 } else {
                     ProgressView("정보를 불러오는 중...")
                 }
@@ -45,6 +45,6 @@ struct PlaceDetailView: View {
 
 /*
 #Preview {
-    CafeDetailView().withRouter(selectedIndex: .constant(0))
+    PlaceDetailView().withRouter(selectedIndex: .constant(0))
 }
 */
