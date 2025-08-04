@@ -18,8 +18,19 @@ enum SignupRouter {
 }
 
 extension SignupRouter: APITargetType {
+    
+    ///인증토큰 헤더 여부
+    var requiresAuth: Bool {
+        switch self {
+        case .post:
+            return false
+        default:
+            return true
+        }
+    }
+    
     var path: String {
-        return "/auth/signup"
+        return "/api/v1/users/signup"
     }
 
     var method: Moya.Method {
@@ -42,4 +53,6 @@ extension SignupRouter: APITargetType {
             return .requestJSONEncodable(patchData)
         }
     }
+
+
 }

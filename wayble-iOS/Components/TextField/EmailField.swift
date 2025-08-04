@@ -49,7 +49,8 @@
                  .autocorrectionDisabled(true) // 자동완성 해제
                  .padding(.horizontal, 20)
                  .padding(.vertical, 15)
-                 .frame(width: 350, height: 50)
+                 .frame(maxHeight: .infinity)
+                 .frame(height: 50)
                  .font(.mainTextRegular14)
                  .tracking(-0.28)
                  .background(

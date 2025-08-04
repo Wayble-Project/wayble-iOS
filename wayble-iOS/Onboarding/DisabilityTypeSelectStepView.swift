@@ -11,8 +11,9 @@
 import SwiftUI
 
 struct DisabilityTypeSelectView: View {
+    @Bindable var viewModel: OnboardingViewModel
     @Binding var step: Int
-    @Bindable var viewModel = OnboardingViewModel()
+    @Binding var selectedIndex: Int
     
     @State private var selectedDisabilities: Set<String> = []
     @State private var selectedAssistTools: Set<String> = []
@@ -63,11 +64,29 @@ struct DisabilityTypeSelectView: View {
                     Spacer()
                     BothButton(
                         step: $step,
+                        selectedIndex: $selectedIndex,
                         isNextDisabled: selectedDisabilities.isEmpty || selectedAssistTools.isEmpty,
+                        //isNextDisabled: !viewModel.isDisabilityStepValid,
                         onNextAction: {
-                            viewModel.userInfo.disabilityType = selectedDisabilities.compactMap { UserInfo.DisabilityType(rawValue: $0) }
-                            viewModel.userInfo.mobilityAid = selectedAssistTools.compactMap { UserInfo.MobilityAid(rawValue: $0) }
+                            viewModel.userInfo.hasDisability = true
+                            viewModel.userInfo.disabilityType = selectedDisabilities.compactMap { label in
+                                switch label {
+                                case "시각장애": return .visual
+                                case "청각장애": return .hearing
+                                case "지체장애": return .physical
+                                case "발달장애": return .cognitive
+                                default: return nil
                                 }
+                            }
+                            viewModel.userInfo.mobilityAid = selectedAssistTools.compactMap { label in
+                                switch label {
+                                case "휠체어": return .wheelchair
+                                case "지팡이": return .walkingStick
+                                case "안내견": return .guideDog
+                                default: return nil
+                                }
+                            }
+                        }
                     )
                     .padding(.horizontal, 7)
                     

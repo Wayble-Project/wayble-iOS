@@ -34,7 +34,7 @@ class NavigationRouter {
 //아래에 네비게이션 하고싶은 페이지 추가하기!
 enum Route: Hashable {
     case home
-    case signup
+    case signupEmail
     case findPassword
     case login
     case wayblezone
@@ -47,5 +47,9 @@ enum Route: Hashable {
     case searchBar
     case mapDetail(place: PlaceModel)
     case OnlyMapView
+    case splashView
+    case signupCompleted
+    case onboardingRoot
+    case signupTerm
     
 }

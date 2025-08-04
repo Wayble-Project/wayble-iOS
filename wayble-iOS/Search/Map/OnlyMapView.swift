@@ -5,6 +5,10 @@
 //  Created by 신민정 on 7/27/25.
 //
 
+//FIXME: - .onChange -> 깃허브 수정할 때 /* */ 이 주석 처리가 애매해서 원래 코드가 뭔지 모르겠음!!
+//FIXME: - 이거 고치면서 .onChange(deprecated) 수정하면 좋을 듯!! (수정한 거라 주석 처리한 건가?)
+
+
 import SwiftUI
 import NMapsMap
 
@@ -102,6 +106,7 @@ struct OnlyMapView: View {
                 
             })
         })
+        /*
         .onAppear {
             #if !targetEnvironment(simulator)
             if let coord = locationManager.currentCoordinate {
@@ -109,6 +114,7 @@ struct OnlyMapView: View {
             }
             #endif
         }
+         */
         .onChange(of: viewModel.selectedPlace) { newPlace in
             guard let place = newPlace, place != self.place else { return }
 
@@ -119,6 +125,7 @@ struct OnlyMapView: View {
                 self.placeCategory = place.category.components(separatedBy: ">").last ?? place.category
             }
         }
+
     }
 }
 

@@ -8,8 +8,9 @@
 import SwiftUI
 
 struct GenderBirthStepView: View {
+    @Bindable var viewModel: OnboardingViewModel
     @Binding var step: Int
-    @Bindable var viewModel = OnboardingViewModel()
+    @Binding var selectedIndex: Int
     
     @Binding var selectedItem: String?
     
@@ -34,15 +35,18 @@ struct GenderBirthStepView: View {
             Spacer()
             BothButton(
                 step: $step,
-                isNextDisabled: (selectedItem == nil)||(viewModel.userInfo.birth.isEmpty),
+                selectedIndex: $selectedIndex,
+                //isNextDisabled: (selectedItem == nil)||(viewModel.userInfo.birth.isEmpty),
+                isNextDisabled: (selectedItem == nil) || !viewModel.isBirthValid,
                 onPreviousAction: {
                     selectedItem = nil
                     viewModel.userInfo.birth = ""
                 },
                 onNextAction: {
                     guard let selected = selectedItem,
-                          let gender = UserInfo.Gender(rawValue: selected)
+                          let gender = Gender(rawValue: selected)
                     else { return }
+                    viewModel.userInfo.birth = viewModel.userInfo.birth.trimmingCharacters(in: .whitespacesAndNewlines)
                     viewModel.userInfo.gender = gender
                 }
             )

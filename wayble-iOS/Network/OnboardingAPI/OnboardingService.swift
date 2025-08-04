@@ -12,27 +12,48 @@ import Moya
 final class OnboardingService {
     
     private let provider = MoyaProvider<OnboardingRouter>()
-
-    func getOnboarding(email: String) async throws -> OnboardingData {
+    //let provider = MoyaProvider<OnboardingRouter>(stubClosure: MoyaProvider.immediatelyStub)
+    /// 이건 샘플데이터 용
+    func getOnboarding() async throws -> OnboardingResponse {
         do {
-            let response = try await provider.requestAsync(.get(email: email))
-            let decodedData = try JSONDecoder().decode(OnboardingData.self, from: response.data)
-            print("GET 성공: \(decodedData)")
-            return decodedData
+            let response = try await provider.requestAsync(.get)
+            let decodedResponse = try JSONDecoder().decode(OnboardingResponse.self, from: response.data)
+            print("GET 성공: \(decodedResponse)")
+            return decodedResponse
         } catch {
-            print("요청 혹은 디코딩 실패: \(error.localizedDescription)")
+            print("온보딩 GET 요청 혹은 디코딩 실패: \(error.localizedDescription)")
             throw error
         }
     }
 
-    func createOnboarding(_ onboardingData: OnboardingData) async throws -> OnboardingData {
+    func createOnboarding(_ onboardingData: OnboardingData) async throws -> String {
         do {
+            
+            /// 요청 바디 로그 확인용
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = .prettyPrinted
+            if let requestBody = try? encoder.encode(onboardingData),
+               let requestBodyString = String(data: requestBody, encoding: .utf8) {
+                print("요청 바디:\n\(requestBodyString)")
+            }
+            
+
             let response = try await provider.requestAsync(.post(onboardingData: onboardingData))
-            let decodedData = try JSONDecoder().decode(OnboardingData.self, from: response.data)
-            print("POST 성공: \(decodedData)")
-            return decodedData
+            
+            /// 상태 응답 코드
+            print("Status Code: \(response.statusCode)")
+            print("응답 바디:\n" + (String(data: response.data, encoding: .utf8) ?? "응답 데이터 없음"))
+
+            
+            guard !response.data.isEmpty else {
+                print("⚠️ 응답 바디가 비어 있어 디코딩 생략됨")
+                throw URLError(.badServerResponse)
+            }
+            let decodedResponse = try JSONDecoder().decode(OnboardingPostResponse.self, from: response.data)
+            print("온보딩 POST 성공 메시지: \(decodedResponse.data)")
+            return decodedResponse.data
         } catch {
-            print("POST 요청 혹은 디코딩 실패: \(error.localizedDescription)")
+            print("온보딩 POST 요청 혹은 디코딩 실패: \(error.localizedDescription)")
             throw error
         }
     }

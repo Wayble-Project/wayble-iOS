@@ -26,17 +26,17 @@ struct SetPasswordField: View {
     @Binding var isMatched: Bool
     @FocusState private var isFocused: Bool  // 포커스 상태
     var setPassword: String             // 설정한 패스워드
-    @State private var showPassword: Bool = true // 패스워드 공개 버튼
+    @State private var showPassword: Bool = false // 패스워드 공개 버튼
 
     var content: String
-    var shouldCheckMatch: Bool = true
+    var shouldCheckMatch: Bool = true //비밀번호 일치 텍스트필드
     
     private var fieldState: FieldState {
         if isFocused {
             return .focused
         } else if !isPasswordValid() {
             return .mismatched
-        } else if shouldCheckMatch && !isPasswordMatched {
+        } else if shouldCheckMatch && !isMatched {
             return .mismatched
         } else if !password.isEmpty {
             return .completed
@@ -60,6 +60,7 @@ struct SetPasswordField: View {
                         .tracking(-0.28)
                         .foregroundStyle(Color.gray900)
                         .textContentType(.newPassword)
+                        .textInputAutocapitalization(.none)
                         .focused($isFocused)
                 } else {
                     TextField("8자 이상의 비밀번호", text: $password)
@@ -67,6 +68,7 @@ struct SetPasswordField: View {
                         .tracking(-0.28)
                         .foregroundStyle(Color.gray900)
                         .textContentType(.newPassword)
+                        .textInputAutocapitalization(.none)
                         .focused($isFocused)
                 }
                 
@@ -82,7 +84,8 @@ struct SetPasswordField: View {
             }//h
             .padding(.horizontal, 20)
             .padding(.vertical, 15)
-            .frame(width: 350, height: 50)
+            .frame(maxHeight: .infinity)
+            .frame(height: 50)
             .background(
                 RoundedRectangle(cornerRadius: 15)
                     .stroke(borderColor(for: fieldState), lineWidth: 1)
@@ -94,21 +97,20 @@ struct SetPasswordField: View {
                 isMatched = isPasswordMatched
             }
             
-            if(isPasswordValid()) {
+            if isPasswordValid() && (!shouldCheckMatch || isMatched) {
                 Text(content)
                     .font(.mainTextRegular12)
-                    .foregroundStyle(Color.positive) // 조건에 부합할 때만 positive 색으로
+                    .foregroundStyle(Color.positive)
                     .tracking(-0.24)
                     .padding(.leading, 5)
                     .padding(.top, 5)
             } else {
                 Text(content)
                     .font(.mainTextRegular12)
-                    .foregroundStyle(Color.gray500) // 조건에 부합할 때만 positive 색으로
+                    .foregroundStyle(Color.gray500)
                     .tracking(-0.24)
                     .padding(.leading, 5)
                     .padding(.top, 5)
-                
             }
             
             

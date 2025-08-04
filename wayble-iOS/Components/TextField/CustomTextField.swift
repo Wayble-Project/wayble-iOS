@@ -7,6 +7,12 @@
 
 import SwiftUI
 
+enum ValidationState {
+    case valid
+    case tooShort(min: Int)
+    case duplicated
+    case invalidBirthFormat
+}
 
 //FIXME: - isCheckingMismatch 타입 변경
 //FIXME: - 에러 메시지 띄우기
@@ -16,7 +22,30 @@ struct CustomTextField: View {
     var placeHolder: String
     @Binding var textValue: String
     var keyboardType: UIKeyboardType = .default
+    var validationState: ValidationState = .valid
     @FocusState private var isFocused: Bool
+
+    private var hasError: Bool {
+        switch validationState {
+        case .valid:
+            return false
+        default:
+            return true
+        }
+    }
+
+    private var errorMessage: String {
+        switch validationState {
+        case .tooShort(let min):
+            return "닉네임은 \(min)자 이상이어야 합니다."
+        case .duplicated:
+            return "이미 사용 중인 닉네임입니다."
+        case .invalidBirthFormat:
+            return "올바른 생년월일 형식이 아닙니다."
+        case .valid:
+            return ""
+        }
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -33,20 +62,22 @@ struct CustomTextField: View {
                 .autocorrectionDisabled(true)
                 .padding(.horizontal, 20)
                 .padding(.vertical, 15)
-                .frame(width: 350, height: 50)
+                .frame(maxHeight: .infinity)
+                .frame(height: 50)
                 .font(.mainTextRegular14)
                 .tracking(-0.28)
                 .background(
                     RoundedRectangle(cornerRadius: 15)
-                        .stroke(Color.gray200)
+                        .stroke(hasError ? Color.error : Color.gray200)
                 )
-            Text("에러 메시지 띄우기?")
-                .font(.mainTextRegular12)
-                .foregroundStyle(Color.pink) //조건 따라 수정
-                .tracking(-0.24)
-                .padding(.leading, 5)
-                .padding(.top, 5)
-                .focused($isFocused)
+            if hasError {
+                Text(errorMessage)
+                    .font(.mainTextRegular12)
+                    .foregroundStyle(.error)
+                    .tracking(-0.24)
+                    .padding(.leading, 5)
+                    .padding(.top, 5)
+            }
         }
     }
 }
@@ -54,10 +85,11 @@ struct CustomTextField: View {
 #Preview {
     @State var dummyNickname = ""
     CustomTextField(
-        text: "닉네임",
-        placeHolder: "닉네임을 입력해주세요",
+        text: "생년월일",
+        placeHolder: "YYYY-MM-DD 형식으로 입력해주세요",
         textValue: $dummyNickname,
-        keyboardType: .default
+        keyboardType: .default,
+        validationState: .invalidBirthFormat
     )
 }
 
