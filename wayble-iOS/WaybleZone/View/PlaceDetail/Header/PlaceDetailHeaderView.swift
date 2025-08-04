@@ -87,6 +87,10 @@ struct PlaceDetailHeaderView: View {
     }
 }
 
-//#Preview {
-  //  PlaceDetailHeaderView().withRouter(selectedIndex: .constant(0))
-//}
+
+/*
+#Preview {
+    PlaceDetailHeaderView().withRouter(selectedIndex: .constant(0))
+}
+*/
+

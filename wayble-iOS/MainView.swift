@@ -9,12 +9,16 @@ import SwiftUI
 
 struct MainView: View {
     @State private var place = PlaceModel()
-    @State private var searchViewModel = SearchViewModel()
     @State private var searchBarViewID = UUID()
+    @State private var searchViewModel = SearchViewModel()
     @Binding var selectedIndex: Int
+    @Binding var step: Int
     @State private var router = NavigationRouter()
+    @State var signupViewModel = SignupViewModel()
+    @State var onboardingViewModel = OnboardingViewModel()
     @State private var selectedDeparture: PlaceModel? = nil
     @State private var selectedArrival: PlaceModel? = nil
+
 
 
     var body: some View {
@@ -38,7 +42,16 @@ struct MainView: View {
                             selectedIndex: $selectedIndex,
                             searchBarViewID: $searchBarViewID
                         )
-                    case 7:
+                    case 7: LoginView(selectedIndex: $selectedIndex)
+                    case 8: SignupEmailView(viewModel: signupViewModel, selectedIndex: $selectedIndex) //동일한 뷰모델 -> 유저 정보 저장
+                    case 9: SignupPasswordView(viewModel: signupViewModel, selectedIndex: $selectedIndex)
+                    case 10: SignupCompletedView(viewModel: signupViewModel, selectedIndex: $selectedIndex)
+                    case 11: SplashView(selectedIndex: $selectedIndex)
+                    case 12: OnboardingCompletedView(viewModel: onboardingViewModel, selectedIndex: $selectedIndex)
+                    case 13: OnboardingRootView(viewModel: onboardingViewModel, selectedIndex: $selectedIndex)
+                    case 14: SignupTermsView(selectedIndex: $selectedIndex)
+
+                    case 15:
                         Transportation(
                             selectedIndex: $selectedIndex,
                             entryType: .destination,
@@ -49,9 +62,8 @@ struct MainView: View {
                             transportation: SearchViewModel.shared.transportation
                         )
                         .id(UUID())
-                                                
-                       
-                    case 8:
+                                                  
+                    case 16:
                         VStack {
                            
                             MapDetailView(
@@ -88,20 +100,20 @@ struct MainView: View {
                     case .home:
                         HomeView(selectedIndex: $selectedIndex)
                             .navigationBarBackButtonHidden(true)
-                    case .signup:
-                        SignupEmailView()
+                    case .signupEmail:
+                        SignupEmailView(viewModel: signupViewModel, selectedIndex: $selectedIndex)
                             .navigationBarBackButtonHidden(true)
                     case .findPassword:
                         findPasswordView()
                             .navigationBarBackButtonHidden(true)
                     case .login:
-                        LoginView()
+                        LoginView(selectedIndex: $selectedIndex)
                             .navigationBarBackButtonHidden(true)
                     case .wayblezone:
                         WaybleZoneMainView()
                             .navigationBarBackButtonHidden(true)
-                    case .onboardingCompleted:
-                        OnboardingCompletedView()
+                    case .signupCompleted:
+                        SignupCompletedView(viewModel: signupViewModel, selectedIndex: $selectedIndex)
                             .navigationBarBackButtonHidden(true)
                     case .routeDetail:
                         RouteDetail()
@@ -133,7 +145,18 @@ struct MainView: View {
                             transportation: SearchViewModel.shared.transportation
                         )
                         .navigationBarBackButtonHidden(true)
-                    
+                    case .splashView:
+                        SplashView(selectedIndex: $selectedIndex)
+                            .navigationBarBackButtonHidden(true)
+                    case .onboardingCompleted:
+                        OnboardingCompletedView(viewModel: onboardingViewModel, selectedIndex: $selectedIndex)
+                            .navigationBarBackButtonHidden(true)
+                    case .onboardingRoot:
+                        OnboardingRootView(viewModel: onboardingViewModel, selectedIndex: $selectedIndex)
+                            .navigationBarBackButtonHidden(true)
+                    case .signupTerm:
+                        SignupTermsView(selectedIndex: $selectedIndex)
+                            .navigationBarBackButtonHidden(true)
                     }
                 }
             }
@@ -152,15 +175,19 @@ struct MainView: View {
     // 안 보이고 싶은곳 selectedIndex 따라서 추가하기
     var shouldHideTabBar: Bool {
         switch selectedIndex {
-        case 5:
+        case 5,6,7,8,9,10,11,12,13,14:
             return true
-        case 6:
+        case 15:
             return true
-        case 7:
-            return true
-        case 8:
+        case 16:
             return true
         default:
             return false
         }
     }}
+
+
+#Preview {
+    MainView(selectedIndex: .constant(0), step: .constant(0))
+}
+

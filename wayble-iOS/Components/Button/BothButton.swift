@@ -9,6 +9,8 @@ import SwiftUI
 
 struct BothButton: View {
     @Binding var step: Int
+    @Binding var selectedIndex: Int
+    
     @Environment(NavigationRouter.self) private var router
     var isNextDisabled: Bool = true
     var onPreviousAction: (() -> Void)? = nil // 이전 버튼 액션
@@ -25,7 +27,7 @@ struct BothButton: View {
                 if step < 3 {
                     step += 1
                 } else if step == 3 {
-                    router.push(.onboardingCompleted)
+                    selectedIndex = 12
                 }
             }
         }
@@ -35,16 +37,3 @@ struct BothButton: View {
 }
 
 
-
-#Preview {
-    struct PreviewWrapper: View {
-        @State var step = 0
-
-        var body: some View {
-            BothButton(step: $step)
-        }
-    }
-
-    return PreviewWrapper()
-        .withRouter(selectedIndex: .constant(0),router: NavigationRouter())
-}

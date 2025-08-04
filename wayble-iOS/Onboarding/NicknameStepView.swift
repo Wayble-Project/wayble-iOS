@@ -10,8 +10,10 @@
 import SwiftUI
 
 struct NicknameStepView: View {
+    @Bindable var viewModel: OnboardingViewModel
     @Binding var step: Int
-    @Bindable var viewModel = OnboardingViewModel()
+    @Binding var selectedIndex: Int
+
     
     @Environment(NavigationRouter.self) private var router
     
@@ -31,10 +33,16 @@ struct NicknameStepView: View {
             Spacer()
             BothButton(
                 step: $step,
-                isNextDisabled: viewModel.userInfo.nickname.count < 2,
+                selectedIndex: $selectedIndex,
+                isNextDisabled: !viewModel.isNicknameValid,
                 onPreviousAction: {
                     viewModel.userInfo.nickname = ""
-                    router.push(.login)
+                    selectedIndex = 8
+                },
+                onNextAction: {
+                    viewModel.userInfo.nickname = viewModel.userInfo.nickname.trimmingCharacters(in: .whitespacesAndNewlines)
+                    /// .trimmingCharacters(in: .whitespacesAndNewlines) : 앞뒤의 공백(space), 탭, 줄바꿈(\n) 같은 쓸데없는 문자들을 제거해주는 Swift 표준 함수
+                    print("닉네임 : \(viewModel.userInfo.nickname)")
                 }
             )
             

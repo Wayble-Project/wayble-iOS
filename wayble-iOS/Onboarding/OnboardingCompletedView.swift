@@ -12,25 +12,48 @@ import SwiftUI
 
 struct OnboardingCompletedView: View {
     @Environment(NavigationRouter.self) private var router
-    @Environment(OnboardingViewModel.self) private var viewModel
+    @Bindable var viewModel: OnboardingViewModel
+    
+    @Binding var selectedIndex: Int
+    
+    
     
     var body: some View {
         VStack {
             Spacer()
             
-            Image("check02")
-                .resizable()
-                .frame(width: 33, height: 33)
-                .padding(.bottom, 50.4)
+            GeometryReader { geo in
+                MP4View(filename: "OnBoarding", fileExtension: "mp4", size: geo.size)
+                    //.frame(width: 154, height: 230)
+                    .clipped()
+            }
+            //.frame(height: 540)
+            .frame(width: 154, height: 230)
+            .padding(.bottom, 30)
             TitleText(text: "wayble과 함께할\n준비가 되었어요!", alignment: .center)
+                
             
             Spacer()
             
             OkButton(title: "확인", isDisabled: false) {
                 Task {
+                    let info = viewModel.userInfo
+                    print("""
+                    🧾 userInfo:
+                    - email: \(info.email)
+                    - password: \(info.password)
+                    - nickname: \(info.nickname)
+                    - birth: \(info.birth)
+                    - gender: \(info.gender)
+                    - hasDisability: \(info.hasDisability)
+                    - disabilityType: \(info.disabilityType)
+                    - mobilityAid: \(info.mobilityAid)
+                    - isWithCompanion: \(info.isWithCompanion)
+                    - loginType: \(info.loginType)
+                    """)
                     let success = await viewModel.completeOnboarding()
                     if success {
-                        router.push(.home)
+                        selectedIndex = 0
                     } else {
                         print("온보딩 전송 실패: 홈 화면으로 이동 X")
                     }
@@ -39,12 +62,9 @@ struct OnboardingCompletedView: View {
             .padding(.bottom, 54)
         }
         .navigationBarBackButtonHidden(true)
+        .padding(.horizontal, 20)
     }
     
 }
 
-#Preview {
-    OnboardingCompletedView()
-        .environment(OnboardingViewModel())
-        .withRouter(selectedIndex: .constant(0),router: NavigationRouter())
-}
+

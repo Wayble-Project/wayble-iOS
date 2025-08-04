@@ -9,8 +9,9 @@
 import SwiftUI
 
 struct UserTypeSelectView: View {
+    @Bindable var viewModel: OnboardingViewModel
     @Binding var step: Int
-    @Bindable var viewModel = OnboardingViewModel()
+    @Binding var selectedIndex: Int
     
     let options: [String] = ["장애인", "비장애인"]
     @Binding var selectedItem: String?
@@ -44,6 +45,7 @@ struct UserTypeSelectView: View {
             Spacer()
             BothButton(
                 step: $step,
+                selectedIndex: $selectedIndex,
                 isNextDisabled: selectedItem == nil,
                 onPreviousAction: {
                     selectedItem = nil

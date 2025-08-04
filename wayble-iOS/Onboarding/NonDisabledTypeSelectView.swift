@@ -9,8 +9,9 @@
 import SwiftUI
 
 struct NonDisabledTypeSelectView: View {
+    @Bindable var viewModel: OnboardingViewModel
     @Binding var step: Int
-    @Bindable var viewModel = OnboardingViewModel()
+    @Binding var selectedIndex: Int
     
     let options: [String] = ["동행인", "일반 사용자"]
     @Binding var selectedItem: String?
@@ -46,6 +47,7 @@ struct NonDisabledTypeSelectView: View {
             Spacer()
             BothButton(
                 step: $step,
+                selectedIndex: $selectedIndex,
                 isNextDisabled: selectedItem == nil,
                 onPreviousAction: {
                     selectedItem = nil
@@ -60,10 +62,13 @@ struct NonDisabledTypeSelectView: View {
     }
 }
 
+
+/*
 #Preview {
     PreviewWrapper()
         .withRouter(selectedIndex: .constant(0),router: NavigationRouter())
 }
+
 
 private struct PreviewWrapper: View {
     @State var step = 2
@@ -72,7 +77,8 @@ private struct PreviewWrapper: View {
     var body: some View {
         NonDisabledTypeSelectView(
             step: $step,
-            selectedItem: $selected
+            selectedItem: $selected, selectedIndex: <#Binding<Int>#>
         )
     }
 }
+*/

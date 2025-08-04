@@ -49,9 +49,10 @@ struct MapDetailView: View {
                 }) {
                     Image(systemName: "chevron.left")
                         .foregroundStyle(Color.black)
+
                     
                     Text("ex.숙대입구역 맛집")
-                        .foregroundColor(.gray500)
+                        .foregroundStyle(.gray500)
                         .font(.mainTextRegular14)
                         .padding(.leading, 4)
                 }
@@ -64,7 +65,7 @@ struct MapDetailView: View {
             .padding(.vertical, 15)
             .frame(maxWidth: .infinity, maxHeight: 50)
             .background(Color.white)
-            .cornerRadius(15)
+            .clipShape(RoundedRectangle(cornerRadius: 15))
             .overlay(
                 RoundedRectangle(cornerRadius: 15)
                     .inset(by: 0.5)

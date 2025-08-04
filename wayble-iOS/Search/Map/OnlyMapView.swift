@@ -102,22 +102,17 @@ struct OnlyMapView: View {
                 
             })
         })
-        .onAppear {
-            #if !targetEnvironment(simulator)
-            if let coord = locationManager.currentCoordinate {
-                mapCenter = NMGLatLng(lat: coord.latitude, lng: coord.longitude)
-            }
-            #endif
-        }
+
         .onChange(of: viewModel.selectedPlace) { newPlace in
             guard newPlace != self.place else { return }
-
+            
             DispatchQueue.main.async {
                 self.place = newPlace
                 self.placeTitle = newPlace.title
                 self.placeRoadAddress = newPlace.roadAddress
                 self.placeCategory = newPlace.category.components(separatedBy: ">").last ?? newPlace.category
-            }        }
+            }
+        }
     }
 }
 

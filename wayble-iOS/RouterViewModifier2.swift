@@ -3,10 +3,11 @@
 //  Created by 햄무 on 7/12/25.
 //
 
+/*
 import Foundation
 import SwiftUI
 
-struct RouterViewModifier: ViewModifier {
+struct RouterViewModifier2: ViewModifier {
     @State private var searchViewModel = SearchViewModel()
     @Binding var selectedIndex: Int
     @State private var router = NavigationRouter()
@@ -131,3 +132,4 @@ extension RouterViewModifier {
 struct WaybleZoneView: View {
     var body: some View { Text("WaybleZone") }
 }
+*/

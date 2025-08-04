@@ -2,21 +2,30 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key></key>
+	<string></string>
+	<key>API_BASE_URL</key>
+	<string>$(API_BASE_URL)</string>
 	<key>Information Property List</key>
 	<dict>
 		<key>KAKAO_APP_KEY</key>
 		<string>7889a45ba2df2fdbd3171bca2dacaaa6</string>
 	</dict>
 	<key>KAKAO_REST_API_KEY</key>
-	<string>f32cf1af5b7338967e464726d02753a8</string>
+	<string>$(KAKAO_REST_API_KEY)</string>
 	<key>NAVER_CLIENT_ID</key>
-	<string>BgYZd4nAU9SODxHpQJIt</string>
+	<string>$(NAVER_CLIENT_ID)</string>
 	<key>NAVER_CLIENT_SECRET</key>
-	<string>pNjVsZ2VWl</string>
+	<string>$(NAVER_CLIENT_SECRET)</string>
 	<key>NMFNcpKeyId</key>
-	<string>4wrbuvpxtr</string>
+	<string>$(NMFNcpKeyId)</string>
 	<key>NMFNcpKeySecret</key>
-	<string>4kJh9HLYZKTovSsyoukGILkBwFAyjHgPop5kR91f</string>
+	<string>$(NMFNcpKeySecret)</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Pretendard-Black.otf</string>

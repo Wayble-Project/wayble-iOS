@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct SignupTermsView: View {
+   @State private var isChecked: Bool = false
+    @Binding var selectedIndex: Int
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             BackButton()
@@ -18,7 +21,9 @@ struct SignupTermsView: View {
             
             //FIXME: - 토글 버튼 이미지 전환 (색)
             HStack(spacing: 0) {
-                Button(action: {}) {
+                Button(action: {
+                    isChecked.toggle()
+                }) {
                     Image("check01")
                         .resizable()
                         .frame(width: 24, height: 24)
@@ -36,17 +41,17 @@ struct SignupTermsView: View {
                 .padding(.leading, 36)
             
             Spacer()
-            OkButton(title: "확인", isDisabled: false) {
-                print("아이디 생성")
-                //FIXME: - 동의버튼 true로 바뀌어야 넘어가는 코드
+            OkButton(title: "확인", isDisabled: !isChecked) {
+                selectedIndex = 8
             }
             .padding(.bottom, 54)
             
         }
+        .padding(.horizontal, 20)
     }
 }
 
 #Preview {
-    SignupTermsView()
+    SignupTermsView(selectedIndex: .constant(0))
         .environment(NavigationRouter())
 }

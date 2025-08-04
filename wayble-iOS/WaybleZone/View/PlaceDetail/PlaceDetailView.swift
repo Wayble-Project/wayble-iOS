@@ -42,6 +42,9 @@ struct PlaceDetailView: View {
     }
 }
 
-//#Preview {
-  //  CafeDetailView().withRouter(selectedIndex: .constant(0))
-//}
+
+/*
+#Preview {
+    CafeDetailView().withRouter(selectedIndex: .constant(0))
+}
+*/
