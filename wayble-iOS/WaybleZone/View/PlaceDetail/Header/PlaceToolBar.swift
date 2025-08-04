@@ -40,6 +40,8 @@ struct PlaceToolbar: View {
         .padding(.horizontal, 20)
     }
 }
+/*
 #Preview {
     PlaceToolbar(onBack: {}, onShare: {}, onLike: {}).withRouter(selectedIndex: .constant(0))
 }
+*/

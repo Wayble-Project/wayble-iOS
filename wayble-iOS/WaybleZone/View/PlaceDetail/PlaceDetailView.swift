@@ -27,6 +27,8 @@ struct PlaceDetailView: View {
     }
 }
 
+/*
 #Preview {
     CafeDetailView().withRouter(selectedIndex: .constant(0))
 }
+*/

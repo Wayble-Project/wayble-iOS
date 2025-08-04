@@ -10,7 +10,8 @@
 import SwiftUI
 
 struct SignupEmailView: View {
-    @State var viewModel = SignupViewModel()
+    @Bindable var viewModel: SignupViewModel
+    @Binding var selectedIndex: Int
     
     //@AppStorage("email") var email: String = ""
 
@@ -31,14 +32,18 @@ struct SignupEmailView: View {
             Spacer()
             OkButton(title: "확인", isDisabled: !viewModel.isEmailValid || viewModel.isChecking) {
                 //viewModel.checkEmailDuplication()
+                viewModel.userInfo.email = viewModel.userInfo.email //명시..
+                print("📧 입력된 이메일:", viewModel.userInfo.email)
+                print("✅ 이메일 유효성 검사:", viewModel.isEmailValid)
+                selectedIndex = 9
             }
             .padding(.bottom, 54)
             
         }
+        .padding(.horizontal, 20)
     }
 }
 
 #Preview {
-    SignupEmailView()
-        .environment(NavigationRouter())
+    SignupEmailView(viewModel: SignupViewModel(), selectedIndex: .constant(0))
 }

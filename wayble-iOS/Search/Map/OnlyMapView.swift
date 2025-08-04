@@ -136,6 +136,7 @@ struct OnlyMapView: View {
                 
             })
         })
+        /*
         .onAppear {
             #if !targetEnvironment(simulator)
             if let coord = locationManager.currentLocation?.coordinate {
@@ -143,6 +144,7 @@ struct OnlyMapView: View {
             }
             #endif
         }
+         */
     }
 }
 

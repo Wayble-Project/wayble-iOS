@@ -11,7 +11,9 @@ import SwiftUI
 
 struct OnboardingRootView: View {
     @Environment(NavigationRouter.self) private var router
-    @State private var step = 0
+    @Bindable var viewModel: OnboardingViewModel
+    @State var step = 0
+    @Binding var selectedIndex: Int
     @State private var selectedUserType: String? = nil
     @State private var selectedGender: String? = nil
 
@@ -19,18 +21,18 @@ struct OnboardingRootView: View {
         VStack {
             switch step {
             case 0:
-                NicknameStepView(step: $step)
+                NicknameStepView(viewModel: viewModel, step: $step, selectedIndex: $selectedIndex)
             case 1:
-                GenderBirthStepView(step: $step, selectedItem: $selectedGender)
+                GenderBirthStepView(viewModel: viewModel , step: $step, selectedIndex: $selectedIndex, selectedItem: $selectedGender)
             case 2:
-                UserTypeSelectView(step: $step,
-                                   selectedItem: $selectedUserType)
+                UserTypeSelectView(viewModel: viewModel, step: $step,
+                                   selectedIndex: $selectedIndex, selectedItem: $selectedUserType)
             case 3:
                 if selectedUserType == "장애인" {
-                        DisabilityTypeSelectView(step: $step)
+                        DisabilityTypeSelectView(viewModel: viewModel,step: $step, selectedIndex: $selectedIndex)
                     }
                 else {
-                    NonDisabledTypeSelectView(step: $step, selectedItem: $selectedUserType)
+                    NonDisabledTypeSelectView(viewModel: viewModel, step: $step, selectedIndex: $selectedIndex, selectedItem: $selectedUserType)
                 }
                         
             default:
@@ -42,7 +44,3 @@ struct OnboardingRootView: View {
     }
 }
 
-#Preview {
-    OnboardingRootView()
-        .withRouter(selectedIndex: .constant(0))
-}

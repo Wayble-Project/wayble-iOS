@@ -11,14 +11,16 @@ import Foundation
 
 @main
 struct iOSApp: App {
-    @State private var selectedIndex = 0
+    @State private var selectedIndex = 7
+    @State private var step = 0
     @State var userInfo = UserInfo()
-    
+    @StateObject var authViewModel = AuthViewModel()
 
     var body: some Scene {
         WindowGroup {
-            MainView()
+            MainView(selectedIndex: $selectedIndex, step: $step)
                 .withRouter(selectedIndex: $selectedIndex)
+                .environmentObject(authViewModel) // 주입
         }
     }
 }

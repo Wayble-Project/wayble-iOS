@@ -9,14 +9,24 @@ import Foundation
 
 
 import SwiftUI
-//import KakaoSDKUser
-//import KakaoSDKAuth
 
+// FIXME
 @Observable
 class LoginViewModel {
     var userInfo = UserInfo()
+    var isCheckingMismatch: Bool = false
     
-    func login() {
-        print("로그인 시도: \(userInfo.email), \(userInfo.password)")
+    func login() async throws -> TokenInfo {
+        let token = try await LoginService().login(
+            LoginData(
+                email: userInfo.email,
+                password: userInfo.password,
+                loginType: userInfo.loginType.rawValue
+            )
+        )
+        return TokenInfo(
+            accessToken: token.accessToken,
+            refreshToken: token.refreshToken
+        )
     }
 }

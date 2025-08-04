@@ -13,12 +13,11 @@ import SwiftUI
 struct PasswordField: View {
     @Binding var password: String            // 외부에서 상태 바인딩
     @FocusState private var isFocused: Bool  // 포커스 상태
-    var storedPassword: String             // 저장된 패스워드
-    @State private var showPassword: Bool = true // 패스워드 공개 버튼
-    var isCheckingMismatch: Bool          // 확인 버튼 눌렸는지 여부
+    @State private var showPassword: Bool = false // 패스워드 공개 버튼
+    @Binding var isCheckingMismatch: Bool         // 확인 버튼 눌렸는지 여부
 
     private var fieldState: FieldState {
-        if isCheckingMismatch && password != storedPassword {
+        if isCheckingMismatch {
             return .mismatched
         } else if isFocused {
             return .focused
@@ -44,12 +43,14 @@ struct PasswordField: View {
                         .tracking(-0.28)
                         .foregroundStyle(Color.gray900)
                         .autocorrectionDisabled(true)
+                        .textInputAutocapitalization(.none)
                 } else {
                     TextField("8자 이상의 비밀번호", text: $password)
                         .font(.mainTextRegular14)
                         .tracking(-0.28)
                         .foregroundStyle(Color.gray900)
                         .autocorrectionDisabled(true)
+                        .textInputAutocapitalization(.none)
                 }
                 
                 Button(action: {
@@ -64,7 +65,8 @@ struct PasswordField: View {
             }//h
             .padding(.horizontal, 20)
             .padding(.vertical, 15)
-            .frame(width: 350, height: 50)
+            .frame(maxHeight: .infinity)
+            .frame(height: 50)
             .background(
                 RoundedRectangle(cornerRadius: 15)
                     .stroke(borderColor(for: fieldState), lineWidth: 1)
@@ -128,7 +130,6 @@ struct PasswordField: View {
     
     PasswordField(
         password: $dummyPassword,
-        storedPassword: "12345678",
         isCheckingMismatch: true
     )
 }

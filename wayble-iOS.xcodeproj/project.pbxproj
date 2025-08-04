@@ -11,14 +11,11 @@
 		6185D4842E2D2691007017DB /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 6185D4832E2D2691007017DB /* Alamofire */; };
 		6185D4872E2D26A1007017DB /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 6185D4862E2D26A1007017DB /* Kingfisher */; };
 		6E44E4A52E386389001BC046 /* NMapsMap in Frameworks */ = {isa = PBXBuildFile; productRef = 6E44E4A42E386389001BC046 /* NMapsMap */; };
-		89CBAF9B55CC5504DF221C4E /* Pods_wayble_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7251F346D58020C5FF541EA4 /* Pods_wayble_iOS.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		6E29C8BA2E1EAD3B00E69785 /* wayble-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "wayble-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7251F346D58020C5FF541EA4 /* Pods_wayble_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_wayble_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		B62CD4B34F5A91399070EF47 /* Pods-wayble-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-wayble-iOS.release.xcconfig"; path = "Target Support Files/Pods-wayble-iOS/Pods-wayble-iOS.release.xcconfig"; sourceTree = "<group>"; };
-		C4B08A975215688C5005A832 /* Pods-wayble-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-wayble-iOS.debug.xcconfig"; path = "Target Support Files/Pods-wayble-iOS/Pods-wayble-iOS.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -47,7 +44,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				89CBAF9B55CC5504DF221C4E /* Pods_wayble_iOS.framework in Frameworks */,
 				6185D4872E2D26A1007017DB /* Kingfisher in Frameworks */,
 				6E44E4A52E386389001BC046 /* NMapsMap in Frameworks */,
 				6185D4812E2D25B6007017DB /* Moya in Frameworks */,
@@ -61,8 +57,6 @@
 		4C4B02159DE9E0EF9E3BE253 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				C4B08A975215688C5005A832 /* Pods-wayble-iOS.debug.xcconfig */,
-				B62CD4B34F5A91399070EF47 /* Pods-wayble-iOS.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -100,7 +94,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6E29C8C82E1EAD3E00E69785 /* Build configuration list for PBXNativeTarget "wayble-iOS" */;
 			buildPhases = (
-				9FA0C7C0172927A9F61B7B4D /* [CP] Check Pods Manifest.lock */,
 				6E29C8B62E1EAD3B00E69785 /* Sources */,
 				6E29C8B72E1EAD3B00E69785 /* Frameworks */,
 				6E29C8B82E1EAD3B00E69785 /* Resources */,
@@ -173,31 +166,6 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		9FA0C7C0172927A9F61B7B4D /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-wayble-iOS-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
 		6E29C8B62E1EAD3B00E69785 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -211,6 +179,8 @@
 /* Begin XCBuildConfiguration section */
 		6E29C8C62E1EAD3E00E69785 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 6E29C8BC2E1EAD3B00E69785 /* wayble-iOS */;
+			baseConfigurationReferenceRelativePath = Network/Core/Secret.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -274,6 +244,8 @@
 		};
 		6E29C8C72E1EAD3E00E69785 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 6E29C8BC2E1EAD3B00E69785 /* wayble-iOS */;
+			baseConfigurationReferenceRelativePath = Network/Core/Secret.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -330,7 +302,6 @@
 		};
 		6E29C8C92E1EAD3E00E69785 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C4B08A975215688C5005A832 /* Pods-wayble-iOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -368,7 +339,6 @@
 		};
 		6E29C8CA2E1EAD3E00E69785 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B62CD4B34F5A91399070EF47 /* Pods-wayble-iOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;

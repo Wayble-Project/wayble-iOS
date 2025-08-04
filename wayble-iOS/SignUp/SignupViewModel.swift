@@ -11,14 +11,16 @@ import SwiftUI
 
 @Observable
 class SignupViewModel {
+    private let signupService: SignupService
+
     var userInfo = UserInfo()
     var isEmailValid: Bool = false
     var isDuplicate: Bool? = nil
     var isChecking: Bool = false
     
-
-
-
+    init(signupService: SignupService = SignupService()) {
+        self.signupService = signupService
+    }
 
     // 이메일 형식 유효성 검사
     func validateEmailFormat() {
@@ -47,4 +49,26 @@ class SignupViewModel {
         }
     }
      */
+    
+    func signup(completion: @escaping (Bool) -> Void) {
+            let signupData = SignupData(
+                email: userInfo.email,
+                password: userInfo.password,
+                loginType: "BASIC"
+            )
+
+            print("🧾 signupData.email: \(signupData.email)")
+            print("🧾 signupData.password: \(signupData.password)")
+
+            Task {
+                do {
+                    let result = try await signupService.createSignup(signupData)
+                    print("회원가입 성공: \(result)")
+                    completion(true)
+                } catch {
+                    print("회원가입 실패: \(error)")
+                    completion(false)
+                }
+            }
+        }
 }

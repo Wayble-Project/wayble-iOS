@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+import Foundation
+
 
 struct LoginView: View {
     
@@ -14,11 +16,13 @@ struct LoginView: View {
         case email
         case password
     }
-
+    @Binding var selectedIndex: Int
     @Environment(NavigationRouter.self) private var router
     @FocusState private var focusedField: Field?
     //@State var email: String
     @Bindable var viewModel = LoginViewModel()
+    @State private var loginFailed = false
+    @EnvironmentObject var authViewModel: AuthViewModel
     
     var body: some View {
         VStack(spacing: 0) {
@@ -40,22 +44,41 @@ struct LoginView: View {
             
             PasswordField(
                 password: $viewModel.userInfo.password,
-                storedPassword: "12345678",
-                isCheckingMismatch: false
+                isCheckingMismatch: $viewModel.isCheckingMismatch
             )
             .submitLabel(.done)
             .focused($focusedField, equals: .password)
-            .onSubmit {
-                viewModel.login()
+            .onChange(of: viewModel.userInfo.password) { ///비밀번호가 입력될 때마다 isCheckingMismatch를 false로 바꿈
+                viewModel.isCheckingMismatch = false ///비밀번호를 다시 입력할 때 border라인을 원래 상태로 돌리기 위함임
             }
             .padding(.bottom, 29)
             
             
             //FIXME: - isDisabled 수정
+            //FIXME: - 이메일, 비밀번호 확인 로직 들어가야 함
             OkButton(title: "확인", isDisabled: false) {
-                print("확인")
-                router.push(.home)
-                
+                Task { @MainActor in
+                    do {
+                        let token = try await viewModel.login()
+                        let success = KeychainManager.standard.saveSession(token, for: "tokenInfoKey")
+                        
+                        if success {
+                            print("토큰 저장 성공")
+                        } else {
+                            print("토큰 저장 실패")
+                        }
+                        
+                        if await authViewModel.hasCompletedOnboarding() {
+                            authViewModel.state = .loggedIn
+                        } else {
+                            authViewModel.state = .needsOnboarding
+                            viewModel.isCheckingMismatch = true
+                        }
+                        
+                    } catch {
+                        loginFailed = true
+                    }
+                }
             }
             .padding(.bottom, 15)
             
@@ -68,6 +91,12 @@ struct LoginView: View {
             SNSloginButtonView()
                 //.padding(.bottom, 131)
         } //v
+        .padding(.horizontal, 20)
+        .alert("로그인 실패", isPresented: $loginFailed) {
+            Button("확인", role: .cancel) { }
+        } message: {
+            Text("이메일 또는 비밀번호를 확인해주세요.")
+        }
     }
     
     
@@ -84,11 +113,11 @@ struct LoginView: View {
         }
     }
     
-    
+    // MARK: - 비밀번호 찾기 | 회원가입 페이지 이동 버튼
     private var signUporFindPwdButton: some View {
         HStack(alignment: .center, spacing: 0) {
             Spacer()
-            Button(action: {router.push(.findPassword)}) {
+            Button(action: {}) {
                 Text("비밀번호 찾기")
                     .font(.mainTextSemibold12)
                     .foregroundStyle(Color.gray900)
@@ -100,7 +129,7 @@ struct LoginView: View {
                 .padding(.horizontal, 4)
             
             
-            Button(action: {router.push(.signup)}) {
+            Button(action: {selectedIndex = 14}) {
                 Text("회원가입")
                     .font(.mainTextSemibold12)
                     .foregroundStyle(Color.gray900)
@@ -128,13 +157,12 @@ struct LoginView: View {
                 .frame(height: 1)
                 .foregroundStyle(Color.gray300)
         }
-        .padding(.horizontal, 20)
     }
     
 }
 
 //FIXME: - 이미지 교체, 기능 추가해야 함
-
+/// 간편 로그인 버튼 (sdk 사용해서 구현해야 함)
 struct SNSloginButtonView : View {
     
     @Environment(NavigationRouter.self) private var router
@@ -142,7 +170,7 @@ struct SNSloginButtonView : View {
     var body: some View {
         HStack {
             Button(action: {}) {
-                Image("home")
+                Image(.kakaoIcon)
                     .resizable()
                     .frame(width: 52, height: 52)
             }
@@ -161,6 +189,5 @@ struct SNSloginButtonView : View {
 
 
 #Preview {
-    LoginView()
-        .withRouter(selectedIndex: .constant(0))
+    LoginView(selectedIndex: .constant(0))
 }

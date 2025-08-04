@@ -23,7 +23,7 @@ struct NewPasswordCompletedView: View {
             Spacer()
             
             OkButton(title: "확인", isDisabled: false) {
-                print("appstorge 저장하는 코드")
+                // 서버로 patch 
             }
             .padding(.bottom, 54)
         }

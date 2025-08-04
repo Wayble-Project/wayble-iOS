@@ -14,8 +14,10 @@ import SwiftUI
 import SwiftUI
 
 struct SignupPasswordView: View {
-    @State var viewModel = SignupViewModel()
-    @State var confirmPassword: String
+    @Bindable var viewModel: SignupViewModel
+    @Binding var selectedIndex: Int
+    
+    @State var confirmPassword: String = ""
     
     @State private var isPasswordMatched: Bool = false
     
@@ -35,10 +37,11 @@ struct SignupPasswordView: View {
                     $viewModel.userInfo.password,
                 confirmPassword:
                     $confirmPassword,
-                isMatched: .constant(true),
+                isMatched: $isPasswordMatched,
                 setPassword: "1",
                 content: "✓ 대소문자,숫자,특수문자 포함",
-                shouldCheckMatch: false)
+                shouldCheckMatch: false
+            )
             
             .padding(.bottom, 18)
             
@@ -48,7 +51,8 @@ struct SignupPasswordView: View {
                 confirmPassword: $viewModel.userInfo.password,
                 isMatched: $isPasswordMatched,
                 setPassword: "1",
-                content: "✓ 비밀번호 일치"
+                content: "✓ 비밀번호 일치",
+                shouldCheckMatch: true
             )
             
             Spacer()
@@ -57,14 +61,19 @@ struct SignupPasswordView: View {
                 isDisabled: !isPasswordMatched
             ) {
                 print("비밀번호 생성")
+                viewModel.userInfo.password = viewModel.userInfo.password // 명시
+                viewModel.userInfo.loginType = .basic
+                print("📧 이메일:", viewModel.userInfo.email)
+                print("🔒 비밀번호:", viewModel.userInfo.password)
+                selectedIndex = 10
             }
             .padding(.bottom, 54)
             
         }
+        .padding(.horizontal, 20)
     }
 }
 
 #Preview {
-    SignupPasswordView(viewModel: SignupViewModel(), confirmPassword: "")
-        .environment(NavigationRouter())
+    SignupPasswordView(viewModel: SignupViewModel(), selectedIndex: .constant(0))
 }
