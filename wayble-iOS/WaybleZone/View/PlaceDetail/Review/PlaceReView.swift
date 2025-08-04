@@ -99,5 +99,11 @@ struct PlaceReView: View {
 }
 
 #Preview {
+
     PlaceReView(reviews: mockReviewListResponse.data).withRouter(selectedIndex: .constant(0))
+
+  /*
+    PlaceReView(reviews: mockReviewListResponse.data, onWrite: {})
+        .withRouter(selectedIndex: .constant(0),router: NavigationRouter())
+  */
 }

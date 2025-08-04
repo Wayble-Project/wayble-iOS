@@ -12,17 +12,17 @@ import Foundation
 @main
 struct iOSApp: App {
     let router = NavigationRouter()
-        @State private var selectedIndex = 0
-        @State private var step = 0
-        @State var userInfo = UserInfo()
-        @StateObject var authViewModel = AuthViewModel()
+    @State private var selectedIndex = 0
+    @State private var step = 0
+    @State var userInfo = UserInfo()
+    @StateObject var authViewModel = AuthViewModel()
 
     var body: some Scene {
         WindowGroup {
-                    MainView(selectedIndex: $selectedIndex, step: $step)
-                        .withRouter(selectedIndex: $selectedIndex, router: router)
-                        .environment(router)
-                        .environmentObject(authViewModel)
+            MainView(selectedIndex: $selectedIndex, step: $step)
+                .withRouter(selectedIndex: $selectedIndex, router: router)
+                .environment(router)
+                .environmentObject(authViewModel)
         }
     }
 }

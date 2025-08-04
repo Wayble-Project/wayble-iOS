@@ -48,4 +48,3 @@ struct PlaceDetailView: View {
     PlaceDetailView().withRouter(selectedIndex: .constant(0))
 }
 */
-
