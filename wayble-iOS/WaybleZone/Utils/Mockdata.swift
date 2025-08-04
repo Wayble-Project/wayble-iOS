@@ -27,7 +27,10 @@ let mockWaybleZoneResponse = WaybleZoneResponse(
         photos: [
             "mockreview1",
             "mockreview2"
-        ]
+        ],
+        
+        latitude :37.536577523624985,
+        longitude :126.96403125739117
     )
 )
 

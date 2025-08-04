@@ -14,6 +14,8 @@
          .clipped()
  }
  .frame(height: 479) 한번 더 .frame 적기!! */
+
+
 import SwiftUI
 import AVFoundation
 

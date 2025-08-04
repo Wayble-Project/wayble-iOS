@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "도보 길찾기 점.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

@@ -4,6 +4,7 @@ import Foundation
 import Observation
 
 
+
 struct WaybleZoneResponse: Codable {
     let data: WaybleZone
 }
@@ -20,6 +21,8 @@ struct WaybleZone: Codable, Identifiable {
     let facilities: Facilities
     let businessHours: [String: OpeningHours]
     let photos: [String]
+    let latitude: Double
+    let longitude: Double
 
     // JSON 키가 Swift 변수 이름과 다를 때
     enum CodingKeys: String, CodingKey {
@@ -34,6 +37,8 @@ struct WaybleZone: Codable, Identifiable {
         case facilities
         case businessHours = "business_hours"
         case photos
+        case latitude
+        case longitude
     }
 }
 

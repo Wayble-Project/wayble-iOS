@@ -68,17 +68,3 @@ struct OnboardingCompletedView: View {
 }
 
 
- #Preview {
-    struct PreviewWrapper: View {
-        @State var selectedIndex = 0
-        @State var viewModel = OnboardingViewModel()
-
-        var body: some View {
-            OnboardingCompletedView(viewModel: viewModel, selectedIndex: $selectedIndex)
-                .withRouter(selectedIndex: $selectedIndex)
-        }
-    }
-
-    return PreviewWrapper()
- }
- 

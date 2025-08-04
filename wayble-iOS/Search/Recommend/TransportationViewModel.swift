@@ -6,10 +6,11 @@
 //
 
 import Foundation
-import Combine
 
-final class TransportationViewModel: ObservableObject {
+@Observable
+class TransportationViewModel {
     var transportation: TransportationModel
+    var walkViewModel = WalkViewModel()
 
     init() {
         self.transportation = TransportationModel(
@@ -63,9 +64,19 @@ final class TransportationViewModel: ObservableObject {
         transportation.destination = temp
     }
 
-    // 대중교통, 도보로 넘어감 
+    // 대중교통, 도보로 넘어감
     func setTab(to tab: TransportationTab) {
         transportation.selectedTab = tab
+    }
+
+    // 출발지 또는 도착지 설정
+    func setPlace(_ place: PlaceModel, for entryType: EntryType) {
+        switch entryType {
+        case .departure:
+            transportation.departure = place.roadAddress
+        case .destination:
+            transportation.destination = place.roadAddress
+        }
     }
     // 요약된 previewSteps만 추출 (RouteView 용)
     var previewRoutes: [RouteOption] {

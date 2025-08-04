@@ -41,12 +41,16 @@ enum Route: Hashable {
     case onboardingCompleted
     case routeDetail
     case searchHome
-    case searchBar
+    case searchBar(entryType: EntryType)
     case mapDetail(place: PlaceModel)
     case OnlyMapView
     case splashView
     case signupCompleted
     case onboardingRoot
     case signupTerm
-    
+    case transportation(
+        entryType: EntryType,
+        selectedArrival: PlaceModel?,
+        selectedDeparture: PlaceModel?
+    )
 }

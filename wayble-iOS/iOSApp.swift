@@ -11,7 +11,8 @@ import Foundation
 
 @main
 struct iOSApp: App {
-    @State private var selectedIndex = 7
+    let router = NavigationRouter()
+    @State private var selectedIndex = 0
     @State private var step = 0
     @State var userInfo = UserInfo()
     @StateObject var authViewModel = AuthViewModel()
@@ -19,8 +20,9 @@ struct iOSApp: App {
     var body: some Scene {
         WindowGroup {
             MainView(selectedIndex: $selectedIndex, step: $step)
-                .withRouter(selectedIndex: $selectedIndex)
-                .environmentObject(authViewModel) // 주입
+                .withRouter(selectedIndex: $selectedIndex, router: router)
+                .environment(router)
+                .environmentObject(authViewModel)
         }
     }
 }

@@ -1,7 +1,6 @@
 import SwiftUI
 import Observation
 
-
 // WaybleZone 상세페이지
 enum FacilityOption: String, CaseIterable, Identifiable {
     case hasNoDoorStep = "문턱 없음"
@@ -10,6 +9,7 @@ enum FacilityOption: String, CaseIterable, Identifiable {
     case hasTableSeat = "테이블석"
     case hasDisabledToilet = "장애인 화장실"
     case hasSlope = "경사로"
+    case hasElevator = "엘리베이터"
     
     var id: String { self.rawValue } //.id(\.self) 이거 안 써도 됨
     
@@ -21,6 +21,7 @@ enum FacilityOption: String, CaseIterable, Identifiable {
         case .hasTableSeat: return "table"
         case .hasDisabledToilet: return "chair02"
         case .hasSlope: return "chair01"
+        case .hasElevator : return "lift"
         }
     }
 }
@@ -44,11 +45,29 @@ class FacilitySelectionViewModel {
         Facilities(
             hasSlope: selected.contains(.hasSlope),
             hasNoDoorStep: selected.contains(.hasNoDoorStep),
-            hasElevator: false, // 선택 항목에 없음
+            hasElevator: selected.contains(.hasElevator),
             hasTableSeat: selected.contains(.hasTableSeat),
             hasDisabledToilet: selected.contains(.hasDisabledToilet),
             floorInfo: selected.contains(.floorInfo) ? selectedFloorInfo : ""
         )
+    }
+    //mock 데이터 넣어보기용 함수
+    //api 연결시 삭제 
+    func loadMockData() {
+        let mock = mockWaybleZoneResponse.data.facilities
+
+        if mock.hasSlope { selected.insert(.hasSlope) }
+        if mock.hasNoDoorStep { selected.insert(.hasNoDoorStep) }
+        if mock.hasElevator { selected.insert(.hasElevator) }
+        if mock.hasTableSeat { selected.insert(.hasTableSeat) }
+        if mock.hasDisabledToilet { selected.insert(.hasDisabledToilet) }
+        if !mock.floorInfo.isEmpty {
+            selected.insert(.floorInfo)
+            selectedFloorInfo = mock.floorInfo
+        }
+    }
+    var mockZone: WaybleZone {
+        return mockWaybleZoneResponse.data
     }
 }
 
@@ -57,14 +76,14 @@ class FacilitySelectionViewModel {
 //@Observable
 //final class PlaceDetailViewModel2 {
 //    var waybleZone: WaybleZone? = nil
-//    
+//
 //    //    func getPlaceDetail() async throws -> WaybleZone {
 //    //        let url = URL(string: "")!
 //    //        let (data, _) = try await URLSession.shared.data(from: url)
 //    //        let wrapper = try JSONDecoder().decode(WaybleZoneResponse.self, from: data)
 //    //        return wrapper.items[0]
 //    //    }
-//    
+//
 //    func fetchPlaceDetail() async {
 //        do {
 //            self.waybleZone = try await getPlaceDetail()
@@ -72,28 +91,28 @@ class FacilitySelectionViewModel {
 //            print("Error fetching detail: \(error.localizedDescription)")
 //        }
 //    }
-//    
+//
 //    func getPlaceDetail() async throws -> WaybleZone {
 //        guard let url = URL(string: "http://localhost:8080/wayble-zone?city=일산&category=카페") else {
 //            throw URLError(.badURL)
 //        }
-//        
+//
 //        var request = URLRequest(url: url)
 //        request.httpMethod = "GET"
 //        request.setValue("Bearer valid_jwt_token", forHTTPHeaderField: "Authorization")
-//        
+//
 //        let (data, response) = try await URLSession.shared.data(for: request)
-//        
+//
 //        if let httpResponse = response as? HTTPURLResponse {
 //            guard (200..<300).contains(httpResponse.statusCode) else {
 //                throw NSError(domain: "HTTP Error", code: httpResponse.statusCode)
 //            }
 //        }
-//        
+//
 //        let wrapper = try JSONDecoder().decode(WaybleZoneResponse.self, from: data)
 //        return wrapper.data
 //    }
-//    
+//
 //}
 
 

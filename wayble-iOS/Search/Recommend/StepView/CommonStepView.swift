@@ -2,7 +2,7 @@ import SwiftUI
 
 struct CommonStepView: View {
     let step: RouteStep
-    @StateObject var viewModel = TransportationViewModel()
+    @Bindable var viewModel = TransportationViewModel()
     @State private var isSimpleMode = false
     
     var body: some View {
@@ -21,7 +21,7 @@ struct CommonStepView: View {
                                     .font(.mainTextSemibold12)
                                     .foregroundStyle(step.title.contains("출발") ? Color.positive : Color.black)
                                 Spacer()
-                                    .frame(height:0)
+                                    .frame(height:4)
                                 
                                 let color: Color = {
                                     switch step.type {
@@ -32,15 +32,7 @@ struct CommonStepView: View {
                                 }()
 
                                 ZStack {
-                                    Rectangle()
-                                        .fill(color)
-                                        .frame(width: 3, height: 10)
-                                        .offset(y: -10)
-
-                                    Rectangle()
-                                        .fill(color)
-                                        .frame(width: 3, height: 36)
-                                        .offset(y: 13)
+                                    Image(.dot3)
                                 }
                                 
                             }
@@ -53,7 +45,7 @@ struct CommonStepView: View {
                                         .font(.mainTextSemibold14)
                                     
 
-                                    Spacer().frame(height:18)
+                                    Spacer().frame(height:15)
 
                                     HStack(spacing: 7) {
                                         if let routeDetail = step.routeDetail {
@@ -68,6 +60,7 @@ struct CommonStepView: View {
                                             Rectangle()
                                                 .fill(Color.gray700)
                                                 .frame(width: 1, height: 10)
+                                                
                                         }
                                         
                                       
@@ -76,8 +69,7 @@ struct CommonStepView: View {
                                                 .font(.mainTextRegular12)
                                         }
                                     }
-                                    .baselineOffset(-4)
-                                }
+                                                                    }
 
                                 Spacer().frame(height:17)
 

@@ -12,17 +12,26 @@ struct MapDetailView: View {
     let place: PlaceModel
     @Binding var selectedIndex: Int
     @Binding var searchBarViewID: UUID
+    @Binding var selectedDeparture: PlaceModel?
+    @Binding var selectedArrival: PlaceModel?
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         ZStack(alignment: .top) {
+            Color.red.opacity(0.2) // ✅ Background color to verify visibility
+            Text("🧭 DEBUG: MapDetailView Active")
+                .foregroundColor(.white)
+                .padding(8)
+                .background(Color.black)
+                .cornerRadius(8)
+                .padding(.top, 100)
             // 지도 + 고정 핀
             ZStack() {
                 if let mapx = Double(place.x ?? ""),
                    let mapy = Double(place.y ?? "") {
                     
                     let lng = mapx / 10_000_000.0
-                    let lat = mapy / 10_000_000.0 
+                    let lat = mapy / 10_000_000.0
 
                     NaverMapView(centerX: lng, centerY: lat, zoomLevel: 20,showMarker: true) // 줌 레벨 지정
                 }
@@ -39,7 +48,8 @@ struct MapDetailView: View {
                     }
                 }) {
                     Image(systemName: "chevron.left")
-                        .foregroundStyle(.black)
+                        .foregroundStyle(Color.black)
+
                     
                     Text("ex.숙대입구역 맛집")
                         .foregroundStyle(.gray500)
@@ -63,10 +73,26 @@ struct MapDetailView: View {
             )
             .padding(.horizontal, 20)
             .padding(.top, 12)
-            VStack {
-                Spacer()
-                MapBoxView(place: place)
+            if let zone = SearchViewModel.shared.waybleZones.first(where: { $0.name == place.title }) {
+                VStack {
+                    Spacer()
+                    PlaceDetailView(zone: zone)
+                }
+            } else {
+                VStack {
+                    Spacer()
+                    MapBoxView(
+                        place: place,
+                        selectedIndex: $selectedIndex,
+                        selectedDeparture: $selectedDeparture,
+                        selectedArrival: $selectedArrival
+                    )
+                }
             }
+        }
+        .ignoresSafeArea()
+        .onAppear {
+            print("🧭 MapDetailView 헉 등장 - 전달된 place: \(place.title), x: \(place.x ?? "nil"), y: \(place.y ?? "nil")")
         }
         
     }
@@ -83,6 +109,8 @@ struct MapDetailView: View {
             isWaybleZone: true
         ),
         selectedIndex: .constant(0),
-        searchBarViewID: .constant(UUID())
+        searchBarViewID: .constant(UUID()),
+        selectedDeparture: .constant(nil),
+        selectedArrival: .constant(nil)
     )
 }
