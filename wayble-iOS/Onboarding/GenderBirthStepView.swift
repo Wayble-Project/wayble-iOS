@@ -30,7 +30,8 @@ struct GenderBirthStepView: View {
                 text: "생년월일",
                 placeHolder: "YYYY-MM-DD",
                 textValue: $viewModel.userInfo.birth,
-                keyboardType: .default
+                keyboardType: .default,
+                validationState: $viewModel.birthValidationState
             )
             Spacer()
             BothButton(
@@ -43,6 +44,7 @@ struct GenderBirthStepView: View {
                     viewModel.userInfo.birth = ""
                 },
                 onNextAction: {
+                    viewModel.birthValidationState = viewModel.checkBirthState
                     guard let selected = selectedItem,
                           let gender = Gender(rawValue: selected)
                     else { return }

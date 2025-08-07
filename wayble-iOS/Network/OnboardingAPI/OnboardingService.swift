@@ -15,17 +15,27 @@ final class OnboardingService {
     //let provider = MoyaProvider<OnboardingRouter>(stubClosure: MoyaProvider.immediatelyStub)
     /// 이건 샘플데이터 용
     func getOnboarding() async throws -> OnboardingResponse {
+        let response = try await provider.requestAsync(.get)
+        print("Status Code: \(response.statusCode)")
+        // 응답 바디 로그 출력
+        print("🔎 응답 바디: \(String(data: response.data, encoding: .utf8) ?? "없음")")
+        ///서버 응답이 구조적으로 올바르면 data가 nil이어도 디코딩은 성공으로 간주
         do {
-            let response = try await provider.requestAsync(.get)
+            guard !response.data.isEmpty else {
+                print("⚠️ 응답 바디가 비어 있음 → 디코딩 생략")
+                
+                throw URLError(.badServerResponse)
+            }
             let decodedResponse = try JSONDecoder().decode(OnboardingResponse.self, from: response.data)
             print("GET 성공: \(decodedResponse)")
             return decodedResponse
         } catch {
-            print("온보딩 GET 요청 혹은 디코딩 실패: \(error.localizedDescription)")
+            print("온보딩 GET 디코딩 실패: \(error.localizedDescription)")
             throw error
         }
     }
 
+    
     func createOnboarding(_ onboardingData: OnboardingData) async throws -> String {
         do {
             
@@ -44,11 +54,13 @@ final class OnboardingService {
             print("Status Code: \(response.statusCode)")
             print("응답 바디:\n" + (String(data: response.data, encoding: .utf8) ?? "응답 데이터 없음"))
 
-            
+            /*
             guard !response.data.isEmpty else {
                 print("⚠️ 응답 바디가 비어 있어 디코딩 생략됨")
                 throw URLError(.badServerResponse)
             }
+             */
+            
             let decodedResponse = try JSONDecoder().decode(OnboardingPostResponse.self, from: response.data)
             print("온보딩 POST 성공 메시지: \(decodedResponse.data)")
             return decodedResponse.data

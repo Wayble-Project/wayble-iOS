@@ -7,7 +7,7 @@
 //
 
 import SwiftUI
-
+///앱 실행 시 자동으로 로그인 상태를 확인하고, 해당하는 뷰로 이동하도록 MainView에 .task를 추가!!
 struct MainView: View {
     @State private var place = PlaceModel()
     @State private var searchBarViewID = UUID()

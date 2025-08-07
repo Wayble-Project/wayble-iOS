@@ -12,6 +12,7 @@ enum ValidationState {
     case tooShort(min: Int)
     case duplicated
     case invalidBirthFormat
+    case invalidNicknameFormat
 }
 
 //FIXME: - isCheckingMismatch 타입 변경
@@ -22,17 +23,8 @@ struct CustomTextField: View {
     var placeHolder: String
     @Binding var textValue: String
     var keyboardType: UIKeyboardType = .default
-    var validationState: ValidationState = .valid
+    @Binding var validationState: ValidationState
     @FocusState private var isFocused: Bool
-
-    private var hasError: Bool {
-        switch validationState {
-        case .valid:
-            return false
-        default:
-            return true
-        }
-    }
 
     private var errorMessage: String {
         switch validationState {
@@ -42,10 +34,22 @@ struct CustomTextField: View {
             return "이미 사용 중인 닉네임입니다."
         case .invalidBirthFormat:
             return "올바른 생년월일 형식이 아닙니다."
+        case .invalidNicknameFormat:
+            return "닉네임은 한글 또는 영문만 사용할 수 있습니다."
         case .valid:
             return ""
         }
     }
+    
+    private var hasError: Bool {
+        switch validationState {
+        case .valid:
+            return false
+        default:
+            return true
+        }
+    }
+    
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -84,12 +88,13 @@ struct CustomTextField: View {
 
 #Preview {
     @State var dummyNickname = ""
-    CustomTextField(
+    @State var validationState: ValidationState = .invalidBirthFormat
+    return CustomTextField(
         text: "생년월일",
         placeHolder: "YYYY-MM-DD 형식으로 입력해주세요",
         textValue: $dummyNickname,
         keyboardType: .default,
-        validationState: .invalidBirthFormat
+        validationState: $validationState
     )
 }
 
