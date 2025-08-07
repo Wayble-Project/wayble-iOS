@@ -5,7 +5,6 @@
 //  Created by 이서현 on 7/15/25.
 //
 
-
 //FIXME: - 이전버튼 viewModel.userInfo.nickname = "" 만 해도 충분한지
 import SwiftUI
 
@@ -28,21 +27,42 @@ struct NicknameStepView: View {
                 text: "닉네임",
                 placeHolder: "닉네임을 입력해주세요",
                 textValue: $viewModel.userInfo.nickname,
-                keyboardType: .default
+                keyboardType: .default,
+                validationState: .constant(.valid)
             )
             Spacer()
             BothButton(
                 step: $step,
                 selectedIndex: $selectedIndex,
-                isNextDisabled: !viewModel.isNicknameValid,
+                isNextDisabled: viewModel.userInfo.nickname.trimmingCharacters(in: .whitespacesAndNewlines).count < 2,
                 onPreviousAction: {
                     viewModel.userInfo.nickname = ""
                     selectedIndex = 8
                 },
                 onNextAction: {
-                    viewModel.userInfo.nickname = viewModel.userInfo.nickname.trimmingCharacters(in: .whitespacesAndNewlines)
-                    /// .trimmingCharacters(in: .whitespacesAndNewlines) : 앞뒤의 공백(space), 탭, 줄바꿈(\n) 같은 쓸데없는 문자들을 제거해주는 Swift 표준 함수
-                    print("닉네임 : \(viewModel.userInfo.nickname)")
+                    Task {
+                        let trimmed = viewModel.userInfo.nickname.trimmingCharacters(in: .whitespacesAndNewlines)
+
+                        do {
+                            await viewModel.checkNicknameDuplicate(nickname: trimmed)
+                            viewModel.nicknameValidationState = viewModel.checkNicknameState
+
+                            guard let isDuplicate = viewModel.isNicknameDuplicate else {
+                                print("❌ 중복 확인 실패 (nil)")
+                                return
+                            }
+
+                            if isDuplicate {
+                                print("❌ 중복된 닉네임입니다.")
+                                return
+                            }
+
+                            viewModel.userInfo.nickname = trimmed
+                            print("✅ 닉네임 : \(viewModel.userInfo.nickname)")
+                            step += 1
+
+                        }
+                    }
                 }
             )
             

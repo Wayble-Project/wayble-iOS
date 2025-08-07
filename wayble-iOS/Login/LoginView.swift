@@ -59,23 +59,28 @@ struct LoginView: View {
             OkButton(title: "확인", isDisabled: false) {
                 Task { @MainActor in
                     do {
-                        let token = try await viewModel.login()
+                        let token = try await viewModel.login() ///로그인 성공하면 토큰을 응답으로 받음 (TokenInfo)
                         let success = KeychainManager.standard.saveSession(token, for: "tokenInfoKey")
+                        /// token ; 받은 토큰을 Keychain에 저장 +  success ; 성공 여부를 success에 저장 (Bool)
                         
                         if success {
                             print("토큰 저장 성공")
                         } else {
                             print("토큰 저장 실패")
                         }
-                        
-                        if await authViewModel.hasCompletedOnboarding() {
-                            authViewModel.state = .loggedIn
-                        } else {
-                            authViewModel.state = .needsOnboarding
-                            viewModel.isCheckingMismatch = true
+                        await authViewModel.checkLoginStatus()
+                        switch authViewModel.state {
+                        case .unknown: /// 이 케이스는 어떻게 처리할까?
+                            print("")
+                        case .loggedIn:
+                            selectedIndex = 8
+                        case .needsOnboarding:
+                            selectedIndex = 13
+                        case .loggedOut:
+                            loginFailed = true
                         }
-                        
                     } catch {
+                        viewModel.isCheckingMismatch = true ///0806 추가
                         loginFailed = true
                     }
                 }

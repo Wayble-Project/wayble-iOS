@@ -24,9 +24,7 @@ struct BothButton: View {
             }
             NextButton(title: "다음", isDisabled: isNextDisabled) {
                 onNextAction?()
-                if step < 3 {
-                    step += 1
-                } else if step == 3 {
+                if step == 3 {
                     selectedIndex = 12
                 }
             }
@@ -36,3 +34,10 @@ struct BothButton: View {
     }
 }
 
+/*
+ if step < 3 {
+     step += 1
+ } else if step == 3 {
+     selectedIndex = 12
+ }
+ */

@@ -29,7 +29,7 @@ extension APITargetType {
     var baseURL: URL { /// GPT
         guard let urlString = Bundle.main.infoDictionary?["API_BASE_URL"] as? String,
               let url = URL(string: urlString) else {
-            fatalError("❌ API_BASE_URL not found or invalid in Info.plist")
+            fatalError("❌ API_BASE_URL not found or invalid in Info.plist ❌")
         }
         return url
     }

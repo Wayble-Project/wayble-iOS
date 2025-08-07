@@ -24,7 +24,11 @@ final class KeychainManager: @unchecked Sendable {
     /// 세션에 저장된 정보를 불러옵니다.
     public func loadSession(for key: String) -> TokenInfo? {
         guard let data = load(key: key),
-              let session = try? JSONDecoder().decode(TokenInfo.self, from: data) else { return nil }
+              let session = try? JSONDecoder().decode(TokenInfo.self, from: data) else {
+            print("🔑 [Keychain] 토큰 로드 실패 - key: \(key)") ///자동로그인 확인 로그
+            return nil
+        }
+        print("✅ [Keychain] 토큰 로드 성공 - key: \(key), accessToken: \(session.accessToken)") ///나중에 accessToken 로그는 지우기
         return session
     }
 

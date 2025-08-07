@@ -8,8 +8,8 @@
 	<string>$(API_BASE_URL)</string>
 	<key>Information Property List</key>
 	<dict>
-		<key>KAKAO_APP_KEY</key>
-		<string>7889a45ba2df2fdbd3171bca2dacaaa6</string>
+    <key>KAKAO_APP_KEY</key>
+    <string>7889a45ba2df2fdbd3171bca2dacaaa6</string>
 	</dict>
 	<key>KAKAO_REST_API_KEY</key>
 	<string>$(KAKAO_REST_API_KEY)</string>
