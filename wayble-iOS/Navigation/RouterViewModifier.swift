@@ -128,13 +128,7 @@ struct RouterViewModifier: ViewModifier {
                 )
                 .navigationBarBackButtonHidden(true)
             )
-            /*
-             case .mapDetail(let place):
-             return AnyView(MapDetailView(place: place, selectedIndex: $selectedIndex,searchBarViewID: .constant(UUID()))
-             .navigationBarBackButtonHidden(true))
-             
-             */
-            
+
         case .transportation(let entryType, let arrivalPlace, let departurePlace):
             return AnyView(
                 Transportation(

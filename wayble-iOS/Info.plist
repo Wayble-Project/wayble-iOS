@@ -5,22 +5,22 @@
 	<key></key>
 	<string></string>
 	<key>API_BASE_URL</key>
-	<string>$(API_BASE_URL)</string>
+	<string>https://wayble.site</string>
 	<key>Information Property List</key>
 	<dict>
-    <key>KAKAO_APP_KEY</key>
-    <string>7889a45ba2df2fdbd3171bca2dacaaa6</string>
+		<key>KAKAO_APP_KEY</key>
+		<string>7889a45ba2df2fdbd3171bca2dacaaa6</string>
 	</dict>
 	<key>KAKAO_REST_API_KEY</key>
 	<string>$(KAKAO_REST_API_KEY)</string>
 	<key>NAVER_CLIENT_ID</key>
-	<string>$(NAVER_CLIENT_ID)</string>
+	<string>BgYZd4nAU9SODxHpQJIt</string>
 	<key>NAVER_CLIENT_SECRET</key>
-	<string>$(NAVER_CLIENT_SECRET)</string>
+	<string>pNjVsZ2VWl</string>
 	<key>NMFNcpKeyId</key>
-	<string>$(NMFNcpKeyId)</string>
+	<string>4wrbuvpxtr</string>
 	<key>NMFNcpKeySecret</key>
-	<string>$(NMFNcpKeySecret)</string>
+	<string>4kJh9HLYZKTovSsyoukGILkBwFAyjHgPop5kR91f</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>

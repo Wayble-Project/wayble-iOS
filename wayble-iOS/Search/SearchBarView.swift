@@ -254,8 +254,8 @@ struct SearchBarView: View {
                     self.mapDetailViewID = UUID()
                     
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                        $selectedIndex.wrappedValue = 8
-                        print("✅ selectedIndex set to 8")
+                        $selectedIndex.wrappedValue = 17
+                        print("✅ selectedIndex set to 17")
                     }
                 }
             }

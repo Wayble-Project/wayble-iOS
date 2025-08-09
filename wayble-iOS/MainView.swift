@@ -78,8 +78,15 @@ struct MainView: View {
                                 print("MapDetailView - 전달된 place: \(searchViewModel.selectedPlace.title), x: \(searchViewModel.selectedPlace.x ?? "nil"), y: \(searchViewModel.selectedPlace.y ?? "nil")")
                             }
                         }
-                       
                         .id(searchViewModel.selectedPlace.id)
+                    case 17:
+                        MapDetailView(
+                            place: place,
+                            selectedIndex: $selectedIndex,
+                            searchBarViewID: $searchBarViewID,
+                            selectedDeparture: $selectedDeparture,
+                            selectedArrival: $selectedArrival
+                        )
                     default:
                         Text("오류!")
                     }
@@ -169,6 +176,7 @@ struct MainView: View {
                     case .signupTerm:
                         SignupTermsView(selectedIndex: $selectedIndex)
                             .navigationBarBackButtonHidden(true)
+                   
                     }
                 }
             }
@@ -187,7 +195,7 @@ struct MainView: View {
     // 안 보이고 싶은곳 selectedIndex 따라서 추가하기
     var shouldHideTabBar: Bool {
         switch selectedIndex {
-        case 5,6,7,8,9,10,11,12,13,14:
+        case 5,6,7,8,9,10,11,12,13,14,17:
             return true
         case 15:
             return true
