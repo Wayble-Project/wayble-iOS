@@ -13,146 +13,23 @@ struct SubwayStepView: View {
     let step: RouteStep
     @Bindable var viewModel = TransportationViewModel()
     @State private var isSimpleMode = false
+    @State private var showStops: Bool = false
+    
+    private var visibleSubwaySteps: [RouteStep] {
+        viewModel.transportation.recommendedRoutes.first?
+            .steps
+            .filter { $0.type == .subway && $0.isDeparture == true } ?? []
+    }
     
     var body: some View {
         ScrollView {
             VStack(spacing:0) {
-                if let route = viewModel.transportation.recommendedRoutes.first {
-                    VStack(alignment: .leading) {
-                        let visibleSteps = route.steps.filter { $0.type == .subway && $0.isDeparture == true }
-                        ForEach(Array(visibleSteps.enumerated()), id: \.element.id) { idx, step in
-                            
-                            
-                                //역이나 정류장 별로 HStack 으로 묶기
-                                HStack(alignment: .top, spacing: 12) {
-                                    
-                                    // 왼쪽 VStack 모음
-                                    VStack(spacing: 0) {
-                                        stepImage(for: step)
-                                            .padding(.bottom, 4)
-                                        
-                                        Text(step.title)
-                                            .font(.mainTextSemibold12)
-                                            .lineSpacing(-2)
-                                            .padding(.bottom, 2)
-                                        
-                                        // 대중교통 밑에 선
-                                        if idx < route.steps.count - 1 {
-                                            let color: Color = {
-                                                switch step.type {
-                                                case .subway: return step.subwayLine?.color ?? .gray
-                                                case .bus: return step.busType?.color ?? .gray
-                                                default: return .clear
-                                                }
-                                            }()
-                                            
-                                            ZStack {
-                                                
-                                                Rectangle()
-                                                    .fill(color)
-                                                    .frame(width: 3, height: 10)
-                                                    
-                                                
-                                                Rectangle()
-                                                    .fill(color)
-                                                    .frame(width: 3, height: 151)
-                                                    
-                                            }
-                                            .padding(.bottom, 4)
-                                        }
-                                    }
-                                    .frame(width: 50, alignment: .center)
-                                    
-                                    // 오른쪽 정보들 (VStack)
-                                    VStack(alignment: .leading, spacing: 6) {
-                                        VStack(alignment: .leading, spacing: 3) {
-                                            Text("\(step.subTitle) 승차") // 상수역
-                                                .font(.mainTextSemibold14)
-                                            Spacer()
-                                                .frame(height:12)
-                                            
-                                            HStack(spacing: 7) {
-                                 
-                                                if let extra = step.extra {
-                                                    Text(extra)
-                                                        .font(.mainTextSemibold12)
-                                                        .foregroundStyle(Color.error)
-                                                }
-                                                
-                                                if let info = step.Info {
-                                                    Text(info)
-                                                        .font(.mainTextRegular12)
-                                                        .foregroundStyle(Color.gray700)
-                                                }
-                                            }
-                                            
-                                            Spacer()
-                                                .frame(height:17)
-                                            
-                                            if step.type == .subway && step.isDeparture == true {
-                                                VStack(alignment: .leading, spacing: 3) {
-                                                    if let chair = step.chair {
-                                                        HStack(spacing:5){
-                                                            Image("chair04")
-                                                            
-                                                            Text(chair)
-                                                                .font(.mainTextSemibold12)
-                                                                .foregroundStyle(Color.blue700)
-                                                        }
-                                                    }
-                                                    Spacer()
-                                                        .frame(height:5)
-                                                    if let elevator = step.elevator {
-                                                        
-                                                        HStack(spacing:5) {
-                                                            Image("lift04")
-                                                        
-                                                        Text(elevator)
-                                                            .font(.mainTextSemibold12)
-                                                            .foregroundStyle(Color.blue700)
-                                                    }
-                                                }
-                                                    Spacer()
-                                                        .frame(height:5)
-                                                    if let toilet = step.toilet {
-                                                        
-                                                        HStack(spacing:5) {
-                                                            Image("chair04")
-                                                            
-                                                            Text(toilet)
-                                                                .font(.mainTextSemibold12)
-                                                                .foregroundStyle(Color.blue700)
-                                                        }
-                                                    }
-                                                    Spacer()
-                                                        .frame(height:9)
-                                                    // ~개 역 이동 와프 나오면 수정
-                                                    
-                                                    HStack(spacing:7) {
-                                                        Text("5개 역 이동")
-                                                            .font(.mainTextRegular10)
-                                                            .offset(x:3)
-                                                        
-                                                        Image("down")
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        
-                                        
-                                    // 버스나 지하철일경우 밑줄 긋기
-                                        if step.type == .subway || step.type == .bus {
-                                            Rectangle()
-                                                .fill(Color.gray200)
-                                                .frame(height: 1)
-                                                .padding(.top, 10.0)
-                                        }
-                                    }
-                                }
-                                .padding(.trailing, 29.0)
-                            }
+                VStack(alignment: .leading) {
+                    ForEach(0..<visibleSubwaySteps.count, id: \.self) { idx in
+                        let step = visibleSubwaySteps[idx]
+                        
+                        SubwayStepRow(step: step, isLast: idx == visibleSubwaySteps.count - 1)
                     }
-                  
                 }
             }
         }
@@ -162,43 +39,187 @@ struct SubwayStepView: View {
         }
     }
     
-    // 도착일 경우 왼쪽 이모지 "fin"으로
+    @ViewBuilder
     private func stepImage(for step: RouteStep) -> some View {
         if step.type == .walk && step.title.contains("도착") {
-            return AnyView(
-                Image("fin")
-                    .frame(width: 18, height: 20)
-            )
+            Image("fin").frame(width: 18, height: 20)
+        } else if step.title.contains("출발") {
+            Image("start").frame(width: 16, height: 20)
+        } else {
+            let color: Color = {
+                switch step.type {
+                case .subway: return step.subwayLine?.color ?? .gray
+                case .bus: return step.busType?.color ?? .gray
+                case .walk: return .gray
+                }
+            }()
+            ZStack(alignment: .center) {
+                Image("check04").foregroundColor(color)
+                Image("check03").offset(x:-1.2, y:2.5)
+            }
+            .frame(width: 16, height: 16)
         }
-        
-        //출발일 경우 파란 핀으로 수정
-        if step.title.contains("출발") {
-            return AnyView(
-                Image("start")
-                    .frame(width: 16, height: 20)
-            )
+    }
+}
+
+private struct SubwayStepRow: View {
+    let step: RouteStep
+    let isLast: Bool
+    @State private var contentHeight: CGFloat = 0
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 12) {
+            LeftColumn(step: step, isLast: isLast, lineHeight: contentHeight)
+                .frame(width: 50, alignment: .center)
+            RightColumn(step: step)
+                .background(
+                    GeometryReader { geo in
+                        Color.clear.preference(key: RowHeightKey.self, value: geo.size.height)
+                    }
+                )
+                .onPreferenceChange(RowHeightKey.self) { contentHeight = $0 }
+        }
+        .padding(.trailing, 29.0)
+        .animation(.easeInOut(duration: 0.2), value: contentHeight)
+    }
+
+    private struct RowHeightKey: PreferenceKey {
+        static var defaultValue: CGFloat = 0
+        static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+            value = max(value, nextValue())
+        }
+    }
+
+    // MARK: - Left
+    private struct LeftColumn: View {
+        let step: RouteStep
+        let isLast: Bool
+        let lineHeight: CGFloat
+
+        var body: some View {
+            VStack(spacing: 0) {
+                StepIcon(step: step)
+                    .padding(.bottom, 4)
+
+                Text(step.title)
+                    .font(.mainTextSemibold12)
+                    .lineSpacing(-2)
+                    .padding(.bottom, 2)
+
+                Rectangle()
+                    .fill(lineColor(for: step))
+                    .frame(width: 3, height: max(0, lineHeight - 42))
+                    .padding(.bottom, 4)
+                    .animation(.easeInOut(duration: 0.2), value: lineHeight)
+            }
         }
 
-        //각자 탈 것에 맞는 색깔로 표시
-        let color: Color = {
+        private func lineColor(for step: RouteStep) -> Color {
             switch step.type {
-            case .subway:
-                return step.subwayLine?.color ?? .gray
-            case .bus:
-                return step.busType?.color ?? .gray
-            case .walk:
-                return .gray
+            case .subway: return step.subwayLine?.color ?? .gray
+            case .bus: return step.busType?.color ?? .gray
+            default: return .clear
             }
-        }()
-        return AnyView(
-            ZStack(alignment: .center) {
-                Image("check04")
-                    .foregroundColor(color)
-                Image("check03")
-                    .offset(x:-1.2, y:2.5)
+        }
+    }
+
+    // MARK: - Right
+    private struct RightColumn: View {
+        let step: RouteStep
+
+        var body: some View {
+            VStack(alignment: .leading, spacing: 6) {
+                VStack(alignment: .leading, spacing: 3) {
+                    Text("\(step.subTitle) 승차")
+                        .font(.mainTextSemibold14)
+                    Spacer().frame(height: 12)
+
+                    HStack(spacing: 7) {
+                        if let extra = step.extra { // 시간 등
+                            Text(extra)
+                                .font(.mainTextSemibold12)
+                                .foregroundStyle(Color.error)
+                        }
+                        if let info = step.Info { // 행선/방면 등
+                            Text(info)
+                                .font(.mainTextRegular12)
+                                .foregroundStyle(Color.gray700)
+                        }
+                    }
+                    Spacer().frame(height: 17)
+
+                    if step.type == .subway && step.isDeparture == true {
+                        VStack(alignment: .leading, spacing: 3) {
+                            if let chair = step.chair {
+                                HStack(spacing: 5) {
+                                    Image("chair04")
+                                    Text(chair)
+                                        .font(.mainTextSemibold12)
+                                        .foregroundStyle(Color.blue700)
+                                }
+                            }
+                            Spacer().frame(height: 5)
+                            if let elevator = step.elevator {
+                                HStack(spacing: 5) {
+                                    Image("lift04")
+                                    Text(elevator)
+                                        .font(.mainTextSemibold12)
+                                        .foregroundStyle(Color.blue700)
+                                }
+                            }
+                            Spacer().frame(height: 5)
+                            if let toilet = step.toilet {
+                                HStack(spacing: 5) {
+                                    Image("chair04")
+                                    Text(toilet)
+                                        .font(.mainTextSemibold12)
+                                        .foregroundStyle(Color.blue700)
+                                }
+                            }
+                            Spacer().frame(height: 3)
+                           
+                            HStack(spacing: 0) {
+                               
+                                
+                                TrainStopToggleView(stops: ["상수역", "대흥역", "공덕역"]) 
+                            }
+                        }
+                    }
+                }
+
+                if step.type == .subway || step.type == .bus {
+                    Rectangle()
+                        .fill(Color.gray200)
+                        .frame(height: 1)
+                        .padding(.top, 10.0)
+                }
             }
+        }
+    }
+
+    // MARK: - Icon
+    private struct StepIcon: View {
+        let step: RouteStep
+        var body: some View {
+            if step.type == .walk && step.title.contains("도착") {
+                Image("fin").frame(width: 18, height: 20)
+            } else if step.title.contains("출발") {
+                Image("start").frame(width: 16, height: 20)
+            } else {
+                ZStack(alignment: .center) {
+                    Image("check04").foregroundColor(color(for: step))
+                    Image("check03").offset(x: -1.2, y: 2.5)
+                }
                 .frame(width: 16, height: 16)
-        )
+            }
+        }
+        private func color(for step: RouteStep) -> Color {
+            switch step.type {
+            case .subway: return step.subwayLine?.color ?? .gray
+            case .bus: return step.busType?.color ?? .gray
+            case .walk: return .gray
+            }
+        }
     }
 }
 

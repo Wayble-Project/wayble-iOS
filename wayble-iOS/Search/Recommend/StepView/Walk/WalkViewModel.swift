@@ -25,16 +25,52 @@ class WalkViewModel {
         mapRefreshTrigger = UUID()
     }
 
+    // 네이버 local x/y가 1e7 스케일일 수 있으므로 자동 보정
+    private func normalize(_ v: Double) -> Double { v > 1000 ? v / 1e7 : v }
+
+    // 실패 시 공통 정리
+    private func clearRouteAndRefresh() {
+        self.selectedRoute = RouteData(
+            title: "",
+            time: "",
+            arrivalTime: "",
+            distance: "",
+            path: [],
+            elevatorPoints: nil,
+            wheelchairPoints: nil,
+            lineColor: .gray
+        )
+        self.routes = []
+        self.mapRefreshTrigger = UUID()
+    }
+
     @MainActor
     func loadWalkingRoute(departure: PlaceModel, arrival: PlaceModel) async {
-        // PlaceModel: x=lng, y=lat 가정
+        // PlaceModel: x=lng, y=lat (네이버 local x/y는 1e7 스케일일 수 있어 보정)
         guard
-            let sLat = Double(departure.y ?? ""),
-            let sLng = Double(departure.x ?? ""),
-            let eLat = Double(arrival.y ?? ""),
-            let eLng = Double(arrival.x ?? "")
+            let sLatRaw = Double(departure.y ?? ""),
+            let sLngRaw = Double(departure.x ?? ""),
+            let eLatRaw = Double(arrival.y ?? ""),
+            let eLngRaw = Double(arrival.x ?? "")
         else {
             apiError = "출발/도착 좌표가 올바르지 않아요."
+            return
+        }
+
+        let sLat = normalize(sLatRaw)
+        let sLng = normalize(sLngRaw)
+        let eLat = normalize(eLatRaw)
+        let eLng = normalize(eLngRaw)
+
+        // 백엔드 명세: startName / endName 필수 (HTML 태그 제거)
+        let startName = departure.title.removeHTMLTags()
+        let endName   = arrival.title.removeHTMLTags()
+
+        // 위·경도 범위 검증
+        guard (-90...90).contains(sLat), (-90...90).contains(eLat),
+              (-180...180).contains(sLng), (-180...180).contains(eLng) else {
+            apiError = "좌표 범위가 잘못됐어요."
+            clearRouteAndRefresh()
             return
         }
 
@@ -43,65 +79,34 @@ class WalkViewModel {
         defer { isLoading = false }
 
         do {
-            print("🚀 Walking API 요청 → s(\(sLat), \(sLng)) → e(\(eLat), \(eLng))")
+            print("🚀 Walking API 요청 → s(\(sLat), \(sLng)) → e(\(eLat), \(eLng))  | query: startX=\(sLng)&startY=\(sLat)&endX=\(eLng)&endY=\(eLat)&startName=\(startName)&endName=\(endName)")
             let res = try await walkingService.fetchWalkingRoute(
-                startLat: sLat, startLng: sLng, endLat: eLat, endLng: eLng
+                startX: sLng, startY: sLat,
+                endX: eLng, endY: eLat,
+                startName: startName, endName: endName
             )
             if let data = res.data {
-                // 빈 경로 방어 로직
-                if data.path.isEmpty {
-                    apiError = "경로를 찾을 수 없습니다. (path 비어 있음)"
-                    // 지도에서 기존 라인을 지우기 위해 빈 라우트로 교체 + 리프레시
-                    self.routes = []
-                    self.selectedRoute = RouteData(
-                        title: "",
-                        time: "",
-                        arrivalTime: "",
-                        distance: "",
-                        path: [],
-                        elevatorPoints: nil,
-                        wheelchairPoints: nil,
-                        lineColor: .gray
-                    )
-                    self.mapRefreshTrigger = UUID()
+                // 빈 경로 방어: steps에 좌표가 하나도 없으면 실패 처리
+                if !data.hasPolyline {
+                    apiError = "경로를 찾을 수 없습니다. (빈 경로)"
+                    clearRouteAndRefresh()
                     return
                 }
-                print("✅ Walking API 성공 - distance:\(data.distance) duration:\(data.duration) points:\(data.path.count)")
+
+                // 로그는 새 필드 사용
+                print("✅ Walking API 성공 - distance:\(data.totalDistance) time:\(data.totalTime)")
+
                 let route = data.toRouteData()
-                self.routes = [route]               // 필요하면 샘플과 비교: [route, SampleRoutes.shortest]
+                self.routes = [route]
                 self.selectedRoute = route
-                self.mapRefreshTrigger = UUID()     // NaverMap 래퍼 리프레시
+                self.mapRefreshTrigger = UUID()
             } else {
                 apiError = "[\(res.errorCode ?? -1)] \(res.message ?? "경로를 찾을 수 없습니다.")"
-                // 지도 갱신: 실패 시 기존 라인이 남지 않도록 비워줌
-                self.selectedRoute = RouteData(
-                    title: "",
-                    time: "",
-                    arrivalTime: "",
-                    distance: "",
-                    path: [],
-                    elevatorPoints: nil,
-                    wheelchairPoints: nil,
-                    lineColor: .gray
-                )
-                self.mapRefreshTrigger = UUID()
-                self.routes = []
+                clearRouteAndRefresh()
             }
         } catch {
             apiError = error.localizedDescription
-            // 실패 시 지도 선 제거
-            self.selectedRoute = RouteData(
-                title: "",
-                time: "",
-                arrivalTime: "",
-                distance: "",
-                path: [],
-                elevatorPoints: nil,
-                wheelchairPoints: nil,
-                lineColor: .gray
-            )
-            self.mapRefreshTrigger = UUID()
-            self.routes = []
+            clearRouteAndRefresh()
         }
     }
 }

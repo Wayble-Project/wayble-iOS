@@ -12,10 +12,16 @@ struct NaverMapViewWrapper: UIViewRepresentable {
     var route: RouteData
     func makeUIView(context: Context) -> NMFMapView {
         let mapView = NMFMapView()
-        
 
-        let start = route.path.first!
-        let end = route.path.last!
+        //  경로가 비어있을 때 크래시 방지: 기본 카메라만 세팅하고 반환
+        guard let start = route.path.first, let end = route.path.last else {
+            let fallback = NMGLatLng(lat: 37.5665, lng: 126.9780) // 기본 위치(서울 시청 등)
+            let camera = NMFCameraPosition(fallback, zoom: 15)
+            let cameraUpdate = NMFCameraUpdate(position: camera)
+            mapView.moveCamera(cameraUpdate)
+            return mapView
+        }
+
         let center = NMGLatLng(lat: (start.lat + end.lat) / 2, lng: (start.lng + end.lng) / 2)
         let zoom = calculateZoomLevel(start: start, end: end)
         let cameraPosition = NMFCameraPosition(center, zoom: zoom, tilt: 0, heading: 0)
@@ -23,8 +29,8 @@ struct NaverMapViewWrapper: UIViewRepresentable {
         mapView.moveCamera(cameraUpdate)
 
         // 출발/도착 마커
-        addMarker(imageName: "start2", position: route.path.first!, mapView: mapView)
-        addMarker(imageName: "fin2", position: route.path.last!, mapView: mapView)
+        addMarker(imageName: "start2", position: start, mapView: mapView)
+        addMarker(imageName: "fin2", position: end, mapView: mapView)
 
         // 휠체어 마커
         for point in route.wheelchairPoints ?? [] {

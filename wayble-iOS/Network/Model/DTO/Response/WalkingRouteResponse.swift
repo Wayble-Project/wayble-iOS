@@ -8,29 +8,34 @@
 import Foundation
 
 struct WalkingRouteResponse: Codable {
+    let data: WalkingData?
     let errorCode: Int?
     let message: String?
-    let data: WalkingRouteData?
 }
 
-
-struct WalkingRouteData: Codable {
-    let start: WalkPoint
-    let end: WalkPoint
-    let distance: Int          // 미터
-    let duration: Int          // 초
-    let time: String           // "2025-07-11T16:27:00"
-    let path: [WalkCoord]
+struct WalkingData: Codable {
+    let totalDistance: Int
+    let totalTime: Int
+    let steps: [WalkingStep]
 }
 
-struct WalkPoint: Codable {
-    let name: String
-    let address: String
-    let lat: Double
-    let lng: Double
+struct WalkingStep: Codable {
+    enum StepType: String, Codable { case point, line }
+    let type: StepType
+    let name: String?
+    let description: String?
+
+    let coordinate: WalkingCoord?      // point
+    let coordinates: [WalkingCoord]?   // line
+
+    let turnType: Int?
+    let pointType: String?
+
+    let distance: Int?
+    let time: Int?
 }
 
-struct WalkCoord: Codable {
-    let lat: Double
-    let lng: Double
+struct WalkingCoord: Codable {
+    let longitude: Double   // ⚠️ 서버는 longitude/latitude 순서
+    let latitude: Double
 }
