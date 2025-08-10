@@ -169,10 +169,18 @@ struct Transportation: View {
                         if distance > 30000 {
                             longView()
                         } else {
-                            WalkingView(viewModel: viewModel.walkViewModel)
+                            WalkingView(
+                                viewModel: viewModel.walkViewModel,
+                                selectedDeparture: $selectedDeparture,
+                                selectedArrival: $selectedArrival
+                            )
                         }
                     } else {
-                        WalkingView(viewModel: viewModel.walkViewModel)
+                        WalkingView(
+                            viewModel: viewModel.walkViewModel,
+                            selectedDeparture: $selectedDeparture,
+                            selectedArrival: $selectedArrival
+                        )
                     }
                 } else {
                     RouteView(onRouteSelected: { showDetail = true })

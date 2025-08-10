@@ -89,7 +89,7 @@ struct MapBoxView: View {
                                            )
                                            selectedDeparture = departure
                                            selectedArrival = place
-                                           selectedIndex = 7
+                                           selectedIndex = 15
                                            print("🟢 현재 selectedIndex: \(selectedIndex)")
                                        } catch {
                                            print("주소 가져오기 실패: \(error)")
