@@ -6,11 +6,14 @@
 //
 
 import Foundation
+import Observation
 
 @Observable
 class TransportationViewModel {
     var transportation: TransportationModel
     var walkViewModel = WalkViewModel()
+    // 도보 최적경로 API 서비스
+    let walkingService = WalkingService()
 
     init() {
         self.transportation = TransportationModel(
@@ -64,6 +67,12 @@ class TransportationViewModel {
         transportation.destination = temp
     }
 
+    /// 도보 경로 재요청: WalkViewModel 로 위임 (서비스 호출까지 내부에서 처리)
+    @MainActor
+    func fetchWalkingRoute(departure: PlaceModel, arrival: PlaceModel) async {
+        await walkViewModel.loadWalkingRoute(departure: departure, arrival: arrival)
+    }
+
     // 대중교통, 도보로 넘어감
     func setTab(to tab: TransportationTab) {
         transportation.selectedTab = tab
@@ -95,4 +104,3 @@ class TransportationViewModel {
     }
 }
     
-

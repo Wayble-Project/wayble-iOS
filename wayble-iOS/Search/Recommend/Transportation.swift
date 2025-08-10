@@ -35,7 +35,21 @@ struct Transportation: View {
             VStack(spacing: 0) {
                 HStack(alignment: .top) {
                     Button(action: {
+                        // 1) 바인딩된 PlaceModel도 스왑 (UI와 데이터 일치)
+                        let tmp = selectedDeparture
+                        selectedDeparture = selectedArrival
+                        selectedArrival = tmp
+
+                        // 2) ViewModel의 텍스트 필드 값(문자열)도 스왑해 동기화
                         viewModel.swapLocations()
+
+                        // 3) 출발/도착 PlaceModel이 있으면 도보 경로 API 재요청
+                        // 이제 여기에 대중교통api 도 추가하기
+                        if let dep = selectedDeparture, let arr = selectedArrival {
+                            Task {
+                                await viewModel.fetchWalkingRoute(departure: dep, arrival: arr)
+                            }
+                        }
                     }) {
                         Image("switch")
                             .resizable()
@@ -71,7 +85,7 @@ struct Transportation: View {
                         )
                         
                         Button(action: {
-                            searchViewModel.entryType = .destination  // ✅ 도착지 클릭
+                            searchViewModel.entryType = .destination  //  도착지 클릭
                             searchBarViewID = UUID()
                             selectedIndex = 5
                         }) {
