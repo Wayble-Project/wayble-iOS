@@ -44,7 +44,8 @@ struct WalkingView: View {
                         )
                     }
                 }
-
+                .frame(maxWidth: .infinity, alignment: .leading)   // ← 이 줄 추가
+                .padding(.horizontal, 20)  
                 .padding(.bottom, 56)
             }
         }

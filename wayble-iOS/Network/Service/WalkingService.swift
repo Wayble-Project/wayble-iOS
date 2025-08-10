@@ -14,12 +14,17 @@ final class WalkingService {
 
     /// 도보 최적경로 요청
     func fetchWalkingRoute(
-        startLat: Double, startLng: Double,
-        endLat: Double, endLng: Double
+        startX: Double, startY: Double,
+        endX: Double, endY: Double,
+        startName: String, endName: String
     ) async throws -> WalkingRouteResponse {
 
         let response = try await provider.requestAsync(
-            .get(startLat: startLat, startLng: startLng, endLat: endLat, endLng: endLng)
+            .get(
+                startX: startX, startY: startY,
+                endX: endX, endY: endY,
+                startName: startName, endName: endName
+            )
         )
 
         print("Status Code: \(response.statusCode)")
