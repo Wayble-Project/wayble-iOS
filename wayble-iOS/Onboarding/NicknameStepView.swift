@@ -28,7 +28,7 @@ struct NicknameStepView: View {
                 placeHolder: "닉네임을 입력해주세요",
                 textValue: $viewModel.userInfo.nickname,
                 keyboardType: .default,
-                validationState: .constant(.valid)
+                validationState: $viewModel.nicknameValidationState
             )
             Spacer()
             BothButton(

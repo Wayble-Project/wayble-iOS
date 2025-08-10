@@ -105,17 +105,22 @@ extension OnboardingViewModel {
         }
     }
 
-    //MARK: - 생년월일 상태 case
+    //MARK: - 생년월일 형식
     
     var checkBirthState: ValidationState { ///0806
-        ///계산 속성이 하는 역할 ; userInfo.birth 값이 바뀔 때마다, 항상 실시간으로 최신의 유효성 상태를 알려줌
-        let pattern = #"^\d{4}-\d{2}-\d{2}$"#
         if userInfo.birth.isEmpty {
             return .valid
-        } else if userInfo.birth.range(of: pattern, options: .regularExpression) == nil {
-            return .invalidBirthFormat
-        } else {
+        }
+
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        formatter.locale = Locale(identifier: "ko_KR")
+        formatter.timeZone = TimeZone(secondsFromGMT: 0)
+
+        if formatter.date(from: userInfo.birth) != nil {
             return .valid
+        } else {
+            return .invalidBirthFormat
         }
     }
 }
@@ -127,10 +132,52 @@ extension OnboardingViewModel {
     func checkNicknameDuplicate(nickname: String) async {
         do {
             let response = try await NicknameService().checkNicknameDuplicate(nickname: nickname)
-            self.isNicknameDuplicate = !response.data.available
+
+            if let errorCode = response.errorCode {
+                print("🚫 닉네임 중복: \(response.message ?? "") (code: \(errorCode))")
+                self.isNicknameDuplicate = true
+                self.nicknameValidationState = .duplicated
+                return
+            }
+
+            if let isAvailable = response.data?.available {
+                self.isNicknameDuplicate = !isAvailable
+                self.nicknameValidationState = isAvailable ? .valid : .duplicated
+            } else {
+                print("⚠️ 닉네임 사용 가능 여부 파악 실패")
+                self.isNicknameDuplicate = nil
+                self.nicknameValidationState = .invalidNicknameFormat
+                //FIXME: - nicknameValidationState 를 어떻게 할까
+            }
         } catch {
             print("중복 확인 실패: \(error)")
             self.isNicknameDuplicate = nil
+            self.nicknameValidationState = .invalidNicknameFormat
         }
+    }
+}
+
+extension OnboardingViewModel {
+    func handleGender(genderString: String?) {
+        guard let selected = genderString else {
+            print("❌ gender 선택 실패: nil")
+            return
+        }
+        
+        let genderMap: [String: Gender] = [
+            "남성": .male,
+            "여성": .female,
+            "선택 안 함": .none
+        ]
+        
+        //TODO: - 리턴값 어떻게 할지
+        guard let gender = genderMap[selected] else {
+            print("❌ gender 매핑 실패: \(selected)")
+            return
+        }
+        
+        userInfo.gender = gender
+        userInfo.birth = userInfo.birth.trimmingCharacters(in: .whitespacesAndNewlines)
+        print("🎯 gender 설정됨: \(gender)")
     }
 }

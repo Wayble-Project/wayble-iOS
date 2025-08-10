@@ -5,7 +5,7 @@
 //  Created by 이서현 on 7/23/25.
 //
 
-// 파트장님이 주신 코드 ..
+// 파트장님이 주신 코드 .. => 안 쓰이나본데...
 import Foundation
 import Security
 
