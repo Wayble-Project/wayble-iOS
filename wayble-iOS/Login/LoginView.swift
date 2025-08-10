@@ -73,7 +73,7 @@ struct LoginView: View {
                         case .unknown: /// 이 케이스는 어떻게 처리할까?
                             print("")
                         case .loggedIn:
-                            selectedIndex = 8
+                            selectedIndex = 0
                         case .needsOnboarding:
                             selectedIndex = 13
                         case .loggedOut:

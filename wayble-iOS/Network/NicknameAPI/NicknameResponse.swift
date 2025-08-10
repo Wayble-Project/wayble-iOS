@@ -9,7 +9,7 @@
 struct NicknameResponse: Codable {
     let errorCode: Int?
     let message: String?
-    let data: NicknameData
+    let data: NicknameData?
 }
 
 

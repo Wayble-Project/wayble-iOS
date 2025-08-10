@@ -33,12 +33,21 @@ class AuthViewModel: ObservableObject {
             ///"tokenInfoKey" => 저장할 때 사용한 key 이름
             do {
                 let onboardingResponse = try await OnboardingService().getOnboarding()
-                if onboardingResponse.data == nil {
+                if let data = onboardingResponse.data {
+                    let isIncomplete = data.nickname == nil ||
+                                       data.birthDate == nil ||
+                                       data.gender == nil ||
+                                       data.userType == nil
+                    if isIncomplete {
+                        print("🟡 온보딩 정보 일부 누락 → 온보딩 화면으로 이동")
+                        self.state = .needsOnboarding
+                    } else {
+                        print("✅ 온보딩 완료")
+                        self.state = .loggedIn
+                    }
+                } else {
                     print("등록된 유저 정보 없음! -> 온보딩 화면으로 이동")
                     self.state = .needsOnboarding
-                } else {
-                    print("✅ 온보딩 완료")
-                    self.state = .loggedIn
                 }
             } catch { //FIXME: - 이 부분은 어떻게 해결할까 에러 처리를 ... 로그아웃으로 하는 게 맞나
                 print("⚠️ 온보딩 데이터 조회 실패로 로그인 화면으로 이동 , 에러: \(error)")

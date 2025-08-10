@@ -52,6 +52,7 @@ struct UserTypeSelectView: View {
                 },
                 onNextAction: {
                     viewModel.userInfo.hasDisability = (selectedItem == "장애인")
+                    step += 1
                 }
             )
             .padding(.horizontal, 7)

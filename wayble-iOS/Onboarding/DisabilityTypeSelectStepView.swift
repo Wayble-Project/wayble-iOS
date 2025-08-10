@@ -86,6 +86,7 @@ struct DisabilityTypeSelectView: View {
                                 default: return nil
                                 }
                             }
+                            step += 1
                         }
                     )
                     .padding(.horizontal, 7)

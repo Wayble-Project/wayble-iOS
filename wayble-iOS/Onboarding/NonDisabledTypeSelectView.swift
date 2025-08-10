@@ -53,7 +53,12 @@ struct NonDisabledTypeSelectView: View {
                     selectedItem = nil
                 },
                 onNextAction: {
-                    viewModel.userInfo.isWithCompanion = (selectedItem == "동행인")
+                    guard let selected = selectedItem else {
+                        print("❌ 항목 선택 필요")
+                        return ///사용자가 아무 항목도 선택하지 않았을 경우, 다음 화면으로 넘어가지 않고 리턴
+                    }
+                    viewModel.userInfo.isWithCompanion = (selected == "동행인")
+                    step += 1
                 }
             )
             .padding(.horizontal, 7)
@@ -62,23 +67,3 @@ struct NonDisabledTypeSelectView: View {
     }
 }
 
-
-/*
-#Preview {
-    PreviewWrapper()
-        .withRouter(selectedIndex: .constant(0),router: NavigationRouter())
-}
-
-
-private struct PreviewWrapper: View {
-    @State var step = 2
-    @State var selected: String? = nil
-
-    var body: some View {
-        NonDisabledTypeSelectView(
-            step: $step,
-            selectedItem: $selected, selectedIndex: <#Binding<Int>#>
-        )
-    }
-}
-*/
