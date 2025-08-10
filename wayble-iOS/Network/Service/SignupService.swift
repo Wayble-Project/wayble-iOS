@@ -16,19 +16,7 @@ final class SignupService {
         let logger = NetworkLoggerPlugin(configuration: .init(logOptions: [.verbose]))
         self.provider = MoyaProvider<SignupRouter>(plugins: [logger])
     }
-    /*
-    func getSignup(email: String) async throws -> SignupData {
-        do {
-            let response = try await provider.requestAsync(.get(email: email))
-            let decodedData = try JSONDecoder().decode(SignupData.self, from: response.data)
-            print("GET 성공: \(decodedData)")
-            return decodedData
-        } catch {
-            print("회원가입 get 요청 혹은 디코딩 실패: \(error.localizedDescription)")
-            throw error
-        }
-    }
-     */
+    
 
     func createSignup(_ signupData: SignupData) async throws -> SignupResponse {
         do {
