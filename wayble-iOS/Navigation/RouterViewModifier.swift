@@ -143,6 +143,9 @@ struct RouterViewModifier: ViewModifier {
                 .navigationBarBackButtonHidden(true)
             )
             
+        case .mainMapView:
+            return AnyView(MainMapView()
+                .navigationBarBackButtonHidden(true))
             
         }
     }

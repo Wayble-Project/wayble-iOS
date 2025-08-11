@@ -141,8 +141,7 @@ extension OnboardingViewModel {
         do {
             let response = try await NicknameService().checkNicknameDuplicate(nickname: nickname)
 
-            if let errorCode = response.errorCode {
-                print("🚫 닉네임 중복: \(response.message ?? "") (code: \(errorCode))")
+            if response.errorCode != nil {
                 self.isNicknameDuplicate = true
                 self.nicknameValidationState = .duplicated
                 return
