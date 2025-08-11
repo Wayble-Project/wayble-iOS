@@ -10,7 +10,8 @@ import Moya
 
 final class SignupService {
     var signupData: SignupData?
-    private let provider: MoyaProvider<SignupRouter>
+    //private let provider: MoyaProvider<SignupRouter>
+    private let provider = APIManager.shared.createProvider(for: SignupRouter.self)
 
     init() {
         let logger = NetworkLoggerPlugin(configuration: .init(logOptions: [.verbose]))

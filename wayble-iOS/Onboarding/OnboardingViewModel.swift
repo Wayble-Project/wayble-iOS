@@ -77,8 +77,7 @@ extension OnboardingViewModel {
     }
 
     var isBirthValid: Bool {
-        let pattern = #"^\d{4}-\d{2}-\d{2}$"#
-        return userInfo.birth.range(of: pattern, options: .regularExpression) != nil
+        if case .valid = checkBirthState { return true } else { return false }
     }
 
     var isDisabilityStepValid: Bool {
@@ -108,16 +107,25 @@ extension OnboardingViewModel {
     //MARK: - 생년월일 형식
     
     var checkBirthState: ValidationState { ///0806
-        if userInfo.birth.isEmpty {
-            return .valid
+        // 1) 공백 제거 및 비어있으면 즉시 실패
+        let input = userInfo.birth.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !input.isEmpty else { return .invalidBirthFormat }
+
+        // 2) 정규식으로 포맷 강제: yyyy-(01~12)-(01~31) (앞자리 0 필수)
+        let pattern = #"^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$"#
+        guard input.range(of: pattern, options: .regularExpression) != nil else {
+            return .invalidBirthFormat
         }
 
+        // 3) 실제 존재 날짜인지 검사 (예: 2025-02-31 방지)
         let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
+        formatter.calendar = Calendar(identifier: .gregorian)
         formatter.locale = Locale(identifier: "ko_KR")
         formatter.timeZone = TimeZone(secondsFromGMT: 0)
+        formatter.dateFormat = "yyyy-MM-dd"
+        formatter.isLenient = false
 
-        if formatter.date(from: userInfo.birth) != nil {
+        if let date = formatter.date(from: input), formatter.string(from: date) == input {
             return .valid
         } else {
             return .invalidBirthFormat
@@ -179,5 +187,25 @@ extension OnboardingViewModel {
         userInfo.gender = gender
         userInfo.birth = userInfo.birth.trimmingCharacters(in: .whitespacesAndNewlines)
         print("🎯 gender 설정됨: \(gender)")
+    }
+}
+
+extension OnboardingViewModel {
+    func fetchNicknameIfNeeded() async {
+        // 닉네임이 비어 있으면 서버에서 온보딩 정보를 조회해 설정
+        guard userInfo.nickname.isEmpty else { return }
+        do {
+            let response = try await OnboardingService().getOnboarding()
+            if let nickname = response.data?.nickname {
+                await MainActor.run {
+                    self.userInfo.nickname = nickname
+                    print("✅ 닉네임 세팅: \(nickname)")
+                }
+            } else {
+                print("⚠️ 온보딩 응답에 닉네임 없음")
+            }
+        } catch {
+            print("⚠️ 온보딩 조회 실패: \(error)")
+        }
     }
 }

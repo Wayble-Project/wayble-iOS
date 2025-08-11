@@ -10,7 +10,8 @@ import Moya
 
 final class WalkingService {
 
-    private let provider = MoyaProvider<WalkingRouter>()
+    //private let provider = MoyaProvider<WalkingRouter>()
+    private let provider = APIManager.shared.createProvider(for: WalkingRouter.self)
 
     /// 도보 최적경로 요청
     func fetchWalkingRoute(

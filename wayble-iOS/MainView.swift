@@ -29,7 +29,7 @@ struct MainView: View {
                     
                     switch selectedIndex {
                         // 밑에 추가하고 싶은 뷰 적기
-                    case 0: HomeView(selectedIndex: $selectedIndex)
+                    case 0: HomeView(selectedIndex: $selectedIndex, viewModel: onboardingViewModel)
                     case 1: MapView()
                     case 2: ProfileView()
                     case 3: SearchHomeView(selectedIndex: $selectedIndex)
@@ -47,7 +47,7 @@ struct MainView: View {
                     case 8: SignupEmailView(viewModel: signupViewModel, selectedIndex: $selectedIndex) //동일한 뷰모델 -> 유저 정보 저장
                     case 9: SignupPasswordView(viewModel: signupViewModel, selectedIndex: $selectedIndex)
                     case 10: SignupCompletedView(viewModel: signupViewModel, selectedIndex: $selectedIndex)
-                    case 11: SplashView(selectedIndex: $selectedIndex)
+                    case 11: SplashView(selectedIndex: $selectedIndex, onboardingViewModel: onboardingViewModel)
                     case 12: OnboardingCompletedView(viewModel: onboardingViewModel, selectedIndex: $selectedIndex)
                     case 13: OnboardingRootView(viewModel: onboardingViewModel, selectedIndex: $selectedIndex)
                     case 14: SignupTermsView(selectedIndex: $selectedIndex)
@@ -106,7 +106,7 @@ struct MainView: View {
                         SearchHomeView(selectedIndex: $selectedIndex)
                             .navigationBarBackButtonHidden(true)
                     case .home:
-                        HomeView(selectedIndex: $selectedIndex)
+                        HomeView(selectedIndex: $selectedIndex, viewModel: onboardingViewModel)
                             .navigationBarBackButtonHidden(true)
                     case .signupEmail:
                         SignupEmailView(viewModel: signupViewModel, selectedIndex: $selectedIndex)
@@ -165,7 +165,7 @@ struct MainView: View {
                         )
                         .navigationBarBackButtonHidden(true)
                     case .splashView:
-                        SplashView(selectedIndex: $selectedIndex)
+                        SplashView(selectedIndex: $selectedIndex, onboardingViewModel: onboardingViewModel)
                             .navigationBarBackButtonHidden(true)
                     case .onboardingCompleted:
                         OnboardingCompletedView(viewModel: onboardingViewModel, selectedIndex: $selectedIndex)

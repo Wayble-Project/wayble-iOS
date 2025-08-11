@@ -9,7 +9,8 @@ import Foundation
 import Moya
 
 final class LoginService {
-    private let provider = MoyaProvider<LoginRouter>()
+    //private let provider = MoyaProvider<LoginRouter>()
+    private let provider = APIManager.shared.createProvider(for: LoginRouter.self)
     ///private let provider = APIManager.shared.createProvider(for: LoginRouter.self) ///accessToken 재발급 코드와 연결? -> 앞으로 토큰 필요한 건 다 이렇게  0807
     ///로그인 후부터 사용 (로그인 파트는 필요 없는 듯)
 

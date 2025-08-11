@@ -27,7 +27,7 @@ extension AuthRouter: APITargetType {
     var path: String {
         switch self {
         case .sendRefreshToken:
-            return "/member/reissue"
+            return "/api/v1/auth/reissue"
         }
     }
     
@@ -35,24 +35,23 @@ extension AuthRouter: APITargetType {
         switch self {
         case .sendRefreshToken:
             return .post
-            //FIXME: - get인지 post인지 확인해봐야함
         }
     }
     
     var task: Task {
         switch self {
-        case .sendRefreshToken:
-            return .requestPlain
+        case let .sendRefreshToken(refreshToken):
+            return .requestParameters(
+                parameters: ["refreshToken": refreshToken],
+                encoding: URLEncoding.queryString
+            )
         }
     }
     
     var headers: [String : String]? {
         switch self {
-        case .sendRefreshToken(let refresh):
-            var headers = ["Content-Type": "application/json"]
-            headers["Refresh-Token"] = "\(refresh)"
-            
-            return headers
+        case .sendRefreshToken:
+            return nil
         }
     }
 }

@@ -10,8 +10,10 @@ import Moya
 
 final class NicknameService {
     
-    private let provider = MoyaProvider<NicknameRouter>()
-
+    //private let provider = MoyaProvider<NicknameRouter>()
+    private let provider = APIManager.shared.createProvider(for: NicknameRouter.self)
+    
+    
     func checkNicknameDuplicate(nickname: String) async throws -> NicknameResponse {
         let response = try await provider.requestAsync(.get(nickname: nickname))
         print("Status Code: \(response.statusCode)")
