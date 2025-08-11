@@ -77,7 +77,6 @@ struct MainView: View {
                                                   
                     case 16:
                         VStack {
-                           
                             MapDetailView(
                                 place: searchViewModel.selectedPlace,
                                 selectedIndex: $selectedIndex,
@@ -98,6 +97,8 @@ struct MainView: View {
                             selectedDeparture: $selectedDeparture,
                             selectedArrival: $selectedArrival
                         )
+                        
+                    case 18: MainMapView()
                     default:
                         Text("오류!")
                     }
@@ -198,7 +199,9 @@ struct MainView: View {
                     case .signupTerm:
                         SignupTermsView(selectedIndex: $selectedIndex)
                             .navigationBarBackButtonHidden(true)
-                   
+                    case .mainMapView:
+                        MainMapView()
+                            .navigationBarBackButtonHidden(true)
                     }
                 }
             }
@@ -217,11 +220,7 @@ struct MainView: View {
     // 안 보이고 싶은곳 selectedIndex 따라서 추가하기
     var shouldHideTabBar: Bool {
         switch selectedIndex {
-        case 5,6,7,8,9,10,11,12,13,14,17:
-            return true
-        case 15:
-            return true
-        case 16:
+        case 5,6,7,8,9,10,11,12,13,14,15,16,17:
             return true
         default:
             return false

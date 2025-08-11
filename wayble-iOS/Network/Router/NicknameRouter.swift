@@ -17,7 +17,7 @@ extension NicknameRouter: APITargetType {
     
     
     var requiresAuth: Bool {
-        return true
+        return false
     }
      
     
