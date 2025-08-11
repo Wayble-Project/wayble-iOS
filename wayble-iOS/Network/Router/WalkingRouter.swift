@@ -14,9 +14,11 @@ enum WalkingRouter {
 
 extension WalkingRouter: APITargetType {
 
-    var requiresAuth: Bool {  
+    
+    var requiresAuth: Bool {
         return true
     }
+     
 
     var path: String {
         return "/api/v1/directions/walking"

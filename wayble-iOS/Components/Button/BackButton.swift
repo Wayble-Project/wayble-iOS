@@ -16,7 +16,7 @@ struct BackButton: View {
             router.pop()
         }) {
             Image("back")
-                .foregroundColor(.black)
+                .foregroundStyle(.black)
         }
         
         

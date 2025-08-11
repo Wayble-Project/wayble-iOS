@@ -20,9 +20,11 @@ enum DirectionRouter {
 
 extension DirectionRouter: APITargetType {
     
+    
     var requiresAuth: Bool {
         return true
     }
+     
     
     var path: String {
         return "/auth/signup"

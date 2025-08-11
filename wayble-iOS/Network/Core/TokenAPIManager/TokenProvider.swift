@@ -9,7 +9,9 @@ import Foundation
 import Moya
 
 class TokenProvider: TokenProviding {
-    private let userSession = "appNameUser"
+    static let shared = TokenProvider()
+    
+    private let userSession = "tokenInfoKey"
     private let keyChain = KeychainManager.standard
     private let provider = MoyaProvider<AuthRouter>()
     

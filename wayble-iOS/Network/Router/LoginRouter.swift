@@ -19,9 +19,11 @@ extension LoginRouter: APITargetType {
         return "/api/v1/auth/login/basic"
     }
 
+    
     var requiresAuth: Bool {
         return false
     }
+     
 
     var method: Moya.Method {
         switch self {

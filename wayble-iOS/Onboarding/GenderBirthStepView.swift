@@ -38,7 +38,7 @@ struct GenderBirthStepView: View {
                 step: $step,
                 selectedIndex: $selectedIndex,
                 //isNextDisabled: (selectedItem == nil)||(viewModel.userInfo.birth.isEmpty),
-                isNextDisabled: (selectedItem == nil) || !viewModel.isBirthValid,
+                isNextDisabled: (selectedItem == nil) || !viewModel.isBirthValid || viewModel.userInfo.birth.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
                 onPreviousAction: {
                     selectedItem = nil
                     viewModel.userInfo.birth = ""
