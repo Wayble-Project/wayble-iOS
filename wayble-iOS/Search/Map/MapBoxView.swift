@@ -58,7 +58,6 @@ struct MapBoxView: View {
                        Button {
                            selectedDeparture = place
                            SearchViewModel.shared.setPlace(place, for: .departure)
-                           selectedArrival = nil
                            selectedIndex = 15
                            print("🟢 Start tapped → index=\(selectedIndex)")
                        } label: {

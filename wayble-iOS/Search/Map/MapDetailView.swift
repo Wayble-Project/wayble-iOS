@@ -18,13 +18,7 @@ struct MapDetailView: View {
 
     var body: some View {
         ZStack(alignment: .top) {
-            Color.red.opacity(0.2) // ✅ Background color to verify visibility
-            Text("🧭 DEBUG: MapDetailView Active")
-                .foregroundColor(.white)
-                .padding(8)
-                .background(Color.black)
-                .cornerRadius(8)
-                .padding(.top, 100)
+           
             // 지도 + 고정 핀
             ZStack() {
                 if let mapx = Double(place.x ?? ""),
@@ -90,7 +84,7 @@ struct MapDetailView: View {
                 }
             }
         }
-        .ignoresSafeArea()
+        
         .onAppear {
             print("🧭 MapDetailView 헉 등장 - 전달된 place: \(place.title), x: \(place.x ?? "nil"), y: \(place.y ?? "nil")")
         }
