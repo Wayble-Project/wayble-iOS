@@ -46,6 +46,9 @@ struct SearchBarView: View {
     @Binding var selectedIndex: Int
     var entryPoint: EntryPoint = .directions
     var entryType: EntryType? = nil // 출발/도착 구분 필요 시만 사용
+    // 선택 콜백 (부모에서 주입해주면 출발/도착 값을 안전하게 올려보낼 수 있음)
+    var onSelectDeparture: ((PlaceModel) -> Void)? = nil
+    var onSelectDestination: ((PlaceModel) -> Void)? = nil
     
     var body: some View {
         
@@ -250,12 +253,27 @@ struct SearchBarView: View {
                 .onTapGesture {
                     print("선택한 장소: \(place.title), x: \(place.x ?? "nil"), y: \(place.y ?? "nil")")
                     viewModel.selectedPlace = place
-                    self.place = place 
+                    self.place = place
                     self.mapDetailViewID = UUID()
-                    
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                        $selectedIndex.wrappedValue = 17
-                        print("✅ selectedIndex set to 17")
+
+                    if let entryType { // 길찾기 모드: 출발/도착 중 하나 선택
+                        switch entryType {
+                        case .departure:
+                            // 부모로 출발 선택 전달 + 뷰모델 플래그 세팅
+                            onSelectDeparture?(place)
+                            SearchViewModel.shared.setPlace(place, for: .departure)
+                            $selectedIndex.wrappedValue = 15
+                        case .destination:
+                            onSelectDestination?(place)
+                            SearchViewModel.shared.setPlace(place, for: .destination) 
+                            $selectedIndex.wrappedValue = 15
+                        }
+                    } else {
+                        // 기존 플로우: 상세로 이동
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                            $selectedIndex.wrappedValue = 17
+                            print(" selectedIndex set to 17")
+                        }
                     }
                 }
             }
