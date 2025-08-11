@@ -11,7 +11,7 @@ import SwiftUI
 struct MainView: View {
     @State private var place = PlaceModel()
     @State private var searchBarViewID = UUID()
-    @State private var searchViewModel = SearchViewModel()
+    @State private var searchViewModel = SearchViewModel.shared
     @Binding var selectedIndex: Int
     @Binding var step: Int
     @State private var router = NavigationRouter()
@@ -35,8 +35,19 @@ struct MainView: View {
                     case 3: SearchHomeView(selectedIndex: $selectedIndex)
                     case 4: WaybleZoneMainView(vm: TopPlaceViewModel())
                     case 5:
-                        SearchBarView(viewModel: searchViewModel, place: $place, selectedIndex: $selectedIndex, entryPoint: .directions)
-                            .id(searchBarViewID)
+                        
+                        SearchBarView(
+                            viewModel: searchViewModel,
+                            place: $place,
+                            selectedIndex: $selectedIndex,
+                            entryPoint: .directions,
+                            onSelectDeparture: { place in
+                                selectedDeparture = place
+                            },
+                            onSelectDestination: { place in
+                                selectedArrival = place
+                            }
+                        )
                     case 6:
                         OnlyMapView(
                             place: $place,
@@ -138,8 +149,19 @@ struct MainView: View {
                         RouteDetail()
                             .navigationBarBackButtonHidden(true)
                     case .searchBar:
-                        SearchBarView(viewModel: searchViewModel, place: .constant(PlaceModel()), selectedIndex: $selectedIndex, entryPoint: .directions)
-                            .navigationBarBackButtonHidden(true)
+                        SearchBarView(
+                            viewModel: searchViewModel,
+                            place: $place,
+                            selectedIndex: $selectedIndex,
+                            entryPoint: .directions,
+                            onSelectDeparture: { place in
+                                selectedDeparture = place
+                            },
+                            onSelectDestination: { place in
+                                selectedArrival = place
+                            }
+                        )
+                        .navigationBarBackButtonHidden(true)
                     case .OnlyMapView:
                         SearchHomeView(selectedIndex: $selectedIndex)
                             .navigationBarBackButtonHidden(true)
@@ -207,7 +229,4 @@ struct MainView: View {
     }}
 
 
-#Preview {
-    MainView(selectedIndex: .constant(0), step: .constant(0))
-}
 
