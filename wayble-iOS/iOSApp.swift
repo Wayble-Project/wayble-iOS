@@ -23,6 +23,8 @@ struct iOSApp: App {
                 .withRouter(selectedIndex: $selectedIndex, router: router)
                 .environment(router)
                 .environmentObject(authViewModel)
+                .withWaybleZoneRouter()
+                
         }
     }
 }
