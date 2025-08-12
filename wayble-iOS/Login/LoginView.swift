@@ -21,6 +21,8 @@ struct LoginView: View {
     @FocusState private var focusedField: Field?
     //@State var email: String
     @Bindable var viewModel = LoginViewModel()
+    @Bindable var onboardingViewModel: OnboardingViewModel
+    @Bindable var homeViewModel: HomeViewModel
     @State private var loginFailed = false
     @EnvironmentObject var authViewModel: AuthViewModel
     
@@ -73,6 +75,11 @@ struct LoginView: View {
                         case .unknown: /// 이 케이스는 어떻게 처리할까?
                             print("")
                         case .loggedIn:
+                            // 로그인 성공 직후 홈 진입 전에 필요한 데이터 프리로드
+                            async let nicknameTask: () = onboardingViewModel.fetchNicknameIfNeeded()
+                            async let zoneTask: () = homeViewModel.fetchZone(size: 1)
+                            await nicknameTask
+                            await zoneTask
                             selectedIndex = 0
                         case .needsOnboarding:
                             selectedIndex = 13
@@ -192,7 +199,3 @@ struct SNSloginButtonView : View {
 
 
 
-
-#Preview {
-    LoginView(selectedIndex: .constant(0))
-}

@@ -11,8 +11,9 @@ struct SplashView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     @Binding var selectedIndex: Int
     @Bindable var onboardingViewModel: OnboardingViewModel
-    @State private var didFinishDelay = false        // ← 추가
+    @Bindable var homeViewModel: HomeViewModel
     @State private var didFinishAuth = false         // ← 추가
+    @State private var didFinishPreload = false
 
     var body: some View {
         VStack {
@@ -34,16 +35,23 @@ struct SplashView: View {
                     tryRouteIfReady()
                 }
             }
-            // 2) 최소 2초 대기
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                didFinishDelay = true
+        }
+        .task {
+            print("🚀 .task start (splash preload)")
+            async let nicknameTask: () = onboardingViewModel.fetchNicknameIfNeeded()
+            async let zoneTask: () = homeViewModel.fetchZone(size: 1)
+            await nicknameTask
+            await zoneTask
+            await MainActor.run {
+                didFinishPreload = true
                 tryRouteIfReady()
             }
+            print("✅ splash preload all done")
         }
     }
 
     private func tryRouteIfReady() {
-        if didFinishAuth && didFinishDelay { route() }
+        if didFinishAuth && didFinishPreload { route() }
     }
 
     private func route() {

@@ -29,9 +29,10 @@ enum Convenient: String, CaseIterable, Identifiable, Hashable {
         }
 }
 
+//MARK: - 엘리베이터 / 경사로 / 장애인 화장실 / 휠체어 충전소 H 스크롤 뷰
 struct TopConvenientBar: View {
     @State private var selected: Convenient? = nil
-    private let rows = [GridItem(.fixed(44))]
+    private let rows = [GridItem(.flexible())]
     
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
@@ -47,7 +48,9 @@ struct TopConvenientBar: View {
                 }
             }
         }
+        .frame(height: 30)
     }
+    
 }
 
 #Preview {

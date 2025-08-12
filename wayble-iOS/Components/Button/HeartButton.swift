@@ -19,12 +19,12 @@ struct HeartButton: View {
             Image(.heart02)
                 .resizable()
                 .scaledToFit()
-                .frame(width: 26)
+                .frame(height: 20)
                 .padding(.horizontal, 12)
                 .padding(.vertical, 15)
                 .overlay {
                     RoundedRectangle(cornerRadius: 15)
-                        .stroke(Color.gray500, lineWidth: 1)
+                        .stroke(Color.gray300, lineWidth: 1)
                 }
         }
     }

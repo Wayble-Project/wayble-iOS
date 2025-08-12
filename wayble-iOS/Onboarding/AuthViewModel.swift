@@ -64,17 +64,4 @@ class AuthViewModel: ObservableObject {
         if let _ = KeychainManager.standard.loadSession(for: "tokenInfoKey") {
         }
     }
-    /* LoginStatus 확인 함수랑 로직이 같음
-    func hasCompletedOnboarding() async -> Bool {
-        do {
-            if let data = try await OnboardingService().getOnboarding().data {
-                return !data.nickname.isEmpty
-            } else {
-                return false
-            }
-        } catch {
-            return false
-        }
-    }
-    */
 }

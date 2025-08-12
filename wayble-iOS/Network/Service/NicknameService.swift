@@ -29,7 +29,6 @@ final class NicknameService {
 
         // 정상 응답: data가 있는 경우
         if let data = decodedResponse.data {
-            print("✅ 닉네임 사용 가능 여부: \(data.available)")
             return decodedResponse
         }
 
