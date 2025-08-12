@@ -25,8 +25,6 @@ struct PlaceToolbar: View {
                     showSheet = true
                 } label: {
                     Image("heart02")
-//                        .resizable()
-//                        .frame(width: 24, height: 24)
                 }.sheet(isPresented: $showSheet) {
                     SavePlaceSheetView(
                         zoneName: place.name,

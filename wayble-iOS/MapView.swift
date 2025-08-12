@@ -1,8 +1,8 @@
 //
 //  MapView.swift
-//  wayble_iOS
+//  wayble-iOS
 //
-//  Created by 신민정 on 7/9/25.
+//  Created by 신민정 on 8/12/25.
 //
 
 import SwiftUI

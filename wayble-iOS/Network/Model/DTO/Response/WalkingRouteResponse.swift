@@ -36,6 +36,6 @@ struct WalkingStep: Codable {
 }
 
 struct WalkingCoord: Codable {
-    let longitude: Double   // ⚠️ 서버는 longitude/latitude 순서
+    let longitude: Double   // 서버는 longitude/latitude 순서
     let latitude: Double
 }
