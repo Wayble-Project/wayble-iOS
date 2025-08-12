@@ -13,6 +13,7 @@ import SwiftUI
 struct OnboardingCompletedView: View {
     @Environment(NavigationRouter.self) private var router
     @Bindable var viewModel: OnboardingViewModel
+    @Bindable var homeViewModel: HomeViewModel
     
     @Binding var selectedIndex: Int
     
@@ -53,6 +54,11 @@ struct OnboardingCompletedView: View {
                     """)
                     let success = await viewModel.completeOnboarding()
                     if success {
+                        // 홈 진입 전에 필요한 데이터 프리로드 (닉네임/추천존)
+                        async let nicknameTask: () = viewModel.fetchNicknameIfNeeded()
+                        async let zoneTask: () = homeViewModel.fetchZone(size: 1)
+                        await nicknameTask
+                        await zoneTask
                         selectedIndex = 0
                     } else {
                         print("온보딩 전송 실패: 홈 화면으로 이동 X")
@@ -73,9 +79,10 @@ struct OnboardingCompletedView: View {
     struct PreviewWrapper: View {
         @State var selectedIndex = 0
         @State var viewModel = OnboardingViewModel()
+        @State var homeViewModel = HomeViewModel()
 
         var body: some View {
-            OnboardingCompletedView(viewModel: viewModel, selectedIndex: $selectedIndex)
+            OnboardingCompletedView(viewModel: viewModel, homeViewModel: homeViewModel, selectedIndex: $selectedIndex)
                 .withRouter(selectedIndex: $selectedIndex)
         }
     }
@@ -83,4 +90,3 @@ struct OnboardingCompletedView: View {
     return PreviewWrapper()
  }
  
-

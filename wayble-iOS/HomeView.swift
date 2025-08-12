@@ -18,6 +18,9 @@ struct HomeView: View {
     @Binding var selectedIndex: Int
     @Environment(NavigationRouter.self) private var router
     @Bindable var viewModel: OnboardingViewModel ///0811
+    //let zone: FavWaybleZoneInfo /// let으로 하는 게 맞나??
+    @Bindable var homeViewModel: HomeViewModel
+    
 #if DEBUG
     @EnvironmentObject var authViewModel: AuthViewModel
 #endif
@@ -57,7 +60,7 @@ struct HomeView: View {
                             (
                                 Text("오늘은 ")
                                     .font(.mainTextSemibold24) +
-                                Text("아임히어") //여기 웨이블존 모델 카페 이름으로 다시
+                                Text(homeViewModel.zone?.name ?? "추천존") //여기 웨이블존 모델 카페 이름으로 다시
                                     .font(.mainTextSemibold24)
                                     .foregroundStyle(Color("blue-700")) +
                                 Text("를 추천해요")
@@ -71,7 +74,7 @@ struct HomeView: View {
                             .frame(height:6)
                         
                         // 아이콘 웨이블존 껄로 다시
-                        let facilityItems = FacilityUtils.cardFacilityItems(from: WaybleviewModel.facilities)
+                       // let facilityItems = FacilityUtils.cardFacilityItems(from: WaybleviewModel.facilities)
 
                         HStack(spacing: 32) {
                             ForEach(facilityItems, id: \.label) { item in
@@ -98,17 +101,29 @@ struct HomeView: View {
                     Spacer()
                         .frame(height:163)
                     
-                    HStack() {
+                    HStack() { ///길찾기 버튼
                         Button(action: {
                             withAnimation(.default) {
-                                let zone = WaybleviewModel.mockZone
+                                ///homeViewModel.zone가 없을 때 WaybleviewModel.mockZone를 FavWaybleZoneInfo 타입으로 변환해서 사용
+                                let z: FavWaybleZoneInfo = homeViewModel.zone ?? FavWaybleZoneInfo(
+                                    id: WaybleviewModel.mockZone.id,
+                                    name: WaybleviewModel.mockZone.name,
+                                    category: WaybleviewModel.mockZone.category,
+                                    imageUrl: WaybleviewModel.mockZone.imageUrl,
+                                    address: WaybleviewModel.mockZone.address,
+                                    latitude: WaybleviewModel.mockZone.latitude,
+                                    longitude: WaybleviewModel.mockZone.longitude,
+                                    rating: WaybleviewModel.mockZone.rating,
+                                    reviewCount: WaybleviewModel.mockZone.reviewCount,
+                                    facilities: WaybleviewModel.mockZone.facilities
+                                )
 
                                 let arrival = PlaceModel(
-                                    title: selectedDeparture?.title ?? zone.name,
-                                    roadAddress: zone.address,
-                                    x: "\(zone.longitude)",
-                                    y: "\(zone.latitude)",
-                                    category: zone.category
+                                    title: selectedDeparture?.title ?? z.name,
+                                    roadAddress: z.address,
+                                    x: "\(z.longitude)",
+                                    y: "\(z.latitude)",
+                                    category: z.category
                                 )
 
                                 LocationManager.shared.requestLocation { coordinate in
@@ -237,9 +252,17 @@ struct HomeView: View {
         .onAppear {
             WaybleviewModel.loadMockData()
         }
+        /*
         .task {
-            await viewModel.fetchNicknameIfNeeded()
+            print("🚀 .task start")
+            async let nicknameTask: () = viewModel.fetchNicknameIfNeeded()
+            async let zoneTask: () = homeViewModel.fetchZone(size: 1)
+            await nicknameTask
+            await zoneTask
+            print("✅ home task all done")
         }
+         */
+         
 #if DEBUG
 .overlay(alignment: .bottomTrailing) {
     Button("로그아웃(키체인 삭제)") {
@@ -278,4 +301,15 @@ extension Facilities {
         default: return false
         }
     }
+}
+
+extension HomeView {
+    var facilityItems: [FacilityUtils.FacilityItem] {
+        if let z = homeViewModel.zone {
+            return FacilityUtils.cardFacilityItems(from: z.facilities)
+        } else {
+            return []
+        }
+    }
+    
 }

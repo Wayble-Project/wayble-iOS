@@ -23,7 +23,7 @@ class OnboardingViewModel {
 
     var nicknameValidationState: ValidationState = .valid
     var birthValidationState: ValidationState = .valid
-
+    var hasLoadedNickname: Bool = false ///가드 플래그 (HomeViewModel 처럼!)
     
     func completeOnboarding() async -> Bool {
         let onboardingData = OnboardingData(
@@ -185,19 +185,19 @@ extension OnboardingViewModel {
         
         userInfo.gender = gender
         userInfo.birth = userInfo.birth.trimmingCharacters(in: .whitespacesAndNewlines)
-        print("🎯 gender 설정됨: \(gender)")
     }
 }
 
 extension OnboardingViewModel {
     func fetchNicknameIfNeeded() async {
+        guard !hasLoadedNickname, userInfo.nickname.isEmpty else { return }
         // 닉네임이 비어 있으면 서버에서 온보딩 정보를 조회해 설정
-        guard userInfo.nickname.isEmpty else { return }
         do {
             let response = try await OnboardingService().getOnboarding()
             if let nickname = response.data?.nickname {
                 await MainActor.run {
                     self.userInfo.nickname = nickname
+                    self.hasLoadedNickname = true
                     print("✅ 닉네임 세팅: \(nickname)")
                 }
             } else {
