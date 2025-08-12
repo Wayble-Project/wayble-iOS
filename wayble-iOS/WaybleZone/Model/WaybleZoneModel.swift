@@ -1,10 +1,9 @@
-// MARK: PLACEINFO
 
 import Foundation
 import Observation
 
 
-
+// MARK: 상세페이지
 struct WaybleZoneResponse: Codable {
     let data: WaybleZone
 }
@@ -23,7 +22,7 @@ struct WaybleZone: Codable, Identifiable {
     let photos: [String]
     let latitude: Double
     let longitude: Double
-
+    
     // JSON 키가 Swift 변수 이름과 다를 때
     enum CodingKeys: String, CodingKey {
         case id = "waybleZoneId"
@@ -41,6 +40,30 @@ struct WaybleZone: Codable, Identifiable {
         case longitude
     }
 }
+// MARK: 웨이블존 목록
+
+struct WaybleZoneListResponse: Codable {
+    let errorCode: Int
+    let message: String
+    let data: [Wayble]
+}
+
+struct Wayble: Codable, Identifiable {
+    let id: Int
+    let name: String
+    let category: String
+    let address: String
+    let rating: Double
+    let reviewCount: Int
+    let imageUrl: String
+    let contactNumber: String
+    let facilities: Facilities
+    
+    private enum CodingKeys: String, CodingKey {
+        case id = "waybleZoneId"
+        case name, category, address, rating, reviewCount, imageUrl, contactNumber, facilities
+    }
+}
 
 struct Facilities: Codable {
     let hasSlope: Bool
@@ -49,7 +72,7 @@ struct Facilities: Codable {
     let hasTableSeat: Bool
     let hasDisabledToilet: Bool
     let floorInfo: String
-
+    
     enum CodingKeys: String, CodingKey {
         case hasSlope = "hasSlope"
         case hasNoDoorStep = "hasNoDoorStep"
@@ -75,7 +98,7 @@ struct SavedPlace: Identifiable, Codable {
     let waybleZone: [WaybleZone]
     
     var id: Int { placeID }
-
+    
     enum CodingKeys: String, CodingKey {
         case placeID = "place_id"
         case title
@@ -99,11 +122,11 @@ struct Review: Identifiable, Codable {
     let userNickname: String
     let rating: Int
     let content: String
-//    let visitDate: Date
+    //    let visitDate: Date
     let visitDate: String
     let likes: Int
     let images: [String]
-
+    
     enum CodingKeys: String, CodingKey {
         case id = "review_id"
         case userNickname = "user_nickname"
@@ -113,6 +136,15 @@ struct Review: Identifiable, Codable {
         case likes
         case images
     }
+}
+
+struct ReviewPostRequestModel: Encodable {
+    let userId: Int
+    let content: String
+    let rating: Int
+    let visitDate: String
+    let facilities: [String] // 기본모델이랑 다름
+    let images: [String] // 여쭤봐야
 }
 
 //MARK: TOP 3
@@ -144,7 +176,7 @@ struct FavWaybleZoneInfo: Decodable, Identifiable {
     let rating: Double
     let reviewCount: Int
     let facilities: Facilities
-
+    
     enum CodingKeys: String, CodingKey {
         case id = "zoneId"
         case name = "zoneName"

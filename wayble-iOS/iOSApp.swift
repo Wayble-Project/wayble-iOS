@@ -24,6 +24,8 @@ struct iOSApp: App {
                 .environment(router)
                 .environmentObject(authViewModel)
                 .environment(userInfo)  /// 0811
+                .withWaybleZoneRouter()
+                
         }
     }
 }

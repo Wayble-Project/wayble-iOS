@@ -52,10 +52,10 @@ class FacilitySelectionViewModel {
         )
     }
     //mock 데이터 넣어보기용 함수
-    //api 연결시 삭제 
+    //api 연결시 삭제
     func loadMockData() {
         let mock = mockWaybleZoneResponse.data.facilities
-
+        
         if mock.hasSlope { selected.insert(.hasSlope) }
         if mock.hasNoDoorStep { selected.insert(.hasNoDoorStep) }
         if mock.hasElevator { selected.insert(.hasElevator) }
@@ -147,14 +147,6 @@ final class PlaceDetailViewModel {
         }
     }
     
-    //제거 예정 다른 뷰모델로
-    func fetchFavoritesZones(district: String = "마포구") async {
-            do {
-                self.FavoritesZones = try await FavoritesZonesService.fetchFavoritesZones(in: district)
-            } catch {
-                print("Error fetching Favorites zones: \(error.localizedDescription)")
-            }
-        }
     
     func fetchReviews(zoneID: Int, sort: ReviewSort = .latest) async {
         //isLoadingReviews = true
@@ -181,34 +173,41 @@ final class TopPlaceViewModel {
         var id: Self { self }
     }
     
-  //  var favoritesTop3: [FavWaybleZoneInfo] = []
-
-       private let FavoritesZonesService: any FavoritesWaybleZoneServiceProtocol
-
-       init(FavoritesZonesService: any FavoritesWaybleZoneServiceProtocol = FavoritesWaybleZoneService()) {
-           self.FavoritesZonesService = FavoritesZonesService
-       }
-
+    //TODO: 디폴트 현재위치로 수정하기
+    @ObservationIgnored
+    @AppStorage("selectedDong") private var selectedDong: String = "효창동"
+    
+    private let FavoritesZonesService: any FavoritesWaybleZoneServiceProtocol
+    private let searchRankService: any SearchRankWaybleZoneServiceProtocol
+    
+    init(FavoritesZonesService: any FavoritesWaybleZoneServiceProtocol = FavoritesWaybleZoneService(),
+         searchRankService: any SearchRankWaybleZoneServiceProtocol = SearchRankWaybleZoneService()
+    ) {
+        self.FavoritesZonesService = FavoritesZonesService
+        self.searchRankService = searchRankService
+    }
+    
     var selected: Category = .favorite {
         willSet {
             Task { await fetchTop3(for: newValue) }
         }
     }
-
+    
     var top3Zones: [FavWaybleZoneInfo] = []
-
+    
     func fetchTop3(for category: Category) async {
         do {
             switch category {
             case .favorite:
-                let result = try await FavoritesZonesService.fetchFavoritesZones(in: "마포구")
+                let result = try await FavoritesZonesService.fetchFavoritesZones(in: selectedDong)
                 self.top3Zones = result.prefix(3).map { $0.waybleZoneInfo }
             case .search:
-                //TODO: 검색순
-                self.top3Zones = []
+                let result = try await searchRankService.fetchTopSearchedZones(in: selectedDong)
+                self.top3Zones = result.prefix(3).map { $0.waybleZoneInfo }
             }
         } catch {
             print("Top3 fetch Error: \(error)")
+            self.top3Zones = []
         }
     }
 }

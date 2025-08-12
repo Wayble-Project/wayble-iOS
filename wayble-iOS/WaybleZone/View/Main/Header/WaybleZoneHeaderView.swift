@@ -1,8 +1,9 @@
 import SwiftUI
 
 struct WaybleZoneHeaderView: View {
-    @Environment(NavigationRouter.self) var router
-   
+    //@Environment(NavigationRouter.self) var router
+    @Environment(WaybleZoneNavigationRouter.self) var router
+    
     var body: some View {
         VStack(spacing: 16) {
             HStack {
@@ -39,6 +40,7 @@ struct WaybleZoneHeaderView: View {
 
 
 #Preview {
-    WaybleZoneHeaderView().withRouter(selectedIndex: .constant(0))
+    //WaybleZoneHeaderView().withRouter(selectedIndex: .constant(0))
+    WaybleZoneHeaderView().withWaybleZoneRouter()
 }
 

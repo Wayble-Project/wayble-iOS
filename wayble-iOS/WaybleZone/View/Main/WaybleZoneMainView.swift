@@ -2,6 +2,8 @@ import SwiftUI
 
 struct WaybleZoneMainView: View {
     @Bindable var vm: TopPlaceViewModel
+    @Environment(WaybleZoneNavigationRouter.self) var router
+   // @AppStorage("selectedDong") private var selectedDong: String = "효창동"
     
     var body: some View {
             ScrollView {
@@ -24,11 +26,15 @@ struct WaybleZoneMainView: View {
                
             }.ignoresSafeArea(edges: .top)
             .contentMargins(.bottom, 180, for: .scrollContent)
+//            .task(id: selectedDong) {
+//                        await vm.refresh(district: selectedDong)
+//                    }
 
     }
 }
 
 #Preview {
     //WaybleZoneView(vm: WaybleZoneViewModel())
-    WaybleZoneMainView(vm: TopPlaceViewModel()).withRouter(selectedIndex: .constant(0))
+    //WaybleZoneMainView(vm: TopPlaceViewModel()).withRouter(selectedIndex: .constant(0))
+    WaybleZoneMainView(vm: TopPlaceViewModel()).withWaybleZoneRouter()
 }

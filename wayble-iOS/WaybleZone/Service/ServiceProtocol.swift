@@ -8,6 +8,15 @@ protocol ReviewServiceProtocol {
     func fetchReviews(for zoneID: Int, sort: ReviewSort) async throws -> [Review]
 }
 
+protocol ReviewPostServiceProtocol {
+    func postReview(waybleZoneId: Int, review: ReviewPostRequest) async throws
+}
+
 protocol FavoritesWaybleZoneServiceProtocol {
     func fetchFavoritesZones(in district: String) async throws -> [FavoritesWaybleZone]
 }
+
+protocol SearchRankWaybleZoneServiceProtocol {
+    func fetchTopSearchedZones(in district: String) async throws -> [FavoritesWaybleZone]
+}
+

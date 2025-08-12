@@ -1,6 +1,6 @@
 import Foundation
 
-final class ReviewService: ReviewServiceProtocol {
+struct ReviewService: ReviewServiceProtocol {
     private let apiClient: APIClient
 
     init(apiClient: APIClient = APIClient()) {
@@ -13,3 +13,19 @@ final class ReviewService: ReviewServiceProtocol {
         return response.data
     }
 }
+
+
+//struct ReviewPostService: ReviewPostServiceProtocol {
+//    private let apiClient: APIClient
+//    
+//    init(apiClient: APIClient = APIClient()) {
+//        self.apiClient = apiClient
+//    }
+//    
+//    func postReview(waybleZoneId: Int, review: ReviewPostRequest) async throws {
+//        try await apiClient.send(
+//            WaybleZoneRequest.postReview(waybleZoneId: waybleZoneId, review: review),
+//            type: EmptyResponse.self
+//        )
+//    }
+//}
