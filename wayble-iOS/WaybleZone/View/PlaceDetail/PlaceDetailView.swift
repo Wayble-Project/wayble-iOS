@@ -2,10 +2,19 @@ import SwiftUI
 
 struct PlaceDetailView: View {
     @Bindable private var vm: PlaceDetailViewModel
+    @Binding var selectedIndex: Int
+    @Binding var selectedDeparture: PlaceModel?
+    @Binding var selectedArrival: PlaceModel?
 
-    init(zone: WaybleZone) {
+    init(zone: WaybleZone,
+         selectedIndex: Binding<Int>,
+         selectedDeparture: Binding<PlaceModel?>,
+         selectedArrival: Binding<PlaceModel?>) {
         let vm = PlaceDetailViewModel()
         vm.waybleZone = zone
+        self._selectedIndex = selectedIndex
+        self._selectedDeparture = selectedDeparture
+        self._selectedArrival = selectedArrival
         self.vm = vm
     }
     
@@ -22,7 +31,10 @@ struct PlaceDetailView: View {
                             x: "\(zone.longitude)",  // ← 실제 좌표
                             y: "\(zone.latitude)",
                             category: zone.category
-                        )
+                        ),
+                        selectedIndex: $selectedIndex,
+                        selectedDeparture: $selectedDeparture,
+                        selectedArrival: $selectedArrival
                     )
                     PlaceInfoView(waybleZone: zone)
                     PlaceReView(reviews: vm.reviews)
@@ -45,6 +57,8 @@ struct PlaceDetailView: View {
 
 
 //#Preview {
-//    PlaceDetailView().withRouter(selectedIndex: .constant(0))
+//    PlaceDetailView(zone: WaybleZone(...),
+//                    selectedIndex: .constant(0),
+//                    selectedDeparture: .constant(nil),
+//                    selectedArrival: .constant(nil))
 //}
-
