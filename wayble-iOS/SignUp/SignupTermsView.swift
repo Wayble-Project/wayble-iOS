@@ -24,7 +24,7 @@ struct SignupTermsView: View {
                 Button(action: {
                     isChecked.toggle()
                 }) {
-                    Image("check01")
+                    Image(isChecked ? "check05" : "check01")
                         .resizable()
                         .frame(width: 24, height: 24)
                 }

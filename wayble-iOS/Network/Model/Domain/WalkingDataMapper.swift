@@ -9,35 +9,74 @@ import Foundation
 import NMapsMap
 import UIKit
 
-extension WalkingRouteData {
-    func toRouteData(
-        title: String = "도보 최적경로",
-        lineColor: UIColor = .systemBlue
-    ) -> RouteData {
-        let coords = path.map { NMGLatLng(lat: $0.lat, lng: $0.lng) }
 
-        let distanceString = "\(distance)m"
-        let minutes = max(1, duration / 60)
-        let timeString = "\(minutes)분"
+extension WalkingData {
+    
+    var hasPolyline: Bool {
+           let count = steps.reduce(0) { partial, step in
+               partial
+               + (step.coordinate == nil ? 0 : 1)
+               + (step.coordinates?.count ?? 0)
+           }
+           return count >= 2
+       }
+    
+    
+    func toRouteData() -> RouteData {
+        var points: [NMGLatLng] = []
 
-        let arrivalString: String = {
-            let f = ISO8601DateFormatter()
-            guard let date = f.date(from: time) else { return "도착 예정 시간" }
-            let df = DateFormatter()
-            df.locale = Locale(identifier: "ko_KR")
-            df.dateFormat = "a h:mm '도착'"
-            return df.string(from: date)
-        }()
+        for step in steps {
+            if let coords = step.coordinates, !coords.isEmpty {
+                for c in coords {
+                    points.append(NMGLatLng(lat: c.latitude, lng: c.longitude)) // ⚠️ lat/ lng 매핑 주의
+                }
+            } else if let c = step.coordinate {
+                points.append(NMGLatLng(lat: c.latitude, lng: c.longitude))
+            }
+        }
+
+        // 인접 중복 제거 (선 떨림 방지)
+        var dedup: [NMGLatLng] = []
+        dedup.reserveCapacity(points.count)
+        for p in points {
+            if let last = dedup.last {
+                if abs(last.lat - p.lat) < 1e-7 && abs(last.lng - p.lng) < 1e-7 { continue }
+            }
+            dedup.append(p)
+        }
+
+        // UI 표시용 문자열
+        let distStr = formatDistance(totalDistance)
+        let timeStr = formatTime(totalTime)
+        let arrivalStr = estimatedArrivalString(totalTime)
 
         return RouteData(
-            title: title,
-            time: timeString,
-            arrivalTime: arrivalString,
-            distance: distanceString,
-            path: coords,
+            title: "최적 경로",
+            time: timeStr,
+            arrivalTime: arrivalStr,
+            distance: distStr,
+            path: dedup,
             elevatorPoints: nil,
             wheelchairPoints: nil,
-            lineColor: lineColor
+            lineColor: .blue700
         )
+    }
+
+    private func formatDistance(_ m: Int) -> String {
+        if m >= 1000 { return String(format: "%.1fkm", Double(m)/1000.0) }
+        return "\(m)m"
+    }
+
+    private func formatTime(_ sec: Int) -> String {
+        let m = sec / 60, s = sec % 60
+        return s == 0 ? "\(m)분" : "\(m)분 \(s)초"
+    }
+
+    private func estimatedArrivalString(_ sec: Int) -> String {
+        let date = Date().addingTimeInterval(TimeInterval(sec))
+        let f = DateFormatter()
+        f.locale = Locale(identifier: "ko_KR")
+        f.dateFormat = "a h:mm 도착"
+        return f.string(from: date)
     }
 }

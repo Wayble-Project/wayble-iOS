@@ -17,8 +17,9 @@ extension NicknameRouter: APITargetType {
     
     
     var requiresAuth: Bool {
-        return true
+        return false
     }
+     
     
     var path: String {
         return "/api/v1/users/check-nickname"

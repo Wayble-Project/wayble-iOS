@@ -20,7 +20,7 @@ struct RouterViewModifier: ViewModifier {
     private func routeView(for route: Route) -> some View {
         switch route {
         case .home:
-            return AnyView(HomeView(selectedIndex: $selectedIndex)
+            return AnyView(HomeView(selectedIndex: $selectedIndex, viewModel: onboardingViewModel)
                 .navigationBarBackButtonHidden(true))
             
             
@@ -52,7 +52,7 @@ struct RouterViewModifier: ViewModifier {
                 .navigationBarBackButtonHidden(true))
             
         case .splashView:
-            return AnyView(SplashView(selectedIndex: $selectedIndex)
+            return AnyView(SplashView(selectedIndex: $selectedIndex, onboardingViewModel: onboardingViewModel)
                 .navigationBarBackButtonHidden(true))
             
         case .signupCompleted:
@@ -143,6 +143,9 @@ struct RouterViewModifier: ViewModifier {
                 .navigationBarBackButtonHidden(true)
             )
             
+        case .mainMapView:
+            return AnyView(MainMapView()
+                .navigationBarBackButtonHidden(true))
             
         }
     }

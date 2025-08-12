@@ -56,4 +56,5 @@ enum Route: Hashable {
         selectedArrival: PlaceModel?,
         selectedDeparture: PlaceModel?
     )
+    case mainMapView
 }

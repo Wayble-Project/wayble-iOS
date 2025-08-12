@@ -35,7 +35,21 @@ struct Transportation: View {
             VStack(spacing: 0) {
                 HStack(alignment: .top) {
                     Button(action: {
+                        // 1) 바인딩된 PlaceModel도 스왑 (UI와 데이터 일치)
+                        let tmp = selectedDeparture
+                        selectedDeparture = selectedArrival
+                        selectedArrival = tmp
+
+                        // 2) ViewModel의 텍스트 필드 값(문자열)도 스왑해 동기화
                         viewModel.swapLocations()
+
+                        // 3) 출발/도착 PlaceModel이 있으면 도보 경로 API 재요청
+                        // 이제 여기에 대중교통api 도 추가하기
+                        if let dep = selectedDeparture, let arr = selectedArrival {
+                            Task {
+                                await viewModel.fetchWalkingRoute(departure: dep, arrival: arr)
+                            }
+                        }
                     }) {
                         Image("switch")
                             .resizable()
@@ -71,7 +85,7 @@ struct Transportation: View {
                         )
                         
                         Button(action: {
-                            searchViewModel.entryType = .destination  // ✅ 도착지 클릭
+                            searchViewModel.entryType = .destination  //  도착지 클릭
                             searchBarViewID = UUID()
                             selectedIndex = 5
                         }) {
@@ -154,18 +168,22 @@ struct Transportation: View {
                     .frame(maxWidth: .infinity)
             }
             
-            // 아래 영역: RouteDetail 또는 RouteView
-            if showDetail {
+            // 아래 영역: 도착지 없으면 검색 히스토리, 있으면 기존 화면
+            if selectedArrival == nil, selectedDeparture != nil {
+                //  출발만 있는 상태 → 탭바 바로 아래에 전체 높이 플레이스홀더 노출
+                NoSearchView()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+            } else if showDetail {
                 RouteDetail(onBack: { showDetail = false })
             } else {
                 if viewModel.transportation.selectedTab == .walking {
                     if let start = selectedDeparture, let end = selectedArrival,
                        let startX = Double(start.x ?? ""), let startY = Double(start.y ?? ""),
                        let endX = Double(end.x ?? ""), let endY = Double(end.y ?? "") {
-                        
+
                         let distance = CLLocation(latitude: startY, longitude: startX)
                             .distance(from: CLLocation(latitude: endY, longitude: endX))
-                        
+
                         if distance > 30000 {
                             longView()
                         } else {
@@ -188,30 +206,37 @@ struct Transportation: View {
             }
         }
         .onAppear {
-            
-            if selectedDeparture == nil {
+            print("[Transportation.onAppear] dep=\(String(describing: selectedDeparture?.title)) / hasUserSetDeparture=\(searchViewModel.hasUserSetDeparture)")
+            if selectedDeparture == nil && !searchViewModel.hasUserSetDeparture {
                 LocationManager.shared.requestLocation { coordinate in
                     guard let coordinate = coordinate else { return }
-
                     Task {
                         do {
-                            let (title, roadAddress) = try await SearchViewModel.shared.callReverseGeocodeAPI(
-                                lat: coordinate.latitude,
-                                lng: coordinate.longitude
+                            let (title, road) = try await searchViewModel.callReverseGeocodeAPI(
+                                lat: coordinate.latitude, lng: coordinate.longitude
                             )
-
+                            // 대기 중에 값이 세팅됐을 수도 있으니 한 번 더 체크
+                            if selectedDeparture != nil { return }
                             selectedDeparture = PlaceModel(
                                 title: title,
-                                roadAddress: roadAddress,
+                                roadAddress: road,
                                 x: String(coordinate.longitude),
                                 y: String(coordinate.latitude)
                             )
-                            print(" 현재 위치 기반 출발지 설정 완료: \(title)")
+                            // 자동 세팅이 한 번만 일어나도록 플래그 갱신
+                            searchViewModel.hasUserSetDeparture = true
+                            print("현재 위치 기반 출발지 설정 완료: \(title)")
                         } catch {
                             print("역지오코딩 실패: \(error.localizedDescription)")
                         }
                     }
                 }
+            }
+        }
+        .onChange(of: selectedArrival) { newValue in
+            guard let dep = selectedDeparture, let arr = newValue else { return }
+            Task {
+                await viewModel.fetchWalkingRoute(departure: dep, arrival: arr)
             }
         }
     }

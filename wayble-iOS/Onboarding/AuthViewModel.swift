@@ -59,6 +59,11 @@ class AuthViewModel: ObservableObject {
         }
     }
     
+    
+    func checkAutoLogin() async { /// async 을 써야 하나?
+        if let _ = KeychainManager.standard.loadSession(for: "tokenInfoKey") {
+        }
+    }
     /* LoginStatus 확인 함수랑 로직이 같음
     func hasCompletedOnboarding() async -> Bool {
         do {

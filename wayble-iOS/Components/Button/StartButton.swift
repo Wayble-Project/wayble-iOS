@@ -9,26 +9,20 @@ import SwiftUI
 
 struct StartButton: View {
     var body: some View {
-        Button(action : {}) {
-            HStack(alignment: .center) {
-                Text("출발")
-                    .font(.mainTextSemibold16)
-                    .foregroundStyle(Color.blue700)
-            }
-            .padding(.horizontal, 20)
-            .padding(.vertical, 12)
-            .frame(width: 110, height: 44, alignment: .center)
-            .clipShape(RoundedRectangle(cornerRadius: 24))
-
-            .buttonStyle(.plain)
-            .overlay(
-                RoundedRectangle(cornerRadius: 24)
-                    .stroke(Color(.blue500), lineWidth: 1)
-            )
+        HStack(alignment: .center) {
+            Text("출발")
+                .font(.mainTextSemibold16)
+                .foregroundStyle(Color.blue700)
         }
+        .padding(.horizontal, 20)
+        .padding(.vertical, 12)
+        .frame(width: 110, height: 44, alignment: .center)
+        .clipShape(RoundedRectangle(cornerRadius: 24))
+        .overlay(
+            RoundedRectangle(cornerRadius: 24)
+                .stroke(Color(.blue500), lineWidth: 1)
+        )
     }
 }
 
-#Preview {
-    StartButton()
-}
+

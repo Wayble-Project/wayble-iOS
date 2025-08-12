@@ -11,18 +11,20 @@ import Moya
 
 final class OnboardingService {
     
-    private let provider = MoyaProvider<OnboardingRouter>()
+    //private let provider = MoyaProvider<OnboardingRouter>()
+    private let provider = APIManager.shared.createProvider(for: OnboardingRouter.self)
+    
     //let provider = MoyaProvider<OnboardingRouter>(stubClosure: MoyaProvider.immediatelyStub)
     /// 이건 샘플데이터 용
     func getOnboarding() async throws -> OnboardingResponse {
         let response = try await provider.requestAsync(.get)
         print("Status Code: \(response.statusCode)")
         // 응답 바디 로그 출력
-        print("🔎 응답 바디: \(String(data: response.data, encoding: .utf8) ?? "없음")")
+        print("🔎 온보딩 Get 응답 바디: \(String(data: response.data, encoding: .utf8) ?? "없음")")
         ///서버 응답이 구조적으로 올바르면 data가 nil이어도 디코딩은 성공으로 간주
         do {
             guard !response.data.isEmpty else {
-                print("⚠️ 응답 바디가 비어 있음 → 디코딩 생략")
+                print("⚠️ 온보딩 get 응답 바디가 비어 있음 → 디코딩 생략")
                 
                 throw URLError(.badServerResponse)
             }
@@ -103,4 +105,6 @@ final class OnboardingService {
             throw error
         }
     }
+    
+    
 }

@@ -55,29 +55,32 @@ struct MapBoxView: View {
                    .frame(height:26)
                HStack {
                    HStack(spacing: 10) {
-                       NavigationLink {
-                           Transportation(
-                               selectedIndex: $selectedIndex,
-                               entryType: .departure,
-                               selectedArrival: $selectedArrival,
-                               selectedDeparture: $selectedDeparture,
-                               viewModel: TransportationViewModel(),
-                               searchViewModel: .constant(SearchViewModel.shared),
-                               transportation: SearchViewModel.shared.transportation
-                           )
+                       Button {
+                           selectedDeparture = place
+                           SearchViewModel.shared.setPlace(place, for: .departure)
+                           selectedIndex = 15
+                           print("🟢 Start tapped → index=\(selectedIndex)")
                        } label: {
-                           StartButton()
+                           StartButton() // 라벨만
                        }
+                       
                        FinishButton {
+                           // 이미 출발을 선택한 적이 있으면 출발 유지 + 도착만 설정
+                           if selectedDeparture != nil || SearchViewModel.shared.hasUserSetDeparture {
+                               selectedArrival = place
+                               selectedIndex = 15
+                               print("🟢 Finish tapped with existing departure -> keep departure, set arrival")
+                               return
+                           }
+
+                           //  아직 출발이 없다면: 현재 위치를 출발로 자동 설정 (기존 동작)
                            locationManager.requestLocation { coordinate in
                                print("✅ 위치 업데이트됨: \(coordinate)")
                                if let coord = coordinate {
-                                   print("📌 위도: \(coord.latitude), 경도: \(coord.longitude)")
                                    Task {
                                        do {
                                            let (title, road) = try await SearchViewModel.shared.callReverseGeocodeAPI(
-                                               lat: coord.latitude,
-                                               lng: coord.longitude
+                                               lat: coord.latitude, lng: coord.longitude
                                            )
 
                                            let departure = PlaceModel(

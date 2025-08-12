@@ -48,15 +48,15 @@ struct PlaceModel: Codable, Identifiable, Hashable,Equatable {
 
 extension PlaceModel {
     var latitude: Double {
-        if let y = Double(y ?? "") {
-            return y / 1_000_000.0
+        if let yValue = Double(y ?? "") {
+            return yValue > 1000 ? yValue / 1e7 : yValue
         }
         return 0.0
     }
 
     var longitude: Double {
-        if let x = Double(x ?? "") {
-            return x / 1_000_000.0
+        if let xValue = Double(x ?? "") {
+            return xValue > 1000 ? xValue / 1e7 : xValue
         }
         return 0.0
     }

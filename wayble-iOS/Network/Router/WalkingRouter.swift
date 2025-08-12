@@ -9,14 +9,16 @@ import Foundation
 import Moya
 
 enum WalkingRouter {
-    case get(startLat: Double, startLng: Double, endLat: Double, endLng: Double)
+    case get(startX: Double, startY: Double, endX: Double, endY: Double, startName: String, endName: String)
 }
 
 extension WalkingRouter: APITargetType {
 
-    var requiresAuth: Bool {  
+    
+    var requiresAuth: Bool {
         return true
     }
+     
 
     var path: String {
         return "/api/v1/directions/walking"
@@ -31,13 +33,15 @@ extension WalkingRouter: APITargetType {
 
     var task: Task {
         switch self {
-        case let .get(startLat, startLng, endLat, endLng):
+        case let .get(startX, startY, endX, endY, startName, endName):
             return .requestParameters(
                 parameters: [
-                    "startLat": startLat,
-                    "startLng": startLng,
-                    "endLat":   endLat,
-                    "endLng":   endLng
+                    "startX": startX,   // 경도(lng)
+                    "startY": startY,   // 위도(lat)
+                    "endX":   endX,     // 경도(lng)
+                    "endY":   endY,     // 위도(lat)
+                    "startName": startName,
+                    "endName":   endName
                 ],
                 encoding: URLEncoding.default
             )

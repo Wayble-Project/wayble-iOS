@@ -181,7 +181,7 @@ struct SNSloginButtonView : View {
             }
             
             Button(action: {}) {
-                Image("home")
+                Image(.appleIcon)
                     .resizable()
                     .frame(width: 52, height: 52)
             }

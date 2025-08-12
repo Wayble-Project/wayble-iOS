@@ -200,14 +200,22 @@ class SearchViewModel {
         switch entryType {
         case .departure:
             transportation.departure = place.roadAddress
-            hasUserSetDeparture = true
+            self.hasUserSetDeparture = true
         case .destination:
             transportation.destination = place.roadAddress
-            if !hasUserSetDeparture {
+            
+            //출발지에 있으면 종료 
+            guard !hasUserSetDeparture,
+                          transportation.departure.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                    else { return }
+            
+            
+            if !hasUserSetDeparture && self.transportation.departure.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                 Task {
                     do {
                         guard let coordinate = LocationManager.shared.currentCoordinate else { return }
                         let (fullAddress, _) = try await self.callReverseGeocodeAPI(lat: coordinate.latitude, lng: coordinate.longitude)
+                        if !self.transportation.departure.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty { return }
                         DispatchQueue.main.async {
                             self.transportation.departure = fullAddress
                         }
