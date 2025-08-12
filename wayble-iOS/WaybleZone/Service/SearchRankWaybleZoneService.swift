@@ -1,7 +1,18 @@
-//
-//  SearchRankService.swift
-//  wayble-iOS
-//
-//  Created by json on 8/12/25.
-//
+import Foundation
 
+
+struct SearchRankWaybleZoneService: SearchRankWaybleZoneServiceProtocol {
+    
+    private let apiClient: APIClient
+
+    init(apiClient: APIClient = APIClient()) {
+        self.apiClient = apiClient
+    }
+    
+
+    func fetchTopSearchedZones(in district: String) async throws -> [FavoritesWaybleZone] {
+        let request = FavoritesWaybleZoneRequest(district: district)
+        let response = try await apiClient.send(request)
+        return response.data
+    }
+}

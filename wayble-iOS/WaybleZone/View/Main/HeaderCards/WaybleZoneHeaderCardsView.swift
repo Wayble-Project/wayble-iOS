@@ -16,9 +16,9 @@ struct WaybleZoneHeaderCardsView: View {
                         // router.push(.cafeList)
                     }
                     
-                    CategoryCard(title: "편의점", subtitle: "언제나 편하게\n들려요", imageName: "convenienceStore") {
-                        // router.push(.storeList)
-                    }
+//                    CategoryCard(title: "편의점", subtitle: "언제나 편하게\n들려요", imageName: "convenienceStore") {
+//                        // router.push(.storeList)
+//                    }
                 }.frame(maxWidth: .infinity, alignment: .center)
                 
             }
@@ -72,7 +72,7 @@ struct CategoryCard: View {
                 }
                 .padding(13)
             }
-            .frame(width: 110, height: 146)
+            .frame(width: 170, height: 146)
         }
     }
 }
