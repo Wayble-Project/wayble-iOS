@@ -211,3 +211,42 @@ final class TopPlaceViewModel {
         }
     }
 }
+
+
+
+
+//@Observable
+//final class UserPlaceViewModel {
+//    private let service: UserPlaceServiceProtocol
+//
+//    var items: [UserPlace] = []
+//    var isLoading = false
+//    var errorMessage: String?
+//
+//    init(service: UserPlaceServiceProtocol) {
+//        self.service = service
+//    }
+//
+//    @MainActor
+//    func load() async {
+//        isLoading = true
+//        defer { isLoading = false }
+//        do {
+//            items = try await service.fetchUserPlaces()
+//        } catch {
+//            errorMessage = error.localizedDescription
+//        }
+//    }
+//
+//    @MainActor
+//    func add(waybleZoneId: Int, title: String) async {
+//        isLoading = true
+//        defer { isLoading = false }
+//        do {
+//            let created = try await service.createUserPlace(waybleZoneId: waybleZoneId, title: title)
+//            items.insert(created, at: 0)
+//        } catch {
+//            errorMessage = error.localizedDescription
+//        }
+//    }
+//}

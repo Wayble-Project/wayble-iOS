@@ -2,6 +2,7 @@ import SwiftUI
 import PhotosUI
 
 struct WriteReView: View {
+    @Environment(WaybleZoneNavigationRouter.self) var router
     @Bindable var viewModel: FacilitySelectionViewModel
     
     @State private var showModal = false
@@ -121,6 +122,7 @@ struct WriteReView: View {
                             showModal = false
                         }
                         //pop
+                        router.pop()
                     }
                 )
                 .transition(.scale.combined(with: .opacity))
@@ -140,8 +142,8 @@ struct WriteReView: View {
 }
 
 
-/*
+
 #Preview {
-    WriteReView(viewModel: FacilitySelectionViewModel()).withRouter(selectedIndex: .constant(0))
+    WriteReView(viewModel: FacilitySelectionViewModel()).withWaybleZoneRouter().environment(NavigationRouter())
 }
-*/
+

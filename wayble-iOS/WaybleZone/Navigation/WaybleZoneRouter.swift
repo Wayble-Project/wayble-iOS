@@ -34,8 +34,8 @@ class WaybleZoneNavigationRouter {
 //아래에 네비게이션 하고싶은 페이지 추가하기!
 enum WaybleZoneRoute: Hashable {
 
-    case waybleZoneMain
-    case waybleZoneSearch
+    case wZMain
+    case wZSearch
    // case placeDetailView
-    case writeReview
+    case writingReview
 }

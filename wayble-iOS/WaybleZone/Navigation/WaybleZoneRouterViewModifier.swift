@@ -72,34 +72,34 @@ import Foundation
 import SwiftUI
 
 struct WaybleZoneRouterViewModifier: ViewModifier {
-    @State private var router = WaybleZoneNavigationRouter()
+    @State private var wZrouter = WaybleZoneNavigationRouter()
 
     private func routeView(for route: WaybleZoneRoute) -> some View {
         Group {
             switch route {
-            case .waybleZoneMain:
+            case .wZMain:
                 WaybleZoneMainView(vm: TopPlaceViewModel())
 
-            case .waybleZoneSearch:
+            case .wZSearch:
                 WaybleZoneSearchView()
        
 //            case .placeDetailView:
 //                PlaceDetailView()
 
-            case .writeReview:
+            case .writingReview:
                 WriteReView(viewModel: FacilitySelectionViewModel())
    
             @unknown default:
                     EmptyView()
             }
         }
-        .environment(router)
+        .environment(wZrouter)
     }
 
     func body(content: Content) -> some View {
-        NavigationStack(path: $router.path) {
+        NavigationStack(path: $wZrouter.path) {
             content
-                .environment(router)
+                .environment(wZrouter)
                 .navigationDestination(for: WaybleZoneRoute.self) { route in
                     routeView(for: route)
                 }
