@@ -1,5 +1,6 @@
 import SwiftUI
 import Observation
+import PhotosUI
 
 // WaybleZone 상세페이지
 enum FacilityOption: String, CaseIterable, Identifiable {
@@ -175,7 +176,7 @@ final class TopPlaceViewModel {
     
     //TODO: 디폴트 현재위치로 수정하기
     @ObservationIgnored
-    @AppStorage("selectedDong") private var selectedDong: String = "효창동"
+    @AppStorage("selectedDong") private var selectedDong: String = "서초동"
     
     private let FavoritesZonesService: any FavoritesWaybleZoneServiceProtocol
     private let searchRankService: any SearchRankWaybleZoneServiceProtocol
@@ -212,6 +213,82 @@ final class TopPlaceViewModel {
     }
 }
 
+//MARK: 리뷰 작성
+
+@MainActor
+@Observable
+final class WriteReviewViewModel {
+    
+    var isSubmitting = false
+    var submitError: Error?
+    var successMessage: String?
+    
+    private let service: ReviewPostServiceProtocol
+    private let filesService: FilesService
+    
+    init(service: ReviewPostServiceProtocol = ReviewPostService(),
+         filesService: FilesService = FilesService()) {
+        self.service = service
+        self.filesService = filesService
+    }
+    
+    // MARK: Base64 이미지 업로드
+    private func base64(from item: PhotosPickerItem) async throws -> String {
+        guard let data = try await item.loadTransferable(type: Data.self) else {
+            throw URLError(.cannotDecodeContentData)
+        }
+        return data.base64EncodedString()
+    }
+    
+
+        private func base64s(from items: [PhotosPickerItem]) async throws -> [String] {
+            try await withThrowingTaskGroup(of: String.self) { group in
+                for it in items {
+                    group.addTask { try await self.base64(from: it) }
+                }
+                var out: [String] = []
+                for try await s in group { out.append(s) }
+                return out
+            }
+        }
+    
+    func submit(zoneID: Int,
+                form: ReviewPostRequestModel,
+                photoItems: [PhotosPickerItem]?
+    ) async {
+        isSubmitting = true
+        submitError = nil
+        successMessage = nil
+        defer { isSubmitting = false }
+        
+        do {
+            var finalForm = form
+            
+            if let items = photoItems, !items.isEmpty {
+                let base64List = try await base64s(from: items)
+                let uploadedURLs = try await filesService.uploadImagesBase64(base64List)
+                finalForm = ReviewPostRequestModel(
+                    content: form.content,
+                    rating: form.rating,
+                    visitDate: form.visitDate,
+                    facilities: form.facilities,
+                    images: uploadedURLs
+                )
+            }
+            
+            
+            let request = ReviewPostRequest(zoneID: zoneID, payload: finalForm)
+            try await service.postReview(waybleZoneId: zoneID, review: request)
+            successMessage = "리뷰가 등록되었습니다!"
+            
+        } catch is CancellationError {
+            // 유저가 화면을 벗어나는 등 작업이 취소된 경우 조용히 종료
+            return
+        } catch {
+            submitError = error
+        }
+    }
+}
 
 
 

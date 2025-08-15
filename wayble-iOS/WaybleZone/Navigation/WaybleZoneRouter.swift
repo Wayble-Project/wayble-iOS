@@ -13,7 +13,7 @@ class WaybleZoneNavigationRouter {
     var path = NavigationPath()  // 네비게이션 경로를 저장하는 변수, 스택처럼 쌓임
 
     /// 특정 화면을 추가 (Push 기능)
-    func push(_ route: Route) {
+    func push(_ route: WaybleZoneRoute) {
         path.append(route)
     }
 
@@ -33,9 +33,9 @@ class WaybleZoneNavigationRouter {
 
 //아래에 네비게이션 하고싶은 페이지 추가하기!
 enum WaybleZoneRoute: Hashable {
-
+    
     case wZMain
     case wZSearch
-   // case placeDetailView
-    case writingReview
+    case wZplaceDetailView
+    case wZwritingReview(PlaceIdent)
 }

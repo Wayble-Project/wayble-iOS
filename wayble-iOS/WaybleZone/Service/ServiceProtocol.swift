@@ -20,9 +20,9 @@ protocol SearchRankWaybleZoneServiceProtocol {
     func fetchTopSearchedZones(in district: String) async throws -> [FavoritesWaybleZone]
 }
 
-//public protocol FilesServiceProtocol {
-//    func uploadImages(_ images: [ImagePart]) async throws -> [String]
-//}
+public protocol FilesServiceProtocol {
+    func uploadImagesBase64(_ imagesBase64: [String]) async throws -> [String]
+}
 
 //public protocol UserPlaceServiceProtocol {
 //    func createUserPlace(waybleZoneId: Int, title: String) async throws -> UserPlace

@@ -54,6 +54,9 @@ struct TopPlaceView: View {
             ForEach(Array(vm.top3Zones.enumerated()), id: \.element.id) { index, zone in
                 TopPlaceCard(zone: zone, rank: index + 1) // index는 0부터 시작하니 +1
                     .padding(.horizontal, 3)
+                    .onTapGesture {
+                        router.push(.wZplaceDetailView)
+                            }
             }
 
         }

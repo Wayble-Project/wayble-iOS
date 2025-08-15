@@ -71,37 +71,74 @@
 import Foundation
 import SwiftUI
 
+//struct WaybleZoneRouterViewModifier: ViewModifier {
+//    @State private var wZrouter = WaybleZoneNavigationRouter()
+//
+//    private func routeView(for route: WaybleZoneRoute) -> some View {
+//        Group {
+//            switch route {
+//            case .wZMain:
+//                WaybleZoneMainView(vm: TopPlaceViewModel())
+//
+//            case .wZSearch:
+//                WaybleZoneSearchView()
+//       
+//            case .wZplaceDetailView:
+//               PlaceDetailView(vm: PlaceDetailViewModel())
+//
+//            case .wZwritingReview(let place):
+//                WriteReView(viewModel: FacilitySelectionViewModel(),
+//                            place: place )
+//   
+//            @unknown default:
+//                    EmptyView()
+//            }
+//        }
+//        .environment(wZrouter)
+//    }
+//
+//    func body(content: Content) -> some View {
+//        NavigationStack(path: $wZrouter.path) {
+//            content
+//                .environment(wZrouter)
+//                .navigationDestination(for: WaybleZoneRoute.self) { route in
+//                    routeView(for: route)
+//                }
+//        }
+//    }
+//}
+
 struct WaybleZoneRouterViewModifier: ViewModifier {
-    @State private var wZrouter = WaybleZoneNavigationRouter()
+    @State private var wzRouter = WaybleZoneNavigationRouter()
 
+  
+    @ViewBuilder
     private func routeView(for route: WaybleZoneRoute) -> some View {
-        Group {
-            switch route {
-            case .wZMain:
-                WaybleZoneMainView(vm: TopPlaceViewModel())
+        switch route {
+        case .wZMain:
+            WaybleZoneMainView(vm: TopPlaceViewModel())
 
-            case .wZSearch:
-                WaybleZoneSearchView()
-       
-//            case .placeDetailView:
-//                PlaceDetailView()
+        case .wZSearch:
+            WaybleZoneSearchView()
 
-            case .writingReview:
-                WriteReView(viewModel: FacilitySelectionViewModel())
-   
-            @unknown default:
-                    EmptyView()
-            }
+        case .wZplaceDetailView:
+            PlaceDetailView(vm: PlaceDetailViewModel())
+
+        case .wZwritingReview(let place):
+            WriteReView(
+                viewModel: FacilitySelectionViewModel(),
+                place: place
+            )
         }
-        .environment(wZrouter)
     }
 
     func body(content: Content) -> some View {
-        NavigationStack(path: $wZrouter.path) {
+        NavigationStack(path: $wzRouter.path) {
             content
-                .environment(wZrouter)
+                .environment(wzRouter)                   // 루트에도 환경 주입
                 .navigationDestination(for: WaybleZoneRoute.self) { route in
-                    routeView(for: route)
+                    routeView(for: route)                // ✅ 빌더가 서로 다른 타입 합성
+                        .environment(wzRouter)           // 목적지에도 필요하면 주입
                 }
         }
     }

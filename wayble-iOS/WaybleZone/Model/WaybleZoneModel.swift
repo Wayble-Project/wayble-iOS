@@ -4,6 +4,11 @@ import Observation
 
 
 // MARK: 상세페이지
+struct PlaceIdent: Hashable {
+    let id: Int
+    let name: String
+}
+
 struct WaybleZoneResponse: Codable {
     let data: WaybleZone
 }
@@ -146,12 +151,11 @@ struct Review: Identifiable, Codable {
 
 
 struct ReviewPostRequestModel: Encodable {
-    let userId: Int
     let content: String
     let rating: Int
     let visitDate: String
     let facilities: [String] // 기본모델이랑 다름
-    let images: [String] // 이미지 업로드하고 주소 받아와서 넣어야함
+    let images: [String]? // 이미지 업로드하고 주소 받아와서 넣어야함
 }
 
 //MARK: TOP 3

@@ -23,8 +23,8 @@ struct ReviewPostService: ReviewPostServiceProtocol {
     }
     
     func postReview(waybleZoneId: Int, review: ReviewPostRequest) async throws {
-        try await apiClient.send(
-            ReviewPostRequest.postReview(waybleZoneId: waybleZoneId, review: review)
-        )
-    }
+
+            // 응답을 반환하지 않으므로
+            let _: APIResponse<EmptyData> = try await apiClient.send(review)
+        }
 }

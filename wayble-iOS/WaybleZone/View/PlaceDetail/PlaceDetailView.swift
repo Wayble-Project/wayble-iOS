@@ -1,13 +1,13 @@
 import SwiftUI
 
 struct PlaceDetailView: View {
-    @Bindable private var vm: PlaceDetailViewModel
+    @Bindable var vm: PlaceDetailViewModel
 
-    init(zone: WaybleZone) {
-        let vm = PlaceDetailViewModel()
-        vm.waybleZone = zone
-        self.vm = vm
-    }
+//    init(zone: WaybleZone) {
+//        let vm = PlaceDetailViewModel()
+//        vm.waybleZone = zone
+//        self.vm = vm
+//    }
     
     var body: some View {
         ScrollView {
@@ -25,7 +25,7 @@ struct PlaceDetailView: View {
                         )
                     )
                     PlaceInfoView(waybleZone: zone)
-                    PlaceReView(reviews: vm.reviews)
+                    PlaceReView(waybleZone: zone, reviews: vm.reviews)
                 } else {
                     ProgressView("정보를 불러오는 중...")
                 }
