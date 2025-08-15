@@ -41,15 +41,12 @@ class HomeViewModel {
                 }
             }
         }
-
+        
+/// 서울시청
         //let finalCoordinate = coordinate ?? CLLocationCoordinate2D(latitude: 37.5665, longitude: 126.9780)
         let finalCoordinate = coordinate ?? CLLocationCoordinate2D(latitude: 37.4738, longitude: 127.0067)
         
-        /*
-        if finalCoordinate.latitude == 37.5665 && finalCoordinate.longitude == 126.9780 {
-            print("ℹ️ 기본값 위치 사용 : \(finalCoordinate.latitude), \(finalCoordinate.longitude)")
-        }
-         */
+
         if finalCoordinate.latitude == 37.4738 && finalCoordinate.longitude == 127.0067 {
             print("ℹ️ 기본값 위치 사용 (예술의전당): \(finalCoordinate.latitude), \(finalCoordinate.longitude)")
         }

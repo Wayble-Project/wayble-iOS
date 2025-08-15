@@ -11,28 +11,34 @@ import NMapsMap
 struct MainMapView: View {
     
     // MARK: - Map dependencies (ported from OnlyMapView)
-    @State private var mapCenter: NMGLatLng = NMGLatLng(lat: 37.5665, lng: 126.9780)
-    @State private var viewModel = SearchViewModel()
+    @State private var mapCenter: NMGLatLng = NMGLatLng(lat: 37.5386, lng: 126.9628)
+    @StateObject private var viewModel = MainMapViewModel()
     
     @Environment(NavigationRouter.self) private var router
     
     var body: some View {
         VStack(spacing: 0) {
-            MainTopBar()
+            MainTopBar { kind in
+                Task {
+                    await viewModel.loadFacilities(
+                        lat: centerLat,
+                        lng: centerLng,
+                        facilityType: kind.apiParam
+                    )
+                }
+            }
             
             //MARK: - 지도 뷰
             ZStack() {
                 NaverMapView(
-                    centerX: centerLng, /// 지도 중심 경도 값
-                    centerY: centerLat, /// 지도 중심 위도 값
-                    ///onLocationChanged; 지도 중심이 바뀔 때 호출되는 콜백
+                    centerX: centerLng,
+                    centerY: centerLat,
                     onLocationChanged: { newLat, newLng in
-                        mapCenter = NMGLatLng(lat: newLat, lng: newLng) /// 상태값 갱신
-                        viewModel.handleCenterChanged(lat: newLat, lng: newLng) ///뷰모델에 알림
+                        mapCenter = NMGLatLng(lat: newLat, lng: newLng)
                     },
                     zoomLevel: 16,
-                    showMarker: false
-                    
+                    showMarker: false,
+                    facilities: viewModel.homeFacilities
                 )
                 /*
                 Image("pin11")
@@ -44,6 +50,8 @@ struct MainMapView: View {
             
         } //v
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        .appToast($viewModel.errorMessage) ///0815 ToastUI
+        ///MainMapViewModel.errorMessage에 문자열이 들어가면, 화면 하단에 토스트가 뜨고 자동으로 사라지면서 errorMessage도 알아서 nil로 정리
     }
     
     
@@ -57,6 +65,7 @@ struct MainMapView: View {
 //MARK: - 상단 바
 
 struct MainTopBar: View {
+    var onSelect: (Convenient) -> Void = { _ in }
     var body: some View {
         VStack(spacing: 0) {
             HStack(spacing: 0) {
@@ -70,7 +79,7 @@ struct MainTopBar: View {
             } //h
             .padding(.bottom, 14)
             .padding(.trailing, 20)
-            TopConvenientBar()
+            TopConvenientBar(onSelect: onSelect)
                 .padding(.bottom, 21)
         }
         .padding(.leading, 20)
@@ -84,3 +93,4 @@ struct MainTopBar: View {
             .environment(NavigationRouter())
     }
 }
+

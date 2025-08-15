@@ -19,7 +19,9 @@ struct SignupEmailView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            BackButton()
+            BackButton(action: {
+                selectedIndex = 14
+            })
                 .padding(.top, 30)
                 .padding(.bottom, 27)
             TitleText(text: "로그인에 사용할\n아이디를 입력해 주세요")

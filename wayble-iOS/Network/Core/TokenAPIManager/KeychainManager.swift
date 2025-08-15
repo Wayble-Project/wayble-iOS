@@ -10,6 +10,10 @@ import Security
 
 final class KeychainManager: @unchecked Sendable {
     static let standard = KeychainManager()
+
+    // Simple in-memory cache to avoid repeated Keychain hits/log spam
+    private var sessionCache: [String: TokenInfo] = [:]
+    private var hasLoggedSuccessKey: Set<String> = []
     
     private init() {}
     
@@ -18,23 +22,43 @@ final class KeychainManager: @unchecked Sendable {
     /// 세션에 저장된 정보를 저장합니다.
     public func saveSession(_ session: TokenInfo, for key: String) -> Bool {
         guard let data = try? JSONEncoder().encode(session) else { return false }
+        // update cache immediately
+        sessionCache[key] = session
+        hasLoggedSuccessKey.remove(key)
         return save(data, for: key)
     }
 
     /// 세션에 저장된 정보를 불러옵니다.
     public func loadSession(for key: String) -> TokenInfo? {
+        // 1) Cache hit → return quickly without noisy logs
+        if let cached = sessionCache[key] {
+            // Optional lightweight log (commented to keep console clean)
+            // print("✅ [Keychain] 토큰 캐시 HIT - key: \(key)")
+            return cached
+        }
+
+        // 2) Miss → read from Keychain
         guard let data = load(key: key),
               let session = try? JSONDecoder().decode(TokenInfo.self, from: data) else {
-            print("🔑 [Keychain] 토큰 로드 실패 - key: \(key)") ///자동로그인 확인 로그
+            print("🔑 [Keychain] 토큰 로드 실패 - key: \(key)")
             return nil
         }
-        print("✅ [Keychain] 토큰 로드 성공 - key: \(key), accessToken: \(session.accessToken)") ///나중에 accessToken 로그는 지우기
+
+        // Cache it to prevent duplicate loads/logs in the same run
+        sessionCache[key] = session
+
+        // Log success only once per key per app run
+        if hasLoggedSuccessKey.insert(key).inserted {
+            print("✅ [Keychain] 토큰 로드 성공 - key: \(key), accessToken: \(session.accessToken)")
+        }
         return session
     }
 
     /// 세션 정보를 삭제합니다.
     public func deleteSession(for key: String) {
         _ = delete(key: key)
+        sessionCache.removeValue(forKey: key)
+        hasLoggedSuccessKey.remove(key)
     }
 
     // MARK: - Private Raw Keychain Operations

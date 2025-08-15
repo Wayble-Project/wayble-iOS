@@ -282,12 +282,7 @@ struct HomeView: View {
     }
       
 }
-/*
-#Preview {
-    HomeView(selectedIndex: .constant(0), viewModel: $viewModel)
-        .withRouter(selectedIndex: .constant(0),router: NavigationRouter())
-}
- */
+
 
 // MARK: - Facilities Extension
 extension Facilities {
