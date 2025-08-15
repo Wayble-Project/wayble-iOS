@@ -17,6 +17,7 @@ struct MainView: View {
     @State private var router = NavigationRouter()
     @State var signupViewModel = SignupViewModel()
     @State var onboardingViewModel = OnboardingViewModel()
+    @State var homeViewModel = HomeViewModel()
     @State private var selectedDeparture: PlaceModel? = nil
     @State private var selectedArrival: PlaceModel? = nil
 
@@ -29,7 +30,7 @@ struct MainView: View {
                     
                     switch selectedIndex {
                         // 밑에 추가하고 싶은 뷰 적기
-                    case 0: HomeView(selectedIndex: $selectedIndex, viewModel: onboardingViewModel)
+                    case 0: HomeView(selectedIndex: $selectedIndex, viewModel: onboardingViewModel, homeViewModel: homeViewModel)
                     case 1: MapView()
                     case 2: ProfileView()
                     case 3: SearchHomeView(selectedIndex: $selectedIndex)
@@ -54,12 +55,12 @@ struct MainView: View {
                             selectedIndex: $selectedIndex,
                             searchBarViewID: $searchBarViewID
                         )
-                    case 7: LoginView(selectedIndex: $selectedIndex)
+                    case 7: LoginView(selectedIndex: $selectedIndex, onboardingViewModel: onboardingViewModel, homeViewModel: homeViewModel)
                     case 8: SignupEmailView(viewModel: signupViewModel, selectedIndex: $selectedIndex) //동일한 뷰모델 -> 유저 정보 저장
                     case 9: SignupPasswordView(viewModel: signupViewModel, selectedIndex: $selectedIndex)
                     case 10: SignupCompletedView(viewModel: signupViewModel, selectedIndex: $selectedIndex)
-                    case 11: SplashView(selectedIndex: $selectedIndex, onboardingViewModel: onboardingViewModel)
-                    case 12: OnboardingCompletedView(viewModel: onboardingViewModel, selectedIndex: $selectedIndex)
+                    case 11: SplashView(selectedIndex: $selectedIndex, onboardingViewModel: onboardingViewModel, homeViewModel: homeViewModel)
+                    case 12: OnboardingCompletedView(viewModel: onboardingViewModel, homeViewModel: homeViewModel, selectedIndex: $selectedIndex)
                     case 13: OnboardingRootView(viewModel: onboardingViewModel, selectedIndex: $selectedIndex)
                     case 14: SignupTermsView(selectedIndex: $selectedIndex)
 
@@ -118,7 +119,7 @@ struct MainView: View {
                         SearchHomeView(selectedIndex: $selectedIndex)
                             .navigationBarBackButtonHidden(true)
                     case .home:
-                        HomeView(selectedIndex: $selectedIndex, viewModel: onboardingViewModel)
+                        HomeView(selectedIndex: $selectedIndex, viewModel: onboardingViewModel, homeViewModel: homeViewModel)
                             .navigationBarBackButtonHidden(true)
                     case .signupEmail:
                         SignupEmailView(viewModel: signupViewModel, selectedIndex: $selectedIndex)
@@ -127,7 +128,7 @@ struct MainView: View {
                         findPasswordView()
                             .navigationBarBackButtonHidden(true)
                     case .login:
-                        LoginView(selectedIndex: $selectedIndex)
+                        LoginView(selectedIndex: $selectedIndex, onboardingViewModel: onboardingViewModel, homeViewModel: homeViewModel)
                             .navigationBarBackButtonHidden(true)
                     case .wayblezone:
                         WaybleZoneMainView(vm: TopPlaceViewModel())
@@ -188,10 +189,10 @@ struct MainView: View {
                         )
                         .navigationBarBackButtonHidden(true)
                     case .splashView:
-                        SplashView(selectedIndex: $selectedIndex, onboardingViewModel: onboardingViewModel)
+                        SplashView(selectedIndex: $selectedIndex, onboardingViewModel: onboardingViewModel, homeViewModel: homeViewModel)
                             .navigationBarBackButtonHidden(true)
                     case .onboardingCompleted:
-                        OnboardingCompletedView(viewModel: onboardingViewModel, selectedIndex: $selectedIndex)
+                        OnboardingCompletedView(viewModel: onboardingViewModel, homeViewModel: homeViewModel, selectedIndex: $selectedIndex)
                             .navigationBarBackButtonHidden(true)
                     case .onboardingRoot:
                         OnboardingRootView(viewModel: onboardingViewModel, selectedIndex: $selectedIndex)

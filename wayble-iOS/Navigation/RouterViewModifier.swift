@@ -12,15 +12,17 @@ struct RouterViewModifier: ViewModifier {
     @State private var router = NavigationRouter()
     @Bindable var signupViewModel: SignupViewModel
     @Bindable var onboardingViewModel: OnboardingViewModel
+    @Bindable var homeViewModel: HomeViewModel
     
     @State private var searchViewModel = SearchViewModel()
     @State private var place: PlaceModel = PlaceModel()
     
     
+    
     private func routeView(for route: Route) -> some View {
         switch route {
         case .home:
-            return AnyView(HomeView(selectedIndex: $selectedIndex, viewModel: onboardingViewModel)
+            return AnyView(HomeView(selectedIndex: $selectedIndex, viewModel: onboardingViewModel, homeViewModel: homeViewModel)
                 .navigationBarBackButtonHidden(true))
             
             
@@ -33,14 +35,14 @@ struct RouterViewModifier: ViewModifier {
                 .navigationBarBackButtonHidden(true))
             
         case .login:
-            return AnyView(LoginView(selectedIndex: $selectedIndex))
+            return AnyView(LoginView(selectedIndex: $selectedIndex, onboardingViewModel: onboardingViewModel, homeViewModel: homeViewModel))
             
         case .wayblezone:
             return AnyView(WaybleZoneMainView(vm: TopPlaceViewModel())
                 .navigationBarBackButtonHidden(true))
             
         case .onboardingCompleted:
-            return AnyView(OnboardingCompletedView(viewModel: onboardingViewModel, selectedIndex: $selectedIndex)
+            return AnyView(OnboardingCompletedView(viewModel: onboardingViewModel, homeViewModel: homeViewModel, selectedIndex: $selectedIndex)
                 .navigationBarBackButtonHidden(true))
             
         case .routeDetail:
@@ -52,7 +54,7 @@ struct RouterViewModifier: ViewModifier {
                 .navigationBarBackButtonHidden(true))
             
         case .splashView:
-            return AnyView(SplashView(selectedIndex: $selectedIndex, onboardingViewModel: onboardingViewModel)
+            return AnyView(SplashView(selectedIndex: $selectedIndex, onboardingViewModel: onboardingViewModel, homeViewModel: homeViewModel)
                 .navigationBarBackButtonHidden(true))
             
         case .signupCompleted:
@@ -167,20 +169,21 @@ extension View {
         selectedIndex: Binding<Int>,
         router: NavigationRouter = NavigationRouter(),
         signupViewModel: SignupViewModel = SignupViewModel(),
-        onboardingViewModel: OnboardingViewModel = OnboardingViewModel()
+        onboardingViewModel: OnboardingViewModel = OnboardingViewModel(),
+        homeViewModel: HomeViewModel = HomeViewModel()
     ) -> some View {
         self
             .modifier(RouterViewModifier(
                 selectedIndex: selectedIndex,
                 signupViewModel: signupViewModel,
-                onboardingViewModel: onboardingViewModel
+                onboardingViewModel: onboardingViewModel, homeViewModel: homeViewModel
             ))
             .environment(router)
             .navigationDestination(for: Route.self) { route in
                 RouterViewModifier(
                     selectedIndex: selectedIndex,
                     signupViewModel: signupViewModel,
-                    onboardingViewModel: onboardingViewModel
+                    onboardingViewModel: onboardingViewModel, homeViewModel: homeViewModel
                 ).destination(for: route)
             }
     }
