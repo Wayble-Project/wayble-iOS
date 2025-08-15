@@ -37,7 +37,7 @@ struct NicknameStepView: View {
                 isNextDisabled: viewModel.userInfo.nickname.trimmingCharacters(in: .whitespacesAndNewlines).count < 2,
                 onPreviousAction: {
                     viewModel.userInfo.nickname = ""
-                    selectedIndex = 8
+                    selectedIndex = 7
                 },
                 onNextAction: {
                     Task {

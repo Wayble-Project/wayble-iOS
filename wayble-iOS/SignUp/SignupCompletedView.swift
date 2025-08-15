@@ -21,15 +21,15 @@ struct SignupCompletedView: View {
             ZStack(alignment: .bottom) {
                 GeometryReader { geo in
                     MP4View(filename: "Join", fileExtension: "mp4", size: geo.size)
-                        .frame(height: 540)
+                        .frame(height: 500)
                         .clipped()
                 }
-                .frame(height: 540)
+                .frame(height: 600)
                 
                 TitleText(text: "환영합니다\n가입이 완료되었어요!", alignment: .center)
                     //.padding(.bottom, 48)
             }
-            .border(Color.black)
+            //.border(Color.black)
             
             Spacer()
             

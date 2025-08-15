@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import ToastUI
 
 
 //FIXME: - image 변경해야 함
@@ -16,8 +17,6 @@ struct OnboardingCompletedView: View {
     @Bindable var homeViewModel: HomeViewModel
     
     @Binding var selectedIndex: Int
-    
-    
     
     var body: some View {
         VStack {
@@ -62,6 +61,9 @@ struct OnboardingCompletedView: View {
                         selectedIndex = 0
                     } else {
                         print("온보딩 전송 실패: 홈 화면으로 이동 X")
+                        await MainActor.run {
+                            viewModel.errorMessage = "온보딩 전송에 실패했어요. 잠시 후 다시 시도해 주세요."
+                        }
                     }
                 }
             }
@@ -69,6 +71,7 @@ struct OnboardingCompletedView: View {
         }
         .navigationBarBackButtonHidden(true)
         .padding(.horizontal, 20)
+        .appToast($viewModel.errorMessage)
     }
     
 }
