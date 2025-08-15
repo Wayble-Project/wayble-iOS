@@ -102,10 +102,10 @@ struct CustomTabBarView: View {
     
 }
 
-#Preview {
+/*#Preview {
     CustomTabBarView(selectedIndex: .constant(1))
         .previewLayout(.sizeThatFits)
         .padding()
         .background(Color.gray.opacity(0.1))
         .withRouter(selectedIndex: .constant(0),router: NavigationRouter())
-}
+}*/

@@ -1,4 +1,5 @@
 import SwiftUI
+import Foundation
 
 struct CommonStepView: View {
     let step: RouteStep

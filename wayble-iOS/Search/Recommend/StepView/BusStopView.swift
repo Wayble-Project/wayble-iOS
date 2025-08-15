@@ -7,7 +7,7 @@
 import Foundation
 import SwiftUI
 
-struct BusStepView: View {
+struct BusStopView: View {
     let step: RouteStep
     @Bindable var viewModel = TransportationViewModel()
     @State private var isSimpleMode = false
@@ -197,5 +197,5 @@ private struct BusStepRow: View {
 }
 
 #Preview {
-BusStepView(step: RouteStep(type: .walk, title: "도착", subTitle:"홍대정문", detail: nil, extra: nil, Info: nil, extraBus: nil, busTime: nil, simple: true, showDest: true))
+BusStopView(step: RouteStep(type: .walk, title: "도착", subTitle:"홍대정문", detail: nil, extra: nil, Info: nil, extraBus: nil, busTime: nil, simple: true, showDest: true))
 }

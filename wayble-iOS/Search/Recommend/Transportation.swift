@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import CoreLocation
 
-enum EntryType {
+enum EntryType: String, Hashable {
     case departure
     case destination
 }
@@ -19,6 +19,8 @@ struct Transportation: View {
     @State private var searchBarViewID = UUID()
     @Environment(NavigationRouter.self) private var router
     @State private var showDetail: Bool = false
+    @State private var didAutoLoadTransit: Bool = false
+    @State private var selectedRoute: RouteOption? = nil
     var entryType: EntryType
     @Binding var selectedArrival: PlaceModel?
     @Binding var selectedDeparture: PlaceModel?
@@ -48,6 +50,10 @@ struct Transportation: View {
                         if let dep = selectedDeparture, let arr = selectedArrival {
                             Task {
                                 await viewModel.fetchWalkingRoute(departure: dep, arrival: arr)
+                                // 대중교통도 탭이 Transit이면 함께 새로고침
+                                if viewModel.transportation.selectedTab == .transit {
+                                    await viewModel.fetchTransitFirst(departure: dep, arrival: arr)
+                                }
                             }
                         }
                     }) {
@@ -174,7 +180,9 @@ struct Transportation: View {
                 NoSearchView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
             } else if showDetail {
-                RouteDetail(onBack: { showDetail = false })
+                if let route = selectedRoute {
+                    RouteDetail(onBack: { showDetail = false }, route: route)
+                }
             } else {
                 if viewModel.transportation.selectedTab == .walking {
                     if let start = selectedDeparture, let end = selectedArrival,
@@ -201,7 +209,68 @@ struct Transportation: View {
                         )
                     }
                 } else {
-                    RouteView(onRouteSelected: { showDetail = true })
+                    // 🔹 대중교통 탭 본문: 에러/로딩/리스트
+                    VStack(spacing: 0) {
+                        // 에러 배너
+                        if let err = viewModel.transitError {
+                            Text(err)
+                                .font(.footnote)
+                                .foregroundStyle(.red)
+                                .padding(10)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .background(Color.red.opacity(0.08))
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
+                                .padding(.horizontal, 16)
+                                .padding(.top, 8)
+                        }
+
+                        // 경로 카드 리스트
+                        ScrollView {
+                            LazyVStack(spacing: 12) {
+                                ForEach(viewModel.transportation.recommendedRoutes.indices, id: \.self) { index in
+                                    let route = viewModel.transportation.recommendedRoutes[index]
+                                    NavigationLink {
+                                        RouteDetail(route: route)
+                                    } label: {
+                                        RouteView(route: route, onRouteSelected: { showDetail = true })
+                                    }
+                                    .onAppear {
+                                        guard
+                                            index == viewModel.transportation.recommendedRoutes.count - 1,
+                                            viewModel.transitHasNext,
+                                            !viewModel.isTransitLoading,
+                                            let dep = selectedDeparture,
+                                            let arr = selectedArrival
+                                        else { return }
+                                        Task { await viewModel.fetchTransitNext(departure: dep, arrival: arr) }
+                                    }
+                                }
+                            }
+                            .padding(.horizontal, 16)
+                            .padding(.top, 8)
+                        }
+                        // 로딩 오버레이(상단)
+                        .overlay(alignment: .top) {
+                            if viewModel.isTransitLoading {
+                                ProgressView()
+                                    .padding(10)
+                                    .background(.ultraThinMaterial)
+                                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                                    .padding(.top, 8)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .onChange(of: viewModel.transportation.selectedTab) { newTab in
+            guard newTab == .transit else { return }
+            // 출발/도착이 모두 있고 아직 불러오지 않았다면 첫 페이지 요청
+            if let dep = selectedDeparture, let arr = selectedArrival,
+               !viewModel.isTransitLoading,
+               viewModel.transportation.recommendedRoutes.isEmpty {
+                Task {
+                    await viewModel.fetchTransitFirst(departure: dep, arrival: arr)
                 }
             }
         }
@@ -232,11 +301,26 @@ struct Transportation: View {
                     }
                 }
             }
+            // 화면 진입 시 기본 탭이 대중교통이라면 1회 자동 로드
+            if viewModel.transportation.selectedTab == .transit,
+               !didAutoLoadTransit,
+               let dep = selectedDeparture,
+               let arr = selectedArrival,
+               viewModel.transportation.recommendedRoutes.isEmpty {
+                didAutoLoadTransit = true
+                Task {
+                    await viewModel.fetchTransitFirst(departure: dep, arrival: arr)
+                }
+            }
         }
         .onChange(of: selectedArrival) { newValue in
             guard let dep = selectedDeparture, let arr = newValue else { return }
             Task {
                 await viewModel.fetchWalkingRoute(departure: dep, arrival: arr)
+                // 도착지가 바뀌면, 현재 탭이 대중교통일 때 즉시 새로고침
+                if viewModel.transportation.selectedTab == .transit {
+                    await viewModel.fetchTransitFirst(departure: dep, arrival: arr)
+                }
             }
         }
     }
