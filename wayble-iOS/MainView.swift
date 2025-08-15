@@ -133,17 +133,17 @@ struct MainView: View {
                     case .wayblezone:
                         WaybleZoneMainView(vm: TopPlaceViewModel())
                             .navigationBarBackButtonHidden(true)
-                    case .waybleZoneSearch:
-                        WaybleZoneSearchView()
-                            .navigationBarBackButtonHidden(true)
+//                    case .waybleZoneSearch:
+//                        WaybleZoneSearchView()
+//                            .navigationBarBackButtonHidden(true)
                     /*
                     case .placeDetailView:
                         PlaceDetailView()
                             .navigationBarBackButtonHidden(true)
                      */
-                    case .writeReview:
-                        WriteReView(viewModel: FacilitySelectionViewModel())
-                            .navigationBarBackButtonHidden(true)
+//                    case .writeReview:
+//                        WriteReView(viewModel: FacilitySelectionViewModel())
+//                            .navigationBarBackButtonHidden(true)
                     case .signupCompleted:
                         SignupCompletedView(viewModel: signupViewModel, selectedIndex: $selectedIndex)
                             .navigationBarBackButtonHidden(true)

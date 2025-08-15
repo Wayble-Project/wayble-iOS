@@ -20,7 +20,7 @@ struct WaybleZoneHeaderView: View {
 
 
                 Button {
-                    router.push(.waybleZoneSearch)
+                    router.push(.wZSearch)
                 } label: {
                     Image("search")
                         .resizable()

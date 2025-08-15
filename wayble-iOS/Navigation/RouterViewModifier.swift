@@ -69,9 +69,9 @@ struct RouterViewModifier: ViewModifier {
             return AnyView(SignupTermsView(selectedIndex: $selectedIndex)
                 .navigationBarBackButtonHidden(true))
             
-        case .waybleZoneSearch:
-            return AnyView(WaybleZoneSearchView()
-                .navigationBarBackButtonHidden(true))
+//        case .waybleZoneSearch:
+//            return AnyView(WaybleZoneSearchView()
+//                .navigationBarBackButtonHidden(true))
             
         //TODO: - 여기 에러 나서 잡긴 했는데 흠.. 제대로 수정된 건진 모르겠습니다...
         
@@ -83,9 +83,9 @@ struct RouterViewModifier: ViewModifier {
             /// 그리고 RouterViewModifier 에 있는 case .placeDetailView(안에 let zone) 넣고 파라미터로 zone: zone 넣음
             
             
-        case .writeReview:
-            return AnyView(WriteReView(viewModel: FacilitySelectionViewModel())
-                .navigationBarBackButtonHidden(true))
+//        case .writeReview:
+//            return AnyView(WriteReView(viewModel: FacilitySelectionViewModel())
+//                .navigationBarBackButtonHidden(true))
             
         case let .searchBar(entryType):
             return AnyView(

@@ -68,5 +68,4 @@ struct StatefulPreviewWrapper<Value, Content: View>: View {
     StatefulPreviewWrapper("") { binding in
         ReviewTextEditorView(reviewText: binding, maxCharacters: 1000)
     }
-    
 }
