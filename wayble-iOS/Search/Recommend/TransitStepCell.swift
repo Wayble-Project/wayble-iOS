@@ -19,7 +19,7 @@ struct TransitStepCell: View {
                     {
                         switch step.type {
                         case .bus:
-                            return AnyView(BusStepView(step: step))
+                            return AnyView(BusStepView(step: step, nextStep: nil, afterStep: nil))
                         case .subway:
                             return AnyView(SubwayStepView(step: step))
                         case .walk:

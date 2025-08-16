@@ -229,11 +229,14 @@ struct Transportation: View {
                             LazyVStack(spacing: 12) {
                                 ForEach(viewModel.transportation.recommendedRoutes.indices, id: \.self) { index in
                                     let route = viewModel.transportation.recommendedRoutes[index]
-                                    NavigationLink {
-                                        RouteDetail(route: route)
-                                    } label: {
-                                        RouteView(route: route, onRouteSelected: { showDetail = true })
-                                    }
+                                    
+                                    RouteView(
+                                        route: route,
+                                        onRouteSelected: {
+                                            selectedRoute = route
+                                            showDetail = true
+                                        }
+                                    )
                                     .onAppear {
                                         guard
                                             index == viewModel.transportation.recommendedRoutes.count - 1,

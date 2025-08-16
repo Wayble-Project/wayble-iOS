@@ -15,13 +15,17 @@ struct RouteDetail: View {
     
     var body: some View {
         ScrollView {
-            VStack(spacing: 0) {
-                headerView
-                Divider()
-                stepsListView
+            HStack(){
+                VStack(spacing: 0) {
+                    headerView
+                    Spacer().frame(maxHeight:29)
+                    stepsListView
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
         .navigationBarBackButtonHidden(true)
+        
     }
 }
 
@@ -30,9 +34,13 @@ private extension RouteDetail {
     var headerView: some View {
         HStack(spacing: 8) {
             Image("back2")
-                .onTapGesture { onBack?() ?? dismiss() }
+                .onTapGesture {
+                    withAnimation(.easeInOut) {
+                        onBack?() ?? dismiss()
+                    }
+                }
 
-            Text("[추천경로]")
+            Text("상세경로")
                 .font(.mainTextRegular12)
                 .foregroundStyle(Color.gray700)
 
@@ -45,118 +53,289 @@ private extension RouteDetail {
     var stepsListView: some View {
         VStack(alignment: .leading, spacing: 0) {
             ForEach(Array(route.steps.enumerated()), id: \.offset) { i, step in
-                stepRow(step: step, index: i, isLast: i == route.steps.count - 1, prevStep: i > 0 ? route.steps[i - 1] : nil)
-                    .padding(.vertical, 6)
+                if !(step.type == .subway && (step.title.isEmpty || step.subTitle == nil) && (step.stops == nil || step.stops?.isEmpty == true)) {
+                    let prev = i > 0 ? route.steps[i - 1] : nil
+                    let next = i < route.steps.count - 1 ? route.steps[i + 1] : nil
+                    let isTransferWalk = (step.type == .walk) && ((prev?.type == .subway || prev?.type == .bus)) && ((next?.type == .subway || next?.type == .bus))
+                    let isLeadingWalk = (step.type == .walk) && (i == 0) && ((next?.type == .subway || next?.type == .bus))
+                    stepRow(step: step, index: i, isLast: i == route.steps.count - 1, prevStep: prev, nextStep: next)
+                        .padding(.vertical, (isTransferWalk || isLeadingWalk) ? 0 : 6)
+                }
             }
         }
-        .padding(.horizontal, 20)
-     
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, 28)
     }
 
     @ViewBuilder
-    func stepRow(step: RouteStep, index: Int, isLast: Bool, prevStep: RouteStep?) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            stepHeader(step: step, isFirst: index == 0, isLast: isLast, prevStep: prevStep)
-            stepDetail(step: step)
+    func stepRow(step: RouteStep, index: Int, isLast: Bool, prevStep: RouteStep?, nextStep: RouteStep?) -> some View {
+        let isTransferWalk = (step.type == .walk) && ((prevStep?.type == .subway || prevStep?.type == .bus)) && ((nextStep?.type == .subway || nextStep?.type == .bus))
+        if isTransferWalk {
+            Color.clear.frame(height: 0.1)
+        } else {
+            VStack(alignment: .leading, spacing: 8) {
+                let afterStep: RouteStep? = {
+                    let nextIndex = index + 2
+                    return nextIndex < route.steps.count ? route.steps[nextIndex] : nil
+                }()
+                stepHeader(step: step, isFirst: index == 0, isLast: isLast, prevStep: prevStep, nextStep: nextStep, afterStep: afterStep)
+                stepDetail(step: step, prevStep: prevStep, nextStep: nextStep, afterStep: afterStep)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
+        
     }
 
     @ViewBuilder
-    func stepHeader(step: RouteStep, isFirst: Bool, isLast: Bool, prevStep: RouteStep?) -> some View {
-        HStack(alignment: .center, spacing: 12) {
-            // LEFT COLUMN (icon + rail/labels)
-            if step.type == .subway {
-                // Subway: icon + line label + vertical rail (50/70)
-                VStack(spacing: 2) {
-                    stepImage(for: step)
-                        .frame(width: 18, height: 20)
-                    // 호선 라벨("서울 지하철"/"수도권 전철" 제거 후 표기)
-                    Text(cleanedLineName(step.title))
-                        .font(.mainTextSemibold12)
-                        .foregroundStyle(Color.gray900)
-                    let color: Color = {
-                        let raw = cleanedLineName(step.title)
-                        return step.subwayLine?.color ?? subwayColor(from: raw)
-                    }()
-                    // short cap above marker (50)
-                    Rectangle().fill(color).frame(width: 3, height: 100)
+    func stepHeader(step: RouteStep, isFirst: Bool, isLast: Bool, prevStep: RouteStep?, nextStep: RouteStep?, afterStep: RouteStep?) -> some View {
+        if step.type == .bus {
+            EmptyView()
+        } else {
+            VStack(spacing: 0) {
+                Spacer().frame(maxHeight: 13)
+                HStack(alignment: .top, spacing: 12) {
+                // LEFT COLUMN (icon + rail/labels)
+                if step.type == .subway {
+                    VStack(spacing: 2) {
+                        stepImage(for: step)
+                            .frame(width: 18, height: 20)
+                        // 호선 라벨("서울 지하철"/"수도권 전철" 제거 후 표기)
+                        Text(cleanedLineName(step.title))
+                            .font(.mainTextSemibold12)
+                          
+                        let color: Color = {
+                            let raw = cleanedLineName(step.title)
+                            return step.subwayLine?.color ?? subwayColor(from: raw)
+                        }()
+                    //색깔 맞춰서 선긋기
+                        Rectangle().fill(color)
+                            .frame(width: 3)
+                            .frame(maxHeight: .infinity, alignment: .bottom)
+                        
+                    }
+                } else if step.type == .walk {
+                    VStack(spacing: 2) {
+                        if isFirst {
+                            Image("start")
+                                .frame(width: 16, height: 20)
+                            Text("출발")
+                                .font(.mainTextSemibold12)
+                                .foregroundStyle(Color.positive)
+                            Image(.dot3)
+                        } else if isLast {
+                            Image("fin").frame(width: 18, height: 20)
+                            Text("도착").font(.mainTextSemibold12).foregroundStyle(Color.error)
+                        } else {
+                            if prevStep?.type == .subway {
+                                // Hide duplicate left marker/label/dots for walk right after subway
+                                EmptyView()
+                            } else if prevStep?.type == .bus {
+                                // Use previous BUS color for the walk segment marker
+                                let color: Color = prevStep?.busType?.color ?? .gray
+                                ZStack(alignment: .center) {
+                                    Image("check04")
+                                        .renderingMode(.template)
+                                        .foregroundStyle(color)
+                                    Image("check03")
+                                        .renderingMode(.original)
+                                        .offset(x: -1.2, y: 2.5)
+                                }
+                                .frame(width: 16, height: 16)
+                                // one dot under the colored marker
+                                Image("dot3")
+                            }
+                        }
+                    }
+                } else {
+                    stepImage(for: step).frame(width: 18, height: 20)
                 }
 
-            } else if step.type == .walk {
-                VStack(spacing: 2) {
-                    if isFirst {
-                        Image("start").frame(width: 16, height: 20)
-                        Text("출발").font(.mainTextSemibold12).foregroundStyle(Color.positive)
-                        Image(.dot3)
-                    } else if isLast {
-                        Image("fin").frame(width: 18, height: 20)
-                        Text("도착").font(.mainTextSemibold12).foregroundStyle(Color.error)
-                    } else {
-                        stepImage(for: step).frame(width: 18, height: 20)
-                        // Walk after subway: show previous subway line name under the marker
-                        if prevStep?.type == .subway {
-                            Text(cleanedLineName(prevStep?.title ?? prevStep?.subTitle ?? ""))
-                                .font(.mainTextSemibold12)
-                                .foregroundStyle(Color.gray900)
+                // RIGHT COLUMN (titles)
+                VStack(alignment: .leading, spacing: 2) {
+                    if step.type == .walk {
+                        // 출발/도착 외의 walk는 from + "하차"로 표시
+                        let baseText = step.subTitle ?? step.title
+                        let parts: [String] = {
+                            if baseText.contains("->") { return baseText.components(separatedBy: "->").map { $0.trimmingCharacters(in: .whitespaces) } }
+                            if baseText.contains("→") { return baseText.components(separatedBy: "→").map { $0.trimmingCharacters(in: .whitespaces) } }
+                            return [baseText]
+                        }()
+                        if isFirst {
+                            Text("\(parts.first ?? baseText)")
+                                .font(.mainTextSemibold14)
+                             
+                            let nextBase = nextStep?.subTitle ?? nextStep?.title ?? baseText
+                            let nextParts: [String] = {
+                                if nextBase.contains("->") { return nextBase.components(separatedBy: "->").map { $0.trimmingCharacters(in: .whitespaces) } }
+                                if nextBase.contains("→") { return nextBase.components(separatedBy: "→").map { $0.trimmingCharacters(in: .whitespaces) } }
+                                return [nextBase]
+                            }()
+                            let nextBoarding = nextParts.first ?? nextBase   // e.g., "홍대입구역"
+
+                            let distanceText: String = {
+                                if let m = step.moveCount {
+                                    return "도보 \(m)m"
+                                }
+                                if let right = step.title.split(separator: "|").last {
+                                    // title might already contain "도보 30m"
+                                    return right.trimmingCharacters(in: .whitespaces)
+                                }
+                                return "도보"
+                            }()
+                            Spacer().frame(height:15)
+                            HStack(spacing: 8) {
+                                Text("\(nextBoarding)까지")
+                                    .font(.mainTextRegular12)
+                                   
+                                Image("mini")
+                                Text(distanceText)
+                                    .font(.mainTextRegular12)
+                                  
+                            }
+                            Rectangle()
+                                .fill(Color("F3"))
+                                .frame(width: 300, height: 1)
+                                .padding(.top, 20)
+                           
+                        } else if isLast {
+                            Text(parts.count > 1 ? parts.last! : baseText)
+                                .font(.mainTextSemibold14)
+                                
                         } else {
+                            if prevStep?.type == .subway || prevStep?.type == .bus {
+                                // 하차 텍스트는 직전 지하철/버스 블록에서 이미 렌더링했으므로 여기서는 표시하지 않음
+                                EmptyView()
+                            } else {
+                                Text((parts.first ?? baseText) + " 하차")
+                                    .font(.mainTextSemibold12)
+                                  
+                            }
+                        }
+                    } else if step.type == .subway {
+                        // Subway: from + "승차"
+                        let base = step.subTitle ?? step.title
+                        let parts: [String] = {
+                            if base.contains("->") { return base.components(separatedBy: "->").map { $0.trimmingCharacters(in: .whitespaces) } }
+                            if base.contains("→") { return base.components(separatedBy: "→").map { $0.trimmingCharacters(in: .whitespaces) } }
+                            return [base]
+                        }()
+                        let fromStation = parts.first ?? base
+                        Spacer().frame(maxHeight:1)
+                        Text(fromStation + "역 승차")
+                            .font(.mainTextSemibold14)
+                        //지하철 상세 정보
+                        VStack(alignment: .leading, spacing: 8) {
+                            Spacer().frame(maxHeight:18)
+                                Text("휠체어 전용석 \(step.chair ?? "-")")
+                                    .font(.mainTextSemibold12)
+                                    .foregroundStyle(Color.blue700)
+                                
+                                Text("엘레베이터와 가까운 승강장 \(step.elevator ?? "-")")
+                                    .font(.mainTextSemibold12)
+                                    .foregroundStyle(Color.blue700)
+                                
+                           
+                                Text("장애인 화장실 \(step.toilet ?? "X")")
+                                    .font(.mainTextSemibold12)
+                                    .foregroundStyle(Color.blue700)
+                               
+                            }
+                        Spacer().frame(height:10)
+                        // 승차역 토글 (5개역 이동)
+                        if let stops = step.stops, !stops.isEmpty {
+                            TrainStopToggleView(stops: stops)
+                        }
+                        Rectangle()
+                            .fill(Color("F3"))
+                            .frame(width: 300, height: 1)
+                            .padding(.top, 18)
+                       
+                        
+                    }
+                }
+                
+            }
+            // 하차 밑에 ~까지
+            if step.type == .subway, let next = nextStep, next.type == .walk, !(next.title.contains("도착")) {
+                let base = next.subTitle ?? next.title
+                let parts: [String] = {
+                    if base.contains("->") { return base.components(separatedBy: "->").map { $0.trimmingCharacters(in: .whitespaces) } }
+                    if base.contains("→") { return base.components(separatedBy: "→").map { $0.trimmingCharacters(in: .whitespaces) } }
+                    return [base]
+                }()
+                let arrivalName = parts.first ?? base
+                VStack(spacing: 0) {
+                    Spacer().frame(maxHeight: 13)
+                    HStack(alignment: .top, spacing: 12) {
+                        VStack(spacing: 2) {
+                            let color: Color = {
+                                let raw = cleanedLineName(step.title)
+                                return step.subwayLine?.color ?? subwayColor(from: raw)
+                            }()
+                            Circle()
+                                .fill(color)
+                                .frame(width: 16, height: 16)
+                            Text(cleanedLineName(step.title))
+                                .font(.mainTextSemibold12)
                             Image("dot3")
+                        }
+                        VStack(alignment: .leading, spacing: 2) {
+                            Spacer().frame(maxHeight:1)
+                            Text(arrivalName + "역 하차")
+                                .font(.mainTextSemibold14)
+                              
+                           
+                            let boardingBase: String = {
+                                if let after = afterStep, (after.type == .subway || after.type == .bus) {
+                                    var s = after.subTitle ?? after.title
+                                    if s.contains("->") {
+                                        s = s.components(separatedBy: "->").map { $0.trimmingCharacters(in: .whitespaces) }.first ?? s
+                                    } else if s.contains("→") {
+                                        s = s.components(separatedBy: "→").map { $0.trimmingCharacters(in: .whitespaces) }.first ?? s
+                                    }
+                                    if let pipe = s.range(of: "|") { s = String(s[..<pipe.lowerBound]).trimmingCharacters(in: .whitespaces) }
+                                    s = s.replacingOccurrences(of: "<b>", with: "").replacingOccurrences(of: "</b>", with: "")
+                                    return s
+                                } else if let next = nextStep {
+                                    var s = next.subTitle ?? next.title
+                                    if s.contains("->") {
+                                        s = s.components(separatedBy: "->").map { $0.trimmingCharacters(in: .whitespaces) }.first ?? s
+                                    } else if s.contains("→") {
+                                        s = s.components(separatedBy: "→").map { $0.trimmingCharacters(in: .whitespaces) }.first ?? s
+                                    }
+                                    if let pipe = s.range(of: "|") { s = String(s[..<pipe.lowerBound]).trimmingCharacters(in: .whitespaces) }
+                                    s = s.replacingOccurrences(of: "<b>", with: "").replacingOccurrences(of: "</b>", with: "")
+                                    return s
+                                } else {
+                                    return ""
+                                }
+                            }()
+                            let distanceText: String = {
+                                if let m = next.moveCount { return "도보 \(m)m" }
+                                if let right = next.title.split(separator: "|").last { return right.trimmingCharacters(in: .whitespaces) }
+                                return "도보"
+                            }()
+                            Spacer().frame(maxHeight:17)
+                            HStack(spacing: 8) {
+                                Text("\(boardingBase)까지")
+                                    .font(.mainTextRegular12)
+                                  
+                                Image("mini")
+                                Text(distanceText)
+                                    .font(.mainTextRegular12)
+                                  
+                            }
+                            Rectangle()
+                                .fill(Color("F3"))
+                                .frame(width: 300, height: 1)
+                                .padding(.top, 20)
+                            
                         }
                     }
                 }
-            
-            } else {
-                stepImage(for: step).frame(width: 18, height: 20)
             }
-
-            // RIGHT COLUMN (titles)
-            VStack(alignment: .leading, spacing: 2) {
-                if step.type == .walk {
-                    // 출발/도착 외의 walk는 from + "하차"로 표시
-                    let baseText = step.subTitle ?? step.title
-                    let parts: [String] = {
-                        if baseText.contains("->") { return baseText.components(separatedBy: "->").map { $0.trimmingCharacters(in: .whitespaces) } }
-                        if baseText.contains("→") { return baseText.components(separatedBy: "→").map { $0.trimmingCharacters(in: .whitespaces) } }
-                        return [baseText]
-                    }()
-                    if isFirst {
-                        Text(parts.first ?? baseText)
-                            .font(.mainTextSemibold12)
-                            .foregroundStyle(Color.gray900)
-                    } else if isLast {
-                        Text(parts.count > 1 ? parts.last! : baseText)
-                            .font(.mainTextSemibold12)
-                            .foregroundStyle(Color.gray900)
-                    } else {
-                        Text((parts.first ?? baseText) + " 하차")
-                            .font(.mainTextSemibold12)
-                            .foregroundStyle(Color.gray900)
-                    }
-                } else if step.type == .subway {
-                    // Subway: from + "승차"
-                    let base = step.subTitle ?? step.title
-                    let parts: [String] = {
-                        if base.contains("->") { return base.components(separatedBy: "->").map { $0.trimmingCharacters(in: .whitespaces) } }
-                        if base.contains("→") { return base.components(separatedBy: "→").map { $0.trimmingCharacters(in: .whitespaces) } }
-                        return [base]
-                    }()
-                    let fromStation = parts.first ?? base
-                    Text(fromStation + "역 승차")
-                        .font(.mainTextSemibold14)
-                        .foregroundStyle(Color.gray900)
-                    if let cnt = step.moveCount, cnt > 0 {
-                        Text("\(cnt)정거장").font(.mainTextRegular12).foregroundStyle(Color("gray600"))
-                    }
-                } else {
-                    Text(step.title)
-                        .font(.mainTextSemibold14)
-                        .foregroundStyle(Color.gray900)
-                    if let cnt = step.moveCount, cnt > 0 {
-                        Text("\(cnt)정거장").font(.mainTextRegular12).foregroundStyle(Color("gray600"))
-                    }
                 }
             }
-            Spacer()
-        }
     }
 
     private func cleanedLineName(_ name: String) -> String {
@@ -179,14 +358,21 @@ private extension RouteDetail {
     }
 
     @ViewBuilder
-    func stepDetail(step: RouteStep) -> some View {
+    func stepDetail(step: RouteStep, prevStep: RouteStep?, nextStep: RouteStep?, afterStep: RouteStep?) -> some View {
         switch step.type {
         case .bus:
-            BusStepView(step: step)
+            BusStepView(step: step, nextStep: nextStep, afterStep: afterStep)
         case .subway:
             SubwayStepView(step: step)
         case .walk:
-            WalkStepView(step: step)
+            let isTransferWalk = (prevStep?.type == .subway || prevStep?.type == .bus) && (nextStep?.type == .subway || nextStep?.type == .bus)
+            let isLeadingWalk = (prevStep == nil) && (nextStep?.type == .subway || nextStep?.type == .bus)
+            if isTransferWalk || isLeadingWalk {
+                // 전환/출발 직후 WALK는 헤더에서 이미 안내를 렌더링했으므로 상세는 생략
+                EmptyView()
+            } else {
+                WalkStepView(step: step)
+            }
         }
     }
     
@@ -228,68 +414,147 @@ private extension RouteDetail {
     
 struct BusStepView: View {
     let step: RouteStep
+    let nextStep: RouteStep?
+    let afterStep: RouteStep?
+    
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            // 상단: 역 이름 표시 (출발이면 왼쪽, 도착이면 오른쪽)
-            HStack(spacing: 8) {
-                let base = step.subTitle ?? step.title
-                let parts: [String] = {
-                    if base.contains("->") { return base.components(separatedBy: "->").map { $0.trimmingCharacters(in: .whitespaces) } }
-                    if base.contains("→") { return base.components(separatedBy: "→").map { $0.trimmingCharacters(in: .whitespaces) } }
-                    return [base]
-                }()
-                let station: String = {
-                    if step.isDeparture == true { return parts.first ?? base }
-                    if step.isFinal == true { return parts.count > 1 ? parts.last! : base }
-                    return base
-                }()
-
-                Text(station)
-                    .font(.mainTextSemibold14)
-                    .foregroundStyle(Color.gray900)
-
-                if step.isFinal == true {
-                    Text("하차")
+        VStack(alignment: .leading, spacing: 0) {
+            Spacer().frame(maxHeight: 13)
+            HStack(alignment: .top, spacing: 8) {
+                // LEFT: Bus circle, number, line
+                VStack(spacing: 0) {
+                    let busColor: Color = step.busType?.color ?? .gray
+                    ZStack(alignment: .center) {
+                        Image("check04")
+                            .renderingMode(.template)
+                            .foregroundStyle(busColor)
+                        Image("check03")
+                            .renderingMode(.original)
+                            .offset(x: -1.2, y: 2.5)
+                    }
+                    .frame(width: 16, height: 16)
+                    Text(step.title)
                         .font(.mainTextSemibold12)
-                        .foregroundStyle(Color.gray700)
+                        .foregroundColor(.black)
+                        .padding(.top, 2)
+                    Rectangle()
+                        .fill(busColor)
+                        .frame(width: 3)
+                        .frame(maxHeight: .infinity, alignment: .bottom)
+                }
+                
+                // 버스 승차 부분
+                VStack(alignment: .leading, spacing: 2) {
+                    let base = step.subTitle ?? step.title
+                    let parts: [String] = {
+                        if base.contains("->") { return base.components(separatedBy: "->").map { $0.trimmingCharacters(in: .whitespaces) } }
+                        if base.contains("→") { return base.components(separatedBy: "→").map { $0.trimmingCharacters(in: .whitespaces) } }
+                        return [base]
+                    }()
+                    Text("\(parts.first ?? base) 승차")
+                        .font(.mainTextSemibold14)
+                        .foregroundStyle(Color.gray900)
+                    Spacer().frame(height:14)
+                    
+                    HStack(spacing: 7) {
+                        if let extraBus = step.extraBus {
+                            Text(extraBus)
+                                .font(.mainTextSemibold12)
+                                .foregroundStyle(Color.blue700)
+                            Spacer().frame(width:7)
+                            Image(.mini2)
+                        }
+                        if let busTime = step.busTime {
+                            Text(busTime)
+                                .font(.mainTextRegular12)
+                                .foregroundStyle(Color.gray700)
+                        }
+                    }
+                    Spacer().frame(maxHeight:14)
+                    if let stops = step.stops, !stops.isEmpty {
+                        HStack(spacing: 0) {
+                            // 버스토글
+                            BusStopToggleView(stops: stops)
+                        }
+                    }
+                    Rectangle()
+                        .fill(Color("F3"))
+                        .frame(width: 300, height: 1)
+                        .padding(.top, 18)
+                    
                 }
             }
-
-            // 하단: 정거장 개수 및 목록 (토글)
-            if let stops = step.stops, !stops.isEmpty {
-                HStack(spacing: 0) {
-                    TrainStopToggleView(stops: stops)
+            
+            if let stops = step.stops, let lastStop = stops.last {
+                Spacer().frame(maxHeight:13)
+                HStack(alignment: .top, spacing: 8) {
+                    VStack(spacing: 2) {
+                        let busColor: Color = step.busType?.color ?? .gray
+                        Circle()
+                            .fill(busColor)
+                            .frame(width: 16, height: 16)
+                        Text(step.title)
+                            .font(.mainTextSemibold12)
+                            .foregroundColor(.black)
+                            .padding(.top, 2)
+                        Image("dot3")
+                    }
+                    
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(lastStop + " 하차")
+                            .font(.mainTextSemibold14)
+                            .foregroundStyle(Color.gray900)
+                        
+                        
+                        let boardingBase: String = {
+                            if let after = afterStep {
+                                let base = after.subTitle ?? after.title
+                                if base.contains("->") { return base.components(separatedBy: "->").map { $0.trimmingCharacters(in: .whitespaces) }.last ?? base }
+                                if base.contains("→")  { return base.components(separatedBy: "→").map { $0.trimmingCharacters(in: .whitespaces) }.last ?? base }
+                                return base
+                            } else if let next = nextStep {
+                                let base = next.subTitle ?? next.title
+                                if base.contains("->") { return base.components(separatedBy: "->").map { $0.trimmingCharacters(in: .whitespaces) }.last ?? base }
+                                if base.contains("→")  { return base.components(separatedBy: "→").map { $0.trimmingCharacters(in: .whitespaces) }.last ?? base }
+                                return base
+                            } else {
+                                return ""
+                            }
+                        }()
+                        
+                        let distanceText: String = {
+                            if let walk = nextStep, walk.type == .walk {
+                                if let m = walk.moveCount { return "도보 \(m)m" }
+                                if let right = walk.title.split(separator: "|").last { return right.trimmingCharacters(in: .whitespaces) }
+                                return "도보"
+                            }
+                            return "도보"
+                        }()
+                        Spacer().frame(maxHeight:15)
+                        HStack(spacing: 8) {
+                            Text("\(boardingBase)까지")
+                                .font(.mainTextRegular12)
+                                .foregroundStyle(Color.gray900)
+                            Image("mini")
+                            Text(distanceText)
+                                .font(.mainTextRegular12)
+                                .foregroundStyle(Color.gray900)
+                        }
+                        Rectangle()
+                            .fill(Color("F3"))
+                            .frame(width: 300, height: 1)
+                            .padding(.top, 20)
+                      
+                    }
                 }
             }
         }
-        .padding(.top, 2)
     }
 }
 
 struct SubwayStepView: View {
     let step: RouteStep
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack(spacing: 8) {
-                let base = step.subTitle ?? step.title
-                let parts: [String] = {
-                    if base.contains("->") { return base.components(separatedBy: "->").map { $0.trimmingCharacters(in: .whitespaces) } }
-                    if base.contains("→") { return base.components(separatedBy: "→").map { $0.trimmingCharacters(in: .whitespaces) } }
-                    return [base]
-                }()
-                            }
-            if let stops = step.stops, !stops.isEmpty {
-                VStack(alignment: .leading, spacing: 4) {
-                    ForEach(Array(stops.enumerated()), id: \.offset) { _, s in
-                        Text("• \(s)")
-                            .font(.mainTextRegular12)
-                            .foregroundStyle(Color("gray800"))
-                    }
-                }
-            }
-        }
-        .padding(.top, 2)
-    }
+    var body: some View { EmptyView() }
 }
 
 struct WalkStepView: View {
@@ -304,9 +569,3 @@ struct WalkStepView: View {
     }
 }
 
-#Preview {
-    // 간단한 샘플 RouteOption (필요 시 프로젝트의 SampleRoutes를 사용)
-    let sampleSteps: [RouteStep] = []
-    let sample = RouteOption(totalTime: 0, arrivalTime: "-", cost: 0, steps: sampleSteps)
-    return RouteDetail(route: sample)
-}

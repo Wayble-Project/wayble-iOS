@@ -51,9 +51,10 @@ struct BusInfo: Decodable {
 }
 
 struct SubwayInfo: Decodable {
-    let wheelchair: [GeoPoint]?          // []
-    let elevator: [GeoPoint]?            // []
+    let wheelchair: [String]?          // []
+    let elevator: [String]?            // []
     let accessibleRestroom: Bool?        // null 가능
+    
 }
 
 struct GeoPoint: Codable {

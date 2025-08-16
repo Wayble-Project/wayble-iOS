@@ -159,6 +159,21 @@ class TransportationViewModel {
                 let detail = hasElev ? "엘리베이터 있음" : nil
                 let name = (s.routeName?.isEmpty == false) ? s.routeName! : "지하철"
 
+                let chairInfo: String? = {
+                        if let arr = s.subwayInfo?.wheelchair, !arr.isEmpty {
+                            return arr.joined(separator: ", ")   // ex) ["6-1", "10-4"] → "6-1, 10-4"
+                        }
+                        return nil
+                    }()
+                    let elevatorInfo: String? = {
+                        if let arr = s.subwayInfo?.elevator, !arr.isEmpty {
+                            return arr.joined(separator: ", ")   // ex) ["8-1"] → "8-1"
+                        }
+                        return nil
+                    }()
+                    let restroomInfo: String = (s.subwayInfo?.accessibleRestroom == true) ? "O" : "X"
+                
+                
                 return RouteStep(
                     type: .subway,
                     title: name,
@@ -168,6 +183,9 @@ class TransportationViewModel {
                     Info: s.routeName,
                     extraBus: nil,
                     busTime: nil,
+                    chair: chairInfo,
+                    toilet: restroomInfo,
+                    elevator: elevatorInfo,
                     simple: true,
                     stops: stops,
                     moveCount: count

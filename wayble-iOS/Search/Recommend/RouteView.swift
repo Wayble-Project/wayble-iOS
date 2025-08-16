@@ -11,16 +11,14 @@ import SwiftUI
 struct RouteView: View {
     let route: RouteOption
     var onRouteSelected: (() -> Void)? = nil
-    @Environment(NavigationRouter.self) var router
 
     var body: some View {
         VStack(spacing: 0) {
             VStack(alignment: .leading) {
                 // 상단 상태 바(필요하면 확장)
                 HStack {
-                    Text("[추천경로]")
-                        .font(.mainTextRegular12)
-                        .foregroundStyle(Color.gray700)
+                    Text("추천경로")
+                        .font(.mainTextSemibold20)
                 }
                 Spacer().frame(height: 24)
 
@@ -141,11 +139,13 @@ struct RouteView: View {
                                                 .foregroundStyle(Color.blue700)
                                         }
                                     case .bus:
-                                        HStack(spacing: 6) {
-                                            if let extraBus = step.extraBus, extraBus != "마을버스" {
+                                        HStack(spacing: 7) {
+                                            if let extraBus = step.extraBus {
                                                 Text(extraBus)
                                                     .font(.mainTextSemibold12)
                                                     .foregroundStyle(Color.blue700)
+                                                Spacer().frame(width:7)
+                                                Image(.mini2)
                                             }
                                             if let busTime = step.busTime {
                                                 Text(busTime)
@@ -178,7 +178,6 @@ struct RouteView: View {
         }
         .contentShape(Rectangle())
         .onTapGesture {
-            router.push(.routeDetail(route))
             onRouteSelected?()
         }
     }
