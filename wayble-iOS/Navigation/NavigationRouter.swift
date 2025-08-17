@@ -42,7 +42,7 @@ enum Route: Hashable {
     //case placeDetailView(WaybleZone) // git 수정
    // case writeReview
     case onboardingCompleted
-    case routeDetail
+    case routeDetail(RouteOption)
     case searchHome
     case searchBar(entryType: EntryType)
     case mapDetail(place: PlaceModel)

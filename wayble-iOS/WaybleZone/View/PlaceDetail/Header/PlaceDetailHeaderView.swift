@@ -8,6 +8,9 @@ struct PlaceDetailHeaderView: View {
     @Environment(NavigationRouter.self) private var router
     let locationManager = LocationManager.shared
     let place: PlaceModel
+    @Binding var selectedIndex: Int
+    @Binding var selectedDeparture: PlaceModel?
+    @Binding var selectedArrival: PlaceModel?
 
     var body: some View {
 
@@ -58,24 +61,50 @@ struct PlaceDetailHeaderView: View {
             }
         
         HStack(spacing:10) {
-            StartButton()
+            Button {
+                // 출발: 현재 place를 출발로 설정하고 길찾기 탭으로 이동
+                selectedDeparture = place
+                SearchViewModel.shared.setPlace(place, for: .departure)
+                selectedIndex = 15
+                print("🟢 Start tapped → index=\(selectedIndex)")
+            } label: {
+                StartButton()
+            }
+
             FinishButton {
+                // 이미 출발이 있으면 출발 유지 + 도착만 설정
+                if selectedDeparture != nil || SearchViewModel.shared.hasUserSetDeparture {
+                    selectedArrival = place
+                    selectedIndex = 15
+                    print("🟢 Finish tapped with existing departure -> keep departure, set arrival")
+                    return
+                }
+
+                // 출발이 없으면: 현재 위치를 출발로 자동 설정 후 도착 설정
                 locationManager.requestLocation { coordinate in
+                    print("✅ 위치 업데이트됨: \(coordinate)")
                     if let coord = coordinate {
-                        let departure = PlaceModel(
-                            title: "현재 위치",
-                            roadAddress: "",
-                            x: "\(coord.longitude)",
-                            y: "\(coord.latitude)",
-                            category: "기타"
-                        )
-                        router.push(
-                            .transportation(
-                                entryType: .destination,
-                                selectedArrival: place,
-                                selectedDeparture: departure
-                            )
-                        )
+                        Task {
+                            do {
+                                let (title, road) = try await SearchViewModel.shared.callReverseGeocodeAPI(
+                                    lat: coord.latitude,
+                                    lng: coord.longitude
+                                )
+                                let departure = PlaceModel(
+                                    title: title,
+                                    roadAddress: road,
+                                    x: "\(coord.longitude)",
+                                    y: "\(coord.latitude)",
+                                    category: "기타"
+                                )
+                                selectedDeparture = departure
+                                selectedArrival = place
+                                selectedIndex = 15
+                                print("🟢 현재 selectedIndex: \(selectedIndex)")
+                            } catch {
+                                print("주소 가져오기 실패: \(error)")
+                            }
+                        }
                     } else {
                         print("현재 위치 가져오기 실패")
                     }

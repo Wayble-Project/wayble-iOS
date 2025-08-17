@@ -1,4 +1,3 @@
-
 //  wayble-iOS
 //
 //  Created by 햄무 on 7/12/25.
@@ -25,7 +24,6 @@ struct RouterViewModifier: ViewModifier {
             return AnyView(HomeView(selectedIndex: $selectedIndex, viewModel: onboardingViewModel, homeViewModel: homeViewModel)
                 .navigationBarBackButtonHidden(true))
             
-            
         case .signupEmail:
             return AnyView(SignupEmailView(viewModel: signupViewModel, selectedIndex: $selectedIndex)
                 .navigationBarBackButtonHidden(true))
@@ -45,9 +43,11 @@ struct RouterViewModifier: ViewModifier {
             return AnyView(OnboardingCompletedView(viewModel: onboardingViewModel, homeViewModel: homeViewModel, selectedIndex: $selectedIndex)
                 .navigationBarBackButtonHidden(true))
             
-        case .routeDetail:
-            return AnyView(RouteDetail()
-                .navigationBarBackButtonHidden(true))
+        case let .routeDetail(routeOption):
+            return AnyView(
+                RouteDetail(route: routeOption)
+                    .navigationBarBackButtonHidden(true)
+            )
             
         case .searchHome:
             return AnyView(SearchHomeView(selectedIndex: $selectedIndex)
@@ -73,19 +73,11 @@ struct RouterViewModifier: ViewModifier {
 //            return AnyView(WaybleZoneSearchView()
 //                .navigationBarBackButtonHidden(true))
             
-        //TODO: - 여기 에러 나서 잡긴 했는데 흠.. 제대로 수정된 건진 모르겠습니다...
-        
-        /*case .placeDetailView(let zone): // let zone 넣고
-            return  AnyView(PlaceDetailView(zone: zone) //여기에 zone 넣었어요..
+
+        case .writeReview:
+            return AnyView(WriteReView(viewModel: FacilitySelectionViewModel())
                 .navigationBarBackButtonHidden(true))
-         */
-            /// NavigationRouter 에 case placeDetailView 를 case placeDetailView(let zone)으로 넣음
-            /// 그리고 RouterViewModifier 에 있는 case .placeDetailView(안에 let zone) 넣고 파라미터로 zone: zone 넣음
-            
-            
-//        case .writeReview:
-//            return AnyView(WriteReView(viewModel: FacilitySelectionViewModel())
-//                .navigationBarBackButtonHidden(true))
+
             
         case let .searchBar(entryType):
             return AnyView(
@@ -98,11 +90,6 @@ struct RouterViewModifier: ViewModifier {
                 )
                 .navigationBarBackButtonHidden(true)
             )
-            /*
-             case .searchBar:
-             return AnyView(SearchBarView(selectedIndex: $selectedIndex, entryPoint: .directions)
-             .navigationBarBackButtonHidden(true))
-             */
             
         case .OnlyMapView:
             return AnyView(
@@ -113,11 +100,6 @@ struct RouterViewModifier: ViewModifier {
                 )
                 .navigationBarBackButtonHidden(true)
             )
-            /*
-             case .OnlyMapView:
-             return AnyView(SearchBarView(selectedIndex: $selectedIndex, entryPoint: .directions)
-             .navigationBarBackButtonHidden(true))
-             */
             
         case .mapDetail:
             return AnyView(
@@ -161,21 +143,24 @@ struct RouterViewModifier: ViewModifier {
                     routeView(for: route)
                 }
         }
+        .onAppear {
+            print("🧭 [NavStack] router ptr=\(Unmanaged.passUnretained(router).toOpaque())")
+        }
     }
 }
 
 extension View {
     func withRouter(
         selectedIndex: Binding<Int>,
-        router: NavigationRouter = NavigationRouter(),
         signupViewModel: SignupViewModel = SignupViewModel(),
         onboardingViewModel: OnboardingViewModel = OnboardingViewModel(),
         homeViewModel: HomeViewModel = HomeViewModel()
     ) -> some View {
-        self
-            .modifier(RouterViewModifier(
+        self.modifier(
+            RouterViewModifier(
                 selectedIndex: selectedIndex,
                 signupViewModel: signupViewModel,
+
                 onboardingViewModel: onboardingViewModel, homeViewModel: homeViewModel
             ))
             .environment(router)
@@ -186,9 +171,9 @@ extension View {
                     onboardingViewModel: onboardingViewModel, homeViewModel: homeViewModel
                 ).destination(for: route)
             }
+
     }
 }
-
 
 extension RouterViewModifier {
     @ViewBuilder

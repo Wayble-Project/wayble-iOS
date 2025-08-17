@@ -9,6 +9,7 @@
 	<key>KAKAO_REST_API_KEY</key>
 	<string>$(KAKAO_REST_API_KEY)</string>
 	<key>NAVER_CLIENT_ID</key>
+
 	<string>$(NAVER_CLIENT_ID)</string>
 	<key>NAVER_CLIENT_SECRET</key>
 	<string>$(NAVER_CLIENT_SECRET)</string>
@@ -16,6 +17,7 @@
 	<string>$(NMFNcpKeyId)</string>
 	<key>NMFNcpKeySecret</key>
 	<string>$(NMFNcpKeySecret)</string>
+
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>

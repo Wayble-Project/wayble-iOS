@@ -9,7 +9,7 @@ import SwiftUI
 import Foundation
 
 
-struct SubwayStepView: View {
+struct SubwayStopView: View {
     let step: RouteStep
     @Bindable var viewModel = TransportationViewModel()
     @State private var isSimpleMode = false
@@ -130,7 +130,7 @@ private struct SubwayStepRow: View {
         var body: some View {
             VStack(alignment: .leading, spacing: 6) {
                 VStack(alignment: .leading, spacing: 3) {
-                    Text("\(step.subTitle) 승차")
+                    Text("\(step.subTitle)역 승차")
                         .font(.mainTextSemibold14)
                     Spacer().frame(height: 12)
 
@@ -225,5 +225,5 @@ private struct SubwayStepRow: View {
 
     
 #Preview {
-    SubwayStepView(step: RouteStep(type: .subway, title: "6호선", subTitle: "상수역", detail: "엘리베이터 있음", extra: "14:56", Info: "응암행(광흥창역 방면)", extraBus: nil, busTime: nil, role: .subway, isDeparture: true, chair: "휠체어 전용석 6-1, 10-4", toilet: "장애인 화장실 O",elevator: "엘리베이터와 가까운 승강장 8-1", simple: true))
+    SubwayStopView(step: RouteStep(type: .subway, title: "6호선", subTitle: "상수역", detail: "엘리베이터 있음", extra: "14:56", Info: "응암행(광흥창역 방면)", extraBus: nil, busTime: nil, role: .subway, isDeparture: true, chair: "휠체어 전용석 6-1, 10-4", toilet: "장애인 화장실 O",elevator: "엘리베이터와 가까운 승강장 8-1", simple: true))
 }
