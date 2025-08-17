@@ -29,7 +29,7 @@ struct WalkingView: View {
                         .padding(.horizontal, 20)
                 }
             } else {
-                ZStack(alignment: .bottom) {
+                ZStack(alignment: .top) {
                     NaverMapViewWrapper(route: viewModel.selectedRoute)
                         .id(viewModel.mapRefreshTrigger)
                         .edgesIgnoringSafeArea(.all)

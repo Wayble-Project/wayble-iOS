@@ -1,5 +1,5 @@
 //
-//  SampleRoute.swift
+//  SampleRoutes.swift
 //  wayble-iOS
 //
 //  Created by 신민정 on 7/29/25.

@@ -273,15 +273,16 @@ extension TransportationModel {
 
                 let extraBus = (s.busInfo?.isShuttleBus == true) ? "마을버스" : nil
                 let busTime  = s.busInfo?.dispatchInterval.map { "배차간격 \($0)분" }
-                let info     = (s.busInfo?.isLowFloor?.contains(true) == true) ? "저상버스" : nil
-
+                let isLowFloor  = (s.busInfo?.isLowFloor?.contains(true) == true) ? "저상버스" : nil
+                let lowTag: String?  = (isLowFloor != nil) ? "저상버스" : nil
+                
                 return RouteStep(
                     type: type,
                     title: title,
                     subTitle: sub,
                     detail: detail,
                     extra: nil,
-                    Info: info,
+                    Info: lowTag,
                     extraBus: extraBus,
                     busTime: busTime,
                     simple: true,

@@ -140,11 +140,11 @@ struct RouteView: View {
                                         }
                                     case .bus:
                                         HStack(spacing: 7) {
-                                            if let extraBus = step.extraBus {
-                                                Text(extraBus)
+                                            if let low = step.Info  {
+                                                Text(low)
                                                     .font(.mainTextSemibold12)
                                                     .foregroundStyle(Color.blue700)
-                                                Spacer().frame(width:7)
+                                                Spacer().frame(width:3)
                                                 Image(.mini2)
                                             }
                                             if let busTime = step.busTime {

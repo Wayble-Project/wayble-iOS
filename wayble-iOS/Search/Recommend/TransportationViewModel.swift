@@ -192,7 +192,7 @@ class TransportationViewModel {
                 )
 
             case .BUS:
-                let isLow = (s.busInfo?.isLowFloor?.contains(true) == true)
+                let isLow = (s.busInfo?.isLowFloor?.contains(true) == true) //저상버스
                 let extraBus = isLow ? "저상버스" : nil
                 let dispatch = s.busInfo?.dispatchInterval
                 let busTime = (dispatch != nil) ? "배차간격 \(dispatch!)분" : nil
@@ -286,7 +286,15 @@ class TransportationViewModel {
     func setTab(to tab: TransportationTab) {
         transportation.selectedTab = tab
     }
-
+    
+    @MainActor
+    func resetTransit() {
+        transitError = nil
+        isTransitLoading = false
+        transitHasNext = false
+        transitNextCursor = nil
+        transportation.recommendedRoutes = []
+    }
     // 출발지 또는 도착지 설정
     func setPlace(_ place: PlaceModel, for entryType: EntryType) {
         switch entryType {
