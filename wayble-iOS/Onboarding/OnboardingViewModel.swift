@@ -13,6 +13,7 @@
 
 import Foundation
 import SwiftUI
+import Moya
 
 
 @Observable
@@ -23,7 +24,8 @@ class OnboardingViewModel {
 
     var nicknameValidationState: ValidationState = .valid
     var birthValidationState: ValidationState = .valid
-
+    var hasLoadedNickname: Bool = false ///가드 플래그 (HomeViewModel 처럼!)
+    @MainActor var errorMessage: String? /// 토스트로 띄울 메시지
     
     func completeOnboarding() async -> Bool {
         let onboardingData = OnboardingData(
@@ -43,6 +45,13 @@ class OnboardingViewModel {
             return true
         } catch {
             print("온보딩 등록 실패: \(error)")
+            if let moyaError = error as? MoyaError, ///0815 에러처리
+               let response = try? moyaError.response?.map(OnboardingResponse.self),
+               let _ = response.errorCode {
+                await MainActor.run {
+                    self.errorMessage = presentErrorMessage(status: moyaError.response?.statusCode ?? 0, message: response.message).body
+                }
+            }
             return false
         }
     }
@@ -160,6 +169,16 @@ extension OnboardingViewModel {
             print("중복 확인 실패: \(error)")
             self.isNicknameDuplicate = nil
             self.nicknameValidationState = .invalidNicknameFormat
+            if let moyaError = error as? MoyaError,
+               let response = try? moyaError.response?.map(OnboardingResponse.self),
+               response.errorCode != nil {
+                await MainActor.run {
+                    self.errorMessage = presentErrorMessage(
+                        status: moyaError.response?.statusCode,
+                        message: response.message
+                    ).body
+                }
+            }
         }
     }
 }
@@ -185,19 +204,19 @@ extension OnboardingViewModel {
         
         userInfo.gender = gender
         userInfo.birth = userInfo.birth.trimmingCharacters(in: .whitespacesAndNewlines)
-        print("🎯 gender 설정됨: \(gender)")
     }
 }
 
 extension OnboardingViewModel {
     func fetchNicknameIfNeeded() async {
+        guard !hasLoadedNickname, userInfo.nickname.isEmpty else { return }
         // 닉네임이 비어 있으면 서버에서 온보딩 정보를 조회해 설정
-        guard userInfo.nickname.isEmpty else { return }
         do {
             let response = try await OnboardingService().getOnboarding()
             if let nickname = response.data?.nickname {
                 await MainActor.run {
                     self.userInfo.nickname = nickname
+                    self.hasLoadedNickname = true
                     print("✅ 닉네임 세팅: \(nickname)")
                 }
             } else {

@@ -80,7 +80,7 @@ struct CustomTabBarView: View {
             
             Button(action: {
                 withAnimation(.default) {
-                    selectedIndex = 1
+                    selectedIndex = 18
                 }
             }) {
                 ZStack {

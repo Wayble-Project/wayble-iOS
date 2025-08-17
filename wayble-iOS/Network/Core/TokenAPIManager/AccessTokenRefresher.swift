@@ -44,6 +44,10 @@ class AccessTokenRefresher: @unchecked Sendable, RequestInterceptor {
         }
     }
 
+    //MARK: -
+    ///     •    모든 요청을 보내기 전에 adapt(_:for:completion:)이 호출됨.
+    /// •    여기서 tokenProviding.accessToken이 있으면 Authorization 헤더를 붙여줌.
+    
     func adapt(_ urlRequest: URLRequest, for session: Session, completion: @escaping (Result<URLRequest, any Error>) -> Void) {
         var urlRequest = urlRequest
         if let accessToken = tokenProviding.accessToken {
@@ -52,6 +56,9 @@ class AccessTokenRefresher: @unchecked Sendable, RequestInterceptor {
         completion(.success(urlRequest))
     }
     
+    //MARK: -
+    /// •    서버에서 401(또는 404 — 여기선 404도 넣어놨네) 응답이 오면 호출됨.
+    /// •    1회 이상 재시도하지 않도록 request.retryCount < 1 조건을 둠.
     func retry(_ request: Request, for session: Session, dueTo error: any Error, completion: @escaping (RetryResult) -> Void) {
         guard request.retryCount < 1,
               let response = request.task?.response as? HTTPURLResponse,

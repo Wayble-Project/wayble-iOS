@@ -4,11 +4,11 @@ struct RegionSelectionView: View {
     @State private var showSheet = false
 
     @State private var selectedGu = "강남구"
-    @AppStorage("selectedDong") private var selectedDong: String = "개포 1동"
+    @AppStorage("selectedDong") private var selectedDong: String = "서초동"
 
     let guList = ["강남구", "강동구", "강북구", "강서구", "관악구", "광진구", "구로구"]
     let dongDict: [String: [String]] = [
-        "강남구": ["개포 1동", "논현 1동", "대치 1동", "대치 2동"],
+        "강남구": ["서초동", "개포 1동", "논현 1동", "대치 1동", "대치 2동"],
         "강동구": ["개포 2동"],
         "강북구": ["개포 3동"],
         "강서구": ["논현 1동"],

@@ -3,22 +3,38 @@ import SwiftUI
 
 struct TopPlaceCard: View {
     let zone: FavWaybleZoneInfo
-  //  let rank: rank
+    let rank: Int
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(alignment: .top, spacing: 12) {
                 //  Text("\(rank)")
-                Text("\(zone.id)")
+                Text("\(rank)")
                     .font(.mainTextSemibold14)
                     .foregroundStyle(Color("gray-900"))
 
-                Image(zone.imageUrl ?? "something")
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 90, height: 75)
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                    .clipped()
+                let url = URL(string: zone.imageUrl ?? "")
+
+                AsyncImage(url: url) { phase in
+                    switch phase {
+                    case .empty:
+                        ProgressView()
+                            .frame(width: 90, height: 75)
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 90, height: 75)
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                    case .failure:
+                        Image("placeholder") // 에셋에 있는 기본 이미지
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 90, height: 75)
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                    }
+                }
+
                 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(zone.name)
@@ -65,7 +81,11 @@ struct TopPlaceCard: View {
         .padding(.vertical, 10)
         .padding(.horizontal)
         
-        Divider().padding(.vertical, 5)
+        if rank < 3 {
+            Divider()
+                .padding(.vertical, 5)
+        }
+
     }
 }
 
@@ -83,6 +103,6 @@ private extension TopPlaceCard {
 
 #Preview {
     TopPlaceCard(zone: mockFavoritesZones[0].waybleZoneInfo
-     //            ,rank:rank
+                 ,rank: 2
     )
 }

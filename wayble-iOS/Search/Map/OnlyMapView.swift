@@ -53,7 +53,7 @@ struct OnlyMapView: View {
                     .frame(width: 46, height: 58.78)
             }
             
-            // 상단 검색창
+            //MARK: - 상단 검색창
             HStack {
                 Button(action: {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
@@ -87,6 +87,7 @@ struct OnlyMapView: View {
             )
             .padding(.horizontal, 20)
             .padding(.top, 12)
+            
             VStack {
                 Spacer()
                 DynamicMapBoxView(

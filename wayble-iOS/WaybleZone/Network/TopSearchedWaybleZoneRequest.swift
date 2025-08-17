@@ -8,9 +8,10 @@ struct TopSearchedWaybleZoneRequest: APIRequest {
     let district: String
 
     var urlRequest: URLRequest {
-        var components = URLComponents(string: "http://localhost:8080/api/v1/wayble-zones/search/district/most-searches")!
+        var components = URLComponents(string: "https://wayble.site/api/v1/wayble-zones/search/district/most-searches")!
         components.queryItems = [
-            URLQueryItem(name: "district", value: district)
+//            URLQueryItem(name: "district", value: district)
+            URLQueryItem(name: "district", value: "서초동")
         ]
         
         var request = URLRequest(url: components.url!)

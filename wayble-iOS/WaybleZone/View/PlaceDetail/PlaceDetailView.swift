@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct PlaceDetailView: View {
+
     @Bindable private var vm: PlaceDetailViewModel
     @Binding var selectedIndex: Int
     @Binding var selectedDeparture: PlaceModel?
@@ -17,6 +18,7 @@ struct PlaceDetailView: View {
         self._selectedArrival = selectedArrival
         self.vm = vm
     }
+
     
     var body: some View {
         ScrollView {
@@ -37,7 +39,7 @@ struct PlaceDetailView: View {
                         selectedArrival: $selectedArrival
                     )
                     PlaceInfoView(waybleZone: zone)
-                    PlaceReView(reviews: vm.reviews)
+                    PlaceReView(waybleZone: zone, reviews: vm.reviews)
                 } else {
                     ProgressView("정보를 불러오는 중...")
                 }

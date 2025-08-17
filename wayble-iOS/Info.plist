@@ -9,13 +9,15 @@
 	<key>KAKAO_REST_API_KEY</key>
 	<string>$(KAKAO_REST_API_KEY)</string>
 	<key>NAVER_CLIENT_ID</key>
-	<string>BgYZd4nAU9SODxHpQJIt</string>
+
+	<string>$(NAVER_CLIENT_ID)</string>
 	<key>NAVER_CLIENT_SECRET</key>
-	<string>pNjVsZ2VWl</string>
+	<string>$(NAVER_CLIENT_SECRET)</string>
 	<key>NMFNcpKeyId</key>
-	<string>4wrbuvpxtr</string>
+	<string>$(NMFNcpKeyId)</string>
 	<key>NMFNcpKeySecret</key>
-	<string>4kJh9HLYZKTovSsyoukGILkBwFAyjHgPop5kR91f</string>
+	<string>$(NMFNcpKeySecret)</string>
+
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>

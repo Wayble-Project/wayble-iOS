@@ -44,12 +44,10 @@ struct GenderBirthStepView: View {
                     viewModel.userInfo.birth = ""
                 },
                 onNextAction: {
-                    print("✅ 버튼 눌림")
                     viewModel.birthValidationState = viewModel.checkBirthState
                     viewModel.handleGender(genderString: selectedItem) ///0808 ui에서 버튼 선택(남성,여성,선택 안 함 선택지)
                     ///UI 입력값들 → 내부 상태로 바꿔주는 처리(handle) 함수
                     step += 1
-                    print("✅ step 증가: \(step)")
                 }
             )
         } //v

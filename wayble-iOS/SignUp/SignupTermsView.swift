@@ -13,7 +13,9 @@ struct SignupTermsView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            BackButton()
+            BackButton(action: {
+                selectedIndex = 7
+            })
                 .padding(.top, 30)
                 .padding(.bottom, 27)
             TitleText(text: "wayble 이용 약관에\n동의해 주세요")

@@ -25,7 +25,9 @@ struct SignupPasswordView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            BackButton()
+            BackButton(action: {
+                selectedIndex = 8
+            })
                 .padding(.top, 30)
                 .padding(.bottom, 27)
             TitleText(text: "로그인에 사용할\n비밀번호를 입력해 주세요")

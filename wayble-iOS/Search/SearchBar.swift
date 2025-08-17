@@ -18,19 +18,18 @@ struct SearchBar: View {
                 BackButton()
 
                 TextField("ex.숙대입구역 맛집", text: $searchText)
-                    .font(.pretend(type: .regular, size: 14))
-                    .foregroundColor(Color("gray-500"))
+                    .font(.mainTextRegular14)
+                    .foregroundStyle(.gray500)
                     .tracking(-0.28)
                     
                     
             }
-            .frame(maxWidth: 290, maxHeight: 50)
+            .frame(maxHeight: 50)
+            .frame(maxWidth: .infinity)
             .background(
                 RoundedRectangle(cornerRadius: 15)
-                    .stroke(Color("gray-300"), lineWidth: 1)
+                    .stroke(Color.gray300, lineWidth: 1)
             )
-            .padding(.vertical, 15)
-            .padding(.horizontal, 20)
             
             
 
