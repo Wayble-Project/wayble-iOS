@@ -51,14 +51,14 @@ extension WalkingData {
         let arrivalStr = estimatedArrivalString(totalTime)
 
         return RouteData(
-            title: "최적 경로",
+            title: "최단거리",
             time: timeStr,
             arrivalTime: arrivalStr,
             distance: distStr,
             path: dedup,
             elevatorPoints: nil,
             wheelchairPoints: nil,
-            lineColor: .blue700
+            lineColor: .blue900
         )
     }
 

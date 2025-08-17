@@ -29,7 +29,29 @@ struct Transportation: View {
     var viewModel: TransportationViewModel
     @Binding var searchViewModel: SearchViewModel
     var transportation: TransportationModel
-    
+    @State private var lastTransitQueryKey: String? = nil
+
+        private func makeTransitQueryKey() -> String? {
+            guard let d = selectedDeparture, let a = selectedArrival else { return nil }
+            return "\(d.x ?? "")|\(d.y ?? "")|\(a.x ?? "")|\(a.y ?? "")"
+        }
+
+        // 출발/도착이 바뀔 때 공통 리로드
+        private func reloadForNewPlaces() {
+            guard let dep = selectedDeparture, let arr = selectedArrival else { return }
+            let key = makeTransitQueryKey()
+            if key == lastTransitQueryKey { return }        // 같은 쿼리면 스킵
+            lastTransitQueryKey = key
+            Task {
+                // 도보 먼저
+                await viewModel.fetchWalkingRoute(departure: dep, arrival: arr)
+                // 대중교통 탭일 때만 대중교통 새로고침
+                if viewModel.transportation.selectedTab == .transit {
+                    await viewModel.resetTransit()           // 커서/리스트/에러 초기화
+                    await viewModel.fetchTransitFirst(departure: dep, arrival: arr)
+                }
+            }
+        }
     var body: some View {
         VStack(spacing: 0) {
             
@@ -71,10 +93,12 @@ struct Transportation: View {
                         Button(action: {
                             searchViewModel.entryType = .departure  // ✅ 출발지 클릭
                             searchBarViewID = UUID()
+                            didAutoLoadTransit = false
+                            lastTransitQueryKey = nil
                             selectedIndex = 5
                         })  {
                             HStack(alignment: .center) {
-                                Text(selectedDeparture?.title.htmlStripped ?? "출발지 없음")
+                                Text(selectedDeparture?.title.htmlStripped ?? "출발지 입력")
                                     .foregroundStyle(Color("darkblue-500"))
                                     .font(.mainTextSemibold14)
                                 Spacer()
@@ -93,11 +117,13 @@ struct Transportation: View {
                         Button(action: {
                             searchViewModel.entryType = .destination  //  도착지 클릭
                             searchBarViewID = UUID()
+                            didAutoLoadTransit = false
+                            lastTransitQueryKey = nil
                             selectedIndex = 5
                         }) {
                             HStack() {
-                                Text(selectedArrival?.title.htmlStripped ?? "")
-                                    .foregroundStyle(Color("darkblue-500"))
+                                Text(selectedArrival?.title.htmlStripped ?? "도착지 입력")
+                                    .foregroundStyle(Color("darkblue-500") ?? Color("gray-400"))
                                     .font(.mainTextSemibold14)
                                 Spacer()
                             }
@@ -280,17 +306,15 @@ struct Transportation: View {
         .onAppear {
             print("[Transportation.onAppear] dep=\(String(describing: selectedDeparture?.title)) / hasUserSetDeparture=\(searchViewModel.hasUserSetDeparture)")
 
-           
+            // 1) 역지오코딩: 그대로 유지
             if selectedDeparture == nil {
                 LocationManager.shared.requestLocation { coordinate in
                     guard let coordinate = coordinate else { return }
-                    // 실패면 그대로 '출발지 없음'
                     Task { @MainActor in
                         do {
                             let (title, road) = try await searchViewModel.callReverseGeocodeAPI(
                                 lat: coordinate.latitude, lng: coordinate.longitude
                             )
-                            // 대기 중 다른 경로로 세팅됐을 수도 있으니 재확인
                             if selectedDeparture == nil {
                                 selectedDeparture = PlaceModel(
                                     title: title,
@@ -307,26 +331,27 @@ struct Transportation: View {
                     }
                 }
             }
-            // 화면 진입 시 기본 탭이 대중교통이라면 1회 자동 로드
+
+            // 2) 🔁 자동 로드: '쿼리 키'가 달라졌으면 매번 새로고침
             if viewModel.transportation.selectedTab == .transit,
-               !didAutoLoadTransit,
-               let dep = selectedDeparture,
-               let arr = selectedArrival,
-               viewModel.transportation.recommendedRoutes.isEmpty {
-                didAutoLoadTransit = true
-                Task {
-                    await viewModel.fetchTransitFirst(departure: dep, arrival: arr)
-                }
+               !viewModel.isTransitLoading,
+               let key = makeTransitQueryKey(),
+               key != lastTransitQueryKey {
+                reloadForNewPlaces()
             }
         }
+        
         .onChange(of: selectedArrival) { newValue in
             guard let dep = selectedDeparture, let arr = newValue else { return }
+            let newKey = makeTransitQueryKey()
+            if newKey == lastTransitQueryKey { return }
+            lastTransitQueryKey = newKey
             Task {
                 await viewModel.fetchWalkingRoute(departure: dep, arrival: arr)
-                // 도착지가 바뀌면, 현재 탭이 대중교통일 때 즉시 새로고침
-                if viewModel.transportation.selectedTab == .transit {
-                    await viewModel.fetchTransitFirst(departure: dep, arrival: arr)
-                }
+                
+                // 탭과 상관없이 항상 대중교통 초기화
+                await viewModel.resetTransit()
+                await viewModel.fetchTransitFirst(departure: dep, arrival: arr)
             }
         }
     }

@@ -507,21 +507,50 @@ struct BusStepView: View {
                         
                         
                         let boardingBase: String = {
-                            if let after = afterStep {
-                                let base = after.subTitle ?? after.title
-                                if base.contains("->") { return base.components(separatedBy: "->").map { $0.trimmingCharacters(in: .whitespaces) }.last ?? base }
-                                if base.contains("→")  { return base.components(separatedBy: "→").map { $0.trimmingCharacters(in: .whitespaces) }.last ?? base }
-                                return base
-                            } else if let next = nextStep {
-                                let base = next.subTitle ?? next.title
-                                if base.contains("->") { return base.components(separatedBy: "->").map { $0.trimmingCharacters(in: .whitespaces) }.last ?? base }
-                                if base.contains("→")  { return base.components(separatedBy: "→").map { $0.trimmingCharacters(in: .whitespaces) }.last ?? base }
-                                return base
-                            } else {
-                                return ""
+                            // 왼쪽/오른쪽 이름 추출 헬퍼
+                            func leftName(_ raw: String) -> String {
+                                var s = raw
+                                if let pipe = s.range(of: "|") { s = String(s[..<pipe.lowerBound]).trimmingCharacters(in: .whitespaces) }
+                                if s.contains("->") {
+                                    s = s.components(separatedBy: "->").map { $0.trimmingCharacters(in: .whitespaces) }.first ?? s
+                                } else if s.contains("→") {
+                                    s = s.components(separatedBy: "→").map { $0.trimmingCharacters(in: .whitespaces) }.first ?? s
+                                }
+                                return s.replacingOccurrences(of: "<b>", with: "")
+                                        .replacingOccurrences(of: "</b>", with: "")
+                                        .replacingOccurrences(of: "승차", with: "")
+                                        .trimmingCharacters(in: .whitespaces)
                             }
+                            func destName(_ raw: String) -> String {
+                                var s = raw
+                                if let pipe = s.range(of: "|") { s = String(s[..<pipe.lowerBound]).trimmingCharacters(in: .whitespaces) }
+                                if s.contains("->") {
+                                    s = s.components(separatedBy: "->").map { $0.trimmingCharacters(in: .whitespaces) }.last ?? s
+                                } else if s.contains("→") {
+                                    s = s.components(separatedBy: "→").map { $0.trimmingCharacters(in: .whitespaces) }.last ?? s
+                                }
+                                return s.replacingOccurrences(of: "<b>", with: "")
+                                        .replacingOccurrences(of: "</b>", with: "")
+                                        .replacingOccurrences(of: "도착", with: "")
+                                        .trimmingCharacters(in: .whitespaces)
+                            }
+
+                            // 1) 다음이 WALK면: 우선 afterStep(다음 승차 지점)이 있으면 그 출발 이름 사용
+                            if let next = nextStep, next.type == .walk {
+                                if let after = afterStep, (after.type == .bus || after.type == .subway) {
+                                    return leftName(after.subTitle ?? after.title)     // 예: "한국경제인협회"
+                                }
+                                // 2) afterStep이 없거나 다음 WALK가 '도착'이면 목적지 이름 사용
+                                let raw = next.subTitle ?? next.title
+                                if afterStep == nil || raw.contains("도착") {
+                                    return destName(raw)                               // 예: "카페 아임히어"
+                                }
+                                // 3) 그 외엔 WALK 텍스트의 왼쪽 이름(ランド마크) 사용
+                                return leftName(raw)                                   // 예: "용산e편한세상"
+                            }
+
+                            return ""
                         }()
-                        
                         let distanceText: String = {
                             if let walk = nextStep, walk.type == .walk {
                                 if let m = walk.moveCount { return "도보 \(m)m" }
