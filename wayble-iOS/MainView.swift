@@ -13,6 +13,7 @@ struct MainView: View {
     @State private var searchBarViewID = UUID()
     @State private var searchViewModel = SearchViewModel.shared
     @Binding var selectedIndex: Int
+    @State private var selectedRoute: RouteOption? = nil
     @Binding var step: Int
     @State private var router = NavigationRouter()
     @State var signupViewModel = SignupViewModel()
@@ -133,23 +134,30 @@ struct MainView: View {
                     case .wayblezone:
                         WaybleZoneMainView(vm: TopPlaceViewModel())
                             .navigationBarBackButtonHidden(true)
-                    case .waybleZoneSearch:
-                        WaybleZoneSearchView()
-                            .navigationBarBackButtonHidden(true)
+//                    case .waybleZoneSearch:
+//                        WaybleZoneSearchView()
+//                            .navigationBarBackButtonHidden(true)
                     /*
                     case .placeDetailView:
                         PlaceDetailView()
                             .navigationBarBackButtonHidden(true)
                      */
-                    case .writeReview:
-                        WriteReView(viewModel: FacilitySelectionViewModel())
-                            .navigationBarBackButtonHidden(true)
+//                    case .writeReview:
+//                        WriteReView(viewModel: FacilitySelectionViewModel())
+//                            .navigationBarBackButtonHidden(true)
                     case .signupCompleted:
                         SignupCompletedView(viewModel: signupViewModel, selectedIndex: $selectedIndex)
                             .navigationBarBackButtonHidden(true)
-                    case .routeDetail:
-                        RouteDetail()
+                    case .routeDetail(let route):
+                        let routeOption = RouteOption(
+                            totalTime: route.totalTime,
+                            arrivalTime: route.arrivalTime,
+                            cost: route.cost,
+                            steps: route.steps
+                        )
+                        RouteDetail(route: routeOption)
                             .navigationBarBackButtonHidden(true)
+                            
                     case .searchBar:
                         SearchBarView(
                             viewModel: searchViewModel,

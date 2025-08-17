@@ -93,4 +93,3 @@ struct PlaceDetailHeaderView: View {
     PlaceDetailHeaderView(waybleZone: mockWaybleZoneResponse.data).withRouter(selectedIndex: .constant(0))
 }
 */
-

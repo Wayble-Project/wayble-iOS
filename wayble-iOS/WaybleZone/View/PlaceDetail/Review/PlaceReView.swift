@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct PlaceReView: View {
-    @Environment(NavigationRouter.self) var router
+    @Environment(WaybleZoneNavigationRouter.self) var router
     
     @State private var selected = "추천순"
     
@@ -9,6 +9,7 @@ struct PlaceReView: View {
     
     @State private var showSortMenu: Bool = false
     
+    let waybleZone: WaybleZone
     let reviews: [Review]
     
     var body: some View {
@@ -32,7 +33,7 @@ struct PlaceReView: View {
                 .padding(.horizontal, 20)
                 
                 Button {
-                    router.push(.writeReview)
+                    router.push(.wZwritingReview(PlaceIdent(id: waybleZone.id, name: waybleZone.name)))
                 } label: {
                     HStack(spacing: 4) {
                         Text("리뷰 작성하기")
@@ -98,12 +99,13 @@ struct PlaceReView: View {
     }
 }
 
-#Preview {
-
-    PlaceReView(reviews: mockReviewListResponse.data).withRouter(selectedIndex: .constant(0))
-
+/*#Preview {
+    
+    PlaceReView(waybleZone: mockWaybleZoneResponse.data,reviews: mockReviewListResponse.data)
+        .withWaybleZoneRouter()
+            
   /*
     PlaceReView(reviews: mockReviewListResponse.data, onWrite: {})
         .withRouter(selectedIndex: .constant(0),router: NavigationRouter())
   */
-}
+}*/

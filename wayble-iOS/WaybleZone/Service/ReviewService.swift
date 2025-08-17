@@ -15,17 +15,16 @@ struct ReviewService: ReviewServiceProtocol {
 }
 
 
-//struct ReviewPostService: ReviewPostServiceProtocol {
-//    private let apiClient: APIClient
-//    
-//    init(apiClient: APIClient = APIClient()) {
-//        self.apiClient = apiClient
-//    }
-//    
-//    func postReview(waybleZoneId: Int, review: ReviewPostRequest) async throws {
-//        try await apiClient.send(
-//            WaybleZoneRequest.postReview(waybleZoneId: waybleZoneId, review: review),
-//            type: EmptyResponse.self
-//        )
-//    }
-//}
+struct ReviewPostService: ReviewPostServiceProtocol {
+    private let apiClient: AuthAPIClient
+    
+    init(apiClient: AuthAPIClient = AuthAPIClient()) {
+        self.apiClient = apiClient
+    }
+    
+    func postReview(waybleZoneId: Int, review: ReviewPostRequest) async throws {
+
+            // 응답을 반환하지 않으므로
+            let _: APIResponse<EmptyData> = try await apiClient.send(review)
+        }
+}

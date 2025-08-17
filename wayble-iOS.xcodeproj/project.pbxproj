@@ -10,7 +10,7 @@
 		6185D4812E2D25B6007017DB /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = 6185D4802E2D25B6007017DB /* Moya */; };
 		6185D4842E2D2691007017DB /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 6185D4832E2D2691007017DB /* Alamofire */; };
 		6185D4872E2D26A1007017DB /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 6185D4862E2D26A1007017DB /* Kingfisher */; };
-		619AEB222E4EEE140060A54A /* ToastUI in Frameworks */ = {isa = PBXBuildFile; productRef = 619AEB212E4EEE140060A54A /* ToastUI */; };
+		6E3AE7A92E51BCCA00003D81 /* ToastUI in Frameworks */ = {isa = PBXBuildFile; productRef = 6E3AE7A82E51BCCA00003D81 /* ToastUI */; };
 		6E44E4A52E386389001BC046 /* NMapsMap in Frameworks */ = {isa = PBXBuildFile; productRef = 6E44E4A42E386389001BC046 /* NMapsMap */; };
 /* End PBXBuildFile section */
 
@@ -48,7 +48,7 @@
 				6185D4872E2D26A1007017DB /* Kingfisher in Frameworks */,
 				6E44E4A52E386389001BC046 /* NMapsMap in Frameworks */,
 				6185D4812E2D25B6007017DB /* Moya in Frameworks */,
-				619AEB222E4EEE140060A54A /* ToastUI in Frameworks */,
+				6E3AE7A92E51BCCA00003D81 /* ToastUI in Frameworks */,
 				6185D4842E2D2691007017DB /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -113,7 +113,7 @@
 				6185D4832E2D2691007017DB /* Alamofire */,
 				6185D4862E2D26A1007017DB /* Kingfisher */,
 				6E44E4A42E386389001BC046 /* NMapsMap */,
-				619AEB212E4EEE140060A54A /* ToastUI */,
+				6E3AE7A82E51BCCA00003D81 /* ToastUI */,
 			);
 			productName = "wayble-iOS";
 			productReference = 6E29C8BA2E1EAD3B00E69785 /* wayble-iOS.app */;
@@ -148,7 +148,7 @@
 				6185D4822E2D2691007017DB /* XCRemoteSwiftPackageReference "Alamofire" */,
 				6185D4852E2D26A1007017DB /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				6E44E4A32E386389001BC046 /* XCRemoteSwiftPackageReference "SPM-NMapsMap" */,
-				619AEB202E4EEE140060A54A /* XCRemoteSwiftPackageReference "ToastUI" */,
+				6E3AE7A72E51BCCA00003D81 /* XCRemoteSwiftPackageReference "ToastUI" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 6E29C8BB2E1EAD3B00E69785 /* Products */;
@@ -430,9 +430,9 @@
 				minimumVersion = 8.5.0;
 			};
 		};
-		619AEB202E4EEE140060A54A /* XCRemoteSwiftPackageReference "ToastUI" */ = {
+		6E3AE7A72E51BCCA00003D81 /* XCRemoteSwiftPackageReference "ToastUI" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/quanshousio/ToastUI";
+			repositoryURL = "https://github.com/quanshousio/ToastUI.git";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 4.0.0;
@@ -464,9 +464,9 @@
 			package = 6185D4852E2D26A1007017DB /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
 		};
-		619AEB212E4EEE140060A54A /* ToastUI */ = {
+		6E3AE7A82E51BCCA00003D81 /* ToastUI */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 619AEB202E4EEE140060A54A /* XCRemoteSwiftPackageReference "ToastUI" */;
+			package = 6E3AE7A72E51BCCA00003D81 /* XCRemoteSwiftPackageReference "ToastUI" */;
 			productName = ToastUI;
 		};
 		6E44E4A42E386389001BC046 /* NMapsMap */ = {

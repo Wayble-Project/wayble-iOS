@@ -26,7 +26,7 @@ struct BackButton: View {
     }
 }
 
-#Preview {
+/*#Preview {
     BackButton().withRouter(selectedIndex: .constant(0),
                             router: NavigationRouter())
-}
+}*/

@@ -1,13 +1,14 @@
 import SwiftUI
 
 struct TopPlaceView: View {
-@Environment(NavigationRouter.self) var router
+    @Environment(WaybleZoneNavigationRouter.self) var router
     @Bindable var vm: TopPlaceViewModel
     @Namespace private var underlineNamespace
+    @AppStorage("selectedDong") private var selectedDong: String = "서초동"
 
     var body: some View {
         VStack(alignment: .leading) {
-            Text("효창동 주변 TOP 3")
+            Text(selectedDong)
                 .font(.mainTextSemibold20)
                 .foregroundStyle(Color("gray-900"))
                 .padding(.horizontal, 20)
@@ -46,10 +47,18 @@ struct TopPlaceView: View {
                 .padding(.horizontal)
 
             // MARK: TOP 3 카드
-            ForEach(vm.top3Zones, id: \.id) { zone in
-                TopPlaceCard(zone: zone)
+//            ForEach(vm.top3Zones, id: \.id) { zone in
+//                TopPlaceCard(zone: zone)
+//                    .padding(.horizontal, 3)
+//            }
+            ForEach(Array(vm.top3Zones.enumerated()), id: \.element.id) { index, zone in
+                TopPlaceCard(zone: zone, rank: index + 1) // index는 0부터 시작하니 +1
                     .padding(.horizontal, 3)
+                    .onTapGesture {
+                        router.push(.wZplaceDetailView)
+                            }
             }
+
         }
         .task {
             await vm.fetchTop3(for: vm.selected)
@@ -57,9 +66,10 @@ struct TopPlaceView: View {
     }
 }
 
-#Preview {
-    TopPlaceView(vm: TopPlaceViewModel()).withRouter(selectedIndex: .constant(0))
-}
+//#Preview {
+//    TopPlaceView(vm: TopPlaceViewModel()).withRouter(selectedIndex: .constant(0))
+ //   TopPlaceView(vm: TopPlaceViewModel()).withWaybleZoneRouter()
+//}
 
 //import SwiftUI
 //

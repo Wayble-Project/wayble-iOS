@@ -38,11 +38,11 @@ enum Route: Hashable {
     case findPassword
     case login
     case wayblezone
-    case waybleZoneSearch
+//    case waybleZoneSearch
     //case placeDetailView(WaybleZone) // git 수정
-    case writeReview
+   // case writeReview
     case onboardingCompleted
-    case routeDetail
+    case routeDetail(RouteOption)
     case searchHome
     case searchBar(entryType: EntryType)
     case mapDetail(place: PlaceModel)

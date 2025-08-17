@@ -4,6 +4,11 @@ import Observation
 
 
 // MARK: 상세페이지
+struct PlaceIdent: Hashable {
+    let id: Int
+    let name: String
+}
+
 struct WaybleZoneResponse: Codable {
     let data: WaybleZone
 }
@@ -120,13 +125,19 @@ struct Review: Identifiable, Codable {
     }
 }
 
+ struct APIResponse<T: Decodable>: Decodable {
+     let errorCode: Int
+     let message: String
+     let data: T
+}
+
+
 struct ReviewPostRequestModel: Encodable {
-    let userId: Int
     let content: String
     let rating: Int
     let visitDate: String
     let facilities: [String] // 기본모델이랑 다름
-    let images: [String] // 여쭤봐야
+    let images: [String]? // 이미지 업로드하고 주소 받아와서 넣어야함
 }
 
 //MARK: TOP 3
@@ -173,6 +184,7 @@ struct FavWaybleZoneInfo: Decodable, Identifiable {
     }
 }
 
+
 struct Facilities: Codable {
     let hasSlope: Bool
     let hasNoDoorStep: Bool
@@ -190,3 +202,29 @@ struct Facilities: Codable {
         case floorInfo = "floorInfo"
     }
 }
+
+
+//MARK: 유저 PLACE LIST
+
+ struct PlaceAPIResponse: Decodable {
+     let errorCode: Int
+     let message: String
+     let data: [Wayble]
+}
+
+ struct UserPlace: Codable, Identifiable, Hashable {
+     let id: Int?
+     let waybleZoneId: Int
+     let title: String
+     let createdAt: String?
+     let updatedAt: String?
+}
+
+
+ struct UploadImagesBody: Codable {
+     let images: [String]
+}
+
+
+struct EmptyData: Decodable {}
+
