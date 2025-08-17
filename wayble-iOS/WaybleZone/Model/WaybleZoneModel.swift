@@ -70,24 +70,6 @@ struct Wayble: Codable, Identifiable {
     }
 }
 
-struct Facilities: Codable {
-    let hasSlope: Bool
-    let hasNoDoorStep: Bool
-    let hasElevator: Bool
-    let hasTableSeat: Bool
-    let hasDisabledToilet: Bool
-    let floorInfo: String
-    
-    enum CodingKeys: String, CodingKey {
-        case hasSlope = "hasSlope"
-        case hasNoDoorStep = "hasNoDoorStep"
-        case hasElevator = "hasElevator"
-        case hasTableSeat = "hasTableSeat"
-        case hasDisabledToilet = "hasDisabledToilet"
-        case floorInfo = "floorInfo"
-    }
-}
-
 
 struct OpeningHours: Codable {
     let open: String
@@ -203,6 +185,24 @@ struct FavWaybleZoneInfo: Decodable, Identifiable {
 }
 
 
+struct Facilities: Codable {
+    let hasSlope: Bool
+    let hasNoDoorStep: Bool
+    let hasElevator: Bool
+    let hasTableSeat: Bool
+    let hasDisabledToilet: Bool
+    let floorInfo: String
+    
+    enum CodingKeys: String, CodingKey {
+        case hasSlope = "hasSlope"
+        case hasNoDoorStep = "hasNoDoorStep"
+        case hasElevator = "hasElevator"
+        case hasTableSeat = "hasTableSeat"
+        case hasDisabledToilet = "hasDisabledToilet"
+        case floorInfo = "floorInfo"
+    }
+}
+
 
 //MARK: 유저 PLACE LIST
 
@@ -227,3 +227,4 @@ struct FavWaybleZoneInfo: Decodable, Identifiable {
 
 
 struct EmptyData: Decodable {}
+

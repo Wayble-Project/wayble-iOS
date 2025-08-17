@@ -58,3 +58,5 @@ final class MainMapViewModel: ObservableObject {
         }
     }
 }
+
+
