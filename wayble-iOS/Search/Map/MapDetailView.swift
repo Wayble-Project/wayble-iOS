@@ -27,7 +27,7 @@ struct MapDetailView: View {
                     let lng = mapx / 10_000_000.0
                     let lat = mapy / 10_000_000.0
 
-                    NaverMapView(centerX: lng, centerY: lat, zoomLevel: 20,showMarker: true) // 줌 레벨 지정
+                    NaverMapView(centerX: lng, centerY: lat, zoomLevel: 17.9,showMarker: true ) 
                 }
 
             }

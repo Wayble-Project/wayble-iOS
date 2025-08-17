@@ -279,25 +279,28 @@ struct Transportation: View {
         }
         .onAppear {
             print("[Transportation.onAppear] dep=\(String(describing: selectedDeparture?.title)) / hasUserSetDeparture=\(searchViewModel.hasUserSetDeparture)")
-            if selectedDeparture == nil && !searchViewModel.hasUserSetDeparture {
+
+           
+            if selectedDeparture == nil {
                 LocationManager.shared.requestLocation { coordinate in
                     guard let coordinate = coordinate else { return }
-                    Task {
+                    // 실패면 그대로 '출발지 없음'
+                    Task { @MainActor in
                         do {
                             let (title, road) = try await searchViewModel.callReverseGeocodeAPI(
                                 lat: coordinate.latitude, lng: coordinate.longitude
                             )
-                            // 대기 중에 값이 세팅됐을 수도 있으니 한 번 더 체크
-                            if selectedDeparture != nil { return }
-                            selectedDeparture = PlaceModel(
-                                title: title,
-                                roadAddress: road,
-                                x: String(coordinate.longitude),
-                                y: String(coordinate.latitude)
-                            )
-                            // 자동 세팅이 한 번만 일어나도록 플래그 갱신
-                            searchViewModel.hasUserSetDeparture = true
-                            print("현재 위치 기반 출발지 설정 완료: \(title)")
+                            // 대기 중 다른 경로로 세팅됐을 수도 있으니 재확인
+                            if selectedDeparture == nil {
+                                selectedDeparture = PlaceModel(
+                                    title: title,
+                                    roadAddress: road,
+                                    x: String(coordinate.longitude),
+                                    y: String(coordinate.latitude)
+                                )
+                                searchViewModel.hasUserSetDeparture = true
+                                print(" 출발지 설정 완료: \(title)")
+                            }
                         } catch {
                             print("역지오코딩 실패: \(error.localizedDescription)")
                         }
