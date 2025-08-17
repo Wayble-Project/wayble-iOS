@@ -13,8 +13,10 @@ struct RouterViewModifier: ViewModifier {
     @Bindable var signupViewModel: SignupViewModel
     @Bindable var onboardingViewModel: OnboardingViewModel
     @Bindable var homeViewModel: HomeViewModel
+    @State private var selectedDeparture: PlaceModel? = nil
+    @State private var selectedArrival: PlaceModel? = nil
     
-    @State private var searchViewModel = SearchViewModel()
+    @State private var searchViewModel = SearchViewModel.shared
     @State private var place: PlaceModel = PlaceModel()
     
     
@@ -22,7 +24,8 @@ struct RouterViewModifier: ViewModifier {
     private func routeView(for route: Route) -> some View {
         switch route {
         case .home:
-            return AnyView(HomeView(selectedIndex: $selectedIndex, viewModel: onboardingViewModel, homeViewModel: homeViewModel)
+            return AnyView(HomeView(selectedIndex: $selectedIndex, viewModel: onboardingViewModel, homeViewModel: homeViewModel,selectedDeparture: $selectedDeparture,
+                                    selectedArrival: $selectedArrival)
                 .navigationBarBackButtonHidden(true))
             
             

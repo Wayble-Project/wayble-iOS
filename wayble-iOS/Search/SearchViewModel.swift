@@ -204,20 +204,21 @@ class SearchViewModel {
         case .destination:
             transportation.destination = place.roadAddress
             
-            //출발지에 있으면 종료 
+            // 출발지에 있으면 종료
             guard !hasUserSetDeparture,
-                          transportation.departure.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                    else { return }
-            
-            
-            if !hasUserSetDeparture && self.transportation.departure.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                Task {
+                  transportation.departure.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            else { return }
+
+
+            // ❗️여기를 currentCoordinate 접근 대신, 요청으로 대체
+            LocationManager.shared.requestLocation { [weak self] coord in
+                guard let self = self, let c = coord else { return }
+                Task { @MainActor in
                     do {
-                        guard let coordinate = LocationManager.shared.currentCoordinate else { return }
-                        let (fullAddress, _) = try await self.callReverseGeocodeAPI(lat: coordinate.latitude, lng: coordinate.longitude)
-                        if !self.transportation.departure.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty { return }
-                        DispatchQueue.main.async {
-                            self.transportation.departure = fullAddress
+                        let (full, _) = try await self.callReverseGeocodeAPI(lat: c.latitude, lng: c.longitude)
+                        if self.transportation.departure.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                            self.transportation.departure = full
+                            self.hasUserSetDeparture = true
                         }
                     } catch {
                         print("현재 위치 기반 출발지 설정 실패: \(error)")

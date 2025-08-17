@@ -256,7 +256,7 @@ private extension RouteDetail {
                 
             }
             // 하차 밑에 ~까지
-            if step.type == .subway, let next = nextStep, next.type == .walk, !(next.title.contains("도착")) {
+                if (step.type == .subway || step.type == .bus), let next = nextStep, next.type == .walk, !(next.title.contains("도착")) {
                 let base = next.subTitle ?? next.title
                 let parts: [String] = {
                     if base.contains("->") { return base.components(separatedBy: "->").map { $0.trimmingCharacters(in: .whitespaces) } }

@@ -13,13 +13,13 @@ import AVKit
 
 struct HomeView: View {
     @Bindable var WaybleviewModel = FacilitySelectionViewModel()
-    @State private var selectedArrival: PlaceModel? = nil
-    @State private var selectedDeparture: PlaceModel? = nil
     @Binding var selectedIndex: Int
     @Environment(NavigationRouter.self) private var router
     @Bindable var viewModel: OnboardingViewModel ///0811
     //let zone: FavWaybleZoneInfo /// let으로 하는 게 맞나??
     @Bindable var homeViewModel: HomeViewModel
+    @Binding var selectedDeparture: PlaceModel?
+    @Binding var selectedArrival: PlaceModel?
     
 #if DEBUG
     @EnvironmentObject var authViewModel: AuthViewModel
@@ -104,7 +104,7 @@ struct HomeView: View {
                     HStack() { ///길찾기 버튼
                         Button(action: {
                             withAnimation(.default) {
-                                ///homeViewModel.zone가 없을 때 WaybleviewModel.mockZone를 FavWaybleZoneInfo 타입으로 변환해서 사용
+                                // 1) 존 → 도착지 PlaceModel 변환
                                 let z: FavWaybleZoneInfo = homeViewModel.zone ?? FavWaybleZoneInfo(
                                     id: WaybleviewModel.mockZone.id,
                                     name: WaybleviewModel.mockZone.name,
@@ -119,43 +119,23 @@ struct HomeView: View {
                                 )
 
                                 let arrival = PlaceModel(
-                                    title: selectedDeparture?.title ?? z.name,
+                                    title: z.name,
                                     roadAddress: z.address,
-                                    x: "\(z.longitude)",
-                                    y: "\(z.latitude)",
+                                    x: "\(z.longitude)",   // 경도
+                                    y: "\(z.latitude)",    // 위도
                                     category: z.category
                                 )
 
-                                LocationManager.shared.requestLocation { coordinate in
-                                    guard let coordinate = coordinate else { return }
+                                // 2) 도착지만 먼저 꽂고 길찾기 화면으로 이동
+                                self.selectedArrival = arrival
+                                SearchViewModel.shared.setPlace(arrival, for: .destination)
+                               //onAppear의 자동 현재위치 강제 세팅
+                                SearchViewModel.shared.hasUserSetDeparture = false
+                                self.selectedDeparture = nil
+                               
+                                self.selectedIndex = 15
+                                print("➡️ 길찾기 화면으로 이동. 도착지=\(arrival.title)")
 
-                                    Task {
-                                        do {
-                                            let (title, roadAddress) = try await SearchViewModel.shared.callReverseGeocodeAPI(
-                                                lat: coordinate.latitude,
-                                                lng: coordinate.longitude
-                                            )
-
-                                            let departure = PlaceModel(
-                                                title: title,
-                                                roadAddress: roadAddress,
-                                                x: "\(coordinate.longitude)",
-                                                y: "\(coordinate.latitude)",
-                                                category: "기타"
-                                            )
-
-                                            router.push(
-                                                .transportation(
-                                                    entryType: .destination,
-                                                    selectedArrival: arrival,
-                                                    selectedDeparture: departure
-                                                )
-                                            )
-                                        } catch {
-                                            print("❌ 역지오코딩 실패: \(error)")
-                                        }
-                                    }
-                                }
                             }
                         }) {
                             HStack(spacing: 0) {
@@ -163,7 +143,6 @@ struct HomeView: View {
                                     .font(.mainTextSemibold14)
                                     .foregroundStyle(Color.white)
                                     .fixedSize()
-                                
                                 Image("right")
                             }
                             .frame(width: 55, height: 20)
@@ -252,16 +231,7 @@ struct HomeView: View {
         .onAppear {
             WaybleviewModel.loadMockData()
         }
-        /*
-        .task {
-            print("🚀 .task start")
-            async let nicknameTask: () = viewModel.fetchNicknameIfNeeded()
-            async let zoneTask: () = homeViewModel.fetchZone(size: 1)
-            await nicknameTask
-            await zoneTask
-            print("✅ home task all done")
-        }
-         */
+        
          
 #if DEBUG
 .overlay(alignment: .bottomTrailing) {
