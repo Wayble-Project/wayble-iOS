@@ -99,7 +99,7 @@ struct PlaceReView: View {
     }
 }
 
-#Preview {
+/*#Preview {
     
     PlaceReView(waybleZone: mockWaybleZoneResponse.data,reviews: mockReviewListResponse.data)
         .withWaybleZoneRouter()
@@ -108,4 +108,4 @@ struct PlaceReView: View {
     PlaceReView(reviews: mockReviewListResponse.data, onWrite: {})
         .withRouter(selectedIndex: .constant(0),router: NavigationRouter())
   */
-}
+}*/

@@ -39,8 +39,8 @@ struct WaybleZoneHeaderView: View {
 }
 
 
-#Preview {
+/*#Preview {
     //WaybleZoneHeaderView().withRouter(selectedIndex: .constant(0))
     WaybleZoneHeaderView().withWaybleZoneRouter()
-}
+}*/
 

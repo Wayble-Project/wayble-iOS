@@ -71,12 +71,7 @@ struct MapDetailView: View {
                 VStack {
                     Spacer()
 
-                    PlaceDetailView(
-                        zone: zone,
-                        selectedIndex: $selectedIndex,
-                        selectedDeparture: $selectedDeparture,
-                        selectedArrival: $selectedArrival
-                    )
+                    PlaceDetailView(vm: PlaceDetailViewModel())
 
                 }
             } else {
