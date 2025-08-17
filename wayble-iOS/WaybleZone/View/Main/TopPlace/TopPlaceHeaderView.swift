@@ -66,10 +66,10 @@ struct TopPlaceView: View {
     }
 }
 
-#Preview {
+//#Preview {
 //    TopPlaceView(vm: TopPlaceViewModel()).withRouter(selectedIndex: .constant(0))
-    TopPlaceView(vm: TopPlaceViewModel()).withWaybleZoneRouter()
-}
+ //   TopPlaceView(vm: TopPlaceViewModel()).withWaybleZoneRouter()
+//}
 
 //import SwiftUI
 //
