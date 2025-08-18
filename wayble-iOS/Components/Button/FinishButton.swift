@@ -33,7 +33,7 @@ struct FinishButton: View {
     }
 }
 
-#Preview {
+/*#Preview {
     FinishButton {
         // 예시 호출
         let lat = 37.5665
@@ -41,3 +41,4 @@ struct FinishButton: View {
         SearchViewModel().handleCenterChanged(lat: lat, lng: lng)
     }
 }
+*/

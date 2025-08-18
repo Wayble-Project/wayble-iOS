@@ -144,7 +144,7 @@ struct RouteView: View {
                                                 Text(low)
                                                     .font(.mainTextSemibold12)
                                                     .foregroundStyle(Color.blue700)
-                                                Spacer().frame(width:3)
+                                                
                                                 Image(.mini2)
                                             }
                                             if let busTime = step.busTime {
