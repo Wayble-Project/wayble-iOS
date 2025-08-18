@@ -34,10 +34,9 @@ struct SearchRow: View {
 struct SearchBarView: View {
     @Environment(NavigationRouter.self) private var router
     @EnvironmentObject var searchRoute: SearchRouteState
-    @Bindable var viewModel: SearchViewModel
+    @Bindable var viewModel: SearchViewModel = .shared
     @FocusState private var isFocused: Bool
     @State private var mapDetailViewID = UUID()
-    @State private var didLoadHistories: Bool = false
     @State private var isSavingRecord: Bool = false
     @Binding var place: PlaceModel
     @Binding var selectedIndex: Int
@@ -162,11 +161,7 @@ struct SearchBarView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.horizontal, 20)
                         .padding(.vertical, 8)
-                    Text("history count: \(viewModel.searchHistoryUI.count)")
-                        .font(.system(size: 11))
-                        .foregroundStyle(Color.gray300)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.horizontal, 20)
+                   
                 } else {
                     Text("최근 검색")
                         .font(.mainTextSemibold14)
@@ -187,8 +182,8 @@ struct SearchBarView: View {
             Spacer()
         }
         .task {
-            if !didLoadHistories {
-                didLoadHistories = true
+         
+            if viewModel.searchHistoryUI.isEmpty {
                 await viewModel.loadHistoriesFromServer()
             }
         }
