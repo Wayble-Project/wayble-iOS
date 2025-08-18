@@ -36,7 +36,7 @@ struct MainView: View {
                                      selectedArrival: $selectedArrival)
                            
                     case 1: MapView()
-                    case 2: ProfileView()
+                    case 2: ProfileView(selectedIndex: $selectedIndex)
                     case 3: SearchHomeView(selectedIndex: $selectedIndex)
                     case 4: WaybleZoneMainView(vm: TopPlaceViewModel())
                     case 5:
@@ -45,7 +45,6 @@ struct MainView: View {
                             viewModel: searchViewModel,
                             place: $place,
                             selectedIndex: $selectedIndex,
-                            entryPoint: .directions,
                             onSelectDeparture: { place in
                                 selectedDeparture = place
                             },
@@ -103,7 +102,7 @@ struct MainView: View {
                             selectedArrival: $selectedArrival
                         )
                         
-                    case 18: MainMapView()
+                    case 18: MainMapView(selectedIndex: $selectedIndex)
                     default:
                         Text("오류!")
                     }
@@ -167,7 +166,6 @@ struct MainView: View {
                             viewModel: searchViewModel,
                             place: $place,
                             selectedIndex: $selectedIndex,
-                            entryPoint: .directions,
                             onSelectDeparture: { place in
                                 selectedDeparture = place
                             },
@@ -213,7 +211,7 @@ struct MainView: View {
                         SignupTermsView(selectedIndex: $selectedIndex)
                             .navigationBarBackButtonHidden(true)
                     case .mainMapView:
-                        MainMapView()
+                        MainMapView(selectedIndex: $selectedIndex)
                             .navigationBarBackButtonHidden(true)
                     }
                 }

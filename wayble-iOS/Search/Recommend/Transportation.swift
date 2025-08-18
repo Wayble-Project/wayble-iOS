@@ -171,7 +171,7 @@ struct Transportation: View {
                                     .frame(height:11)
                                 Text(tab.rawValue)
                                     .font(.mainTextSemibold14)
-                                    .foregroundColor(viewModel.transportation.selectedTab == tab ? .black : .gray300)
+                                    .foregroundStyle(viewModel.transportation.selectedTab == tab ? .black : .gray300)
                                     .lineLimit(1)
                                     .fixedSize()
                                     .frame(height: 22)
@@ -179,7 +179,7 @@ struct Transportation: View {
                                     .frame(height:11)
                                 Rectangle()
                                     .frame(width: 130, height: 2)
-                                    .foregroundColor(viewModel.transportation.selectedTab == tab ? .black : .clear)
+                                    .foregroundStyle(viewModel.transportation.selectedTab == tab ? .black : .clear)
                             }
                             .frame(maxWidth: .infinity)
                         }
@@ -282,6 +282,7 @@ struct Transportation: View {
                         .overlay(alignment: .top) {
                             if viewModel.isTransitLoading {
                                 ProgressView()
+                                    .progressViewStyle(CircularProgressViewStyle(tint: .loading))
                                     .padding(10)
                                     .background(.ultraThinMaterial)
                                     .clipShape(RoundedRectangle(cornerRadius: 12))

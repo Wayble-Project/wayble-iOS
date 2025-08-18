@@ -127,7 +127,7 @@ struct CommonStepView: View {
         return AnyView(
             ZStack(alignment: .center) {
                 Image("check04")
-                    .foregroundColor(color)
+                    .foregroundStyle(color)
             }
                 .frame(width: 16, height: 16)
         )

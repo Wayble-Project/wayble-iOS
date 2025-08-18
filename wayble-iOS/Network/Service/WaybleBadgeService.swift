@@ -46,7 +46,7 @@ final class WaybleBadgeService {
             .get(latitude: latitude, longitude: longitude, zoneName: trimmed)
         )
         print("Status Code: \(response.statusCode)")
-        print("🔎 main시설 GET 응답 바디: \(String(data: response.data, encoding: .utf8) ?? "없음")")
+        print("🔎 웨이블존 GET 응답 바디: \(String(data: response.data, encoding: .utf8) ?? "없음")")
 
         // 상태 코드 확인 (성공 범위가 아니면 에러 응답을 우선 시도 디코딩)
         guard (200..<300).contains(response.statusCode) else {

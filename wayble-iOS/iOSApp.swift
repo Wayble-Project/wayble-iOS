@@ -15,6 +15,7 @@ struct iOSApp: App {
     @State private var step = 0
     @State var userInfo = UserInfo()
     @StateObject var authViewModel = AuthViewModel()
+    @StateObject private var searchRoute = SearchRouteState()
 
     var body: some Scene {
         WindowGroup {
@@ -22,6 +23,7 @@ struct iOSApp: App {
                 .withRouter(selectedIndex: $selectedIndex)
                 .environmentObject(authViewModel)
                 .environment(userInfo)  /// 0811
+                .environmentObject(searchRoute) ///0818
                 .withWaybleZoneRouter()
                 
         }

@@ -11,14 +11,15 @@ import NMapsMap
 struct MainMapView: View {
     
     // MARK: - Map dependencies (ported from OnlyMapView)
-    @State private var mapCenter: NMGLatLng = NMGLatLng(lat: 37.5386, lng: 126.9628)
+    //@State private var mapCenter: NMGLatLng = NMGLatLng(lat: 37.5386, lng: 126.9628) - 용산
+    @State private var mapCenter: NMGLatLng = NMGLatLng(lat: 37.4831, lng: 127.0326)
     @StateObject private var viewModel = MainMapViewModel()
-    
+    @Binding var selectedIndex: Int
     @Environment(NavigationRouter.self) private var router
     
     var body: some View {
         VStack(spacing: 0) {
-            MainTopBar { kind in
+            MainTopBar(selectedIndex: $selectedIndex) { kind in
                 Task {
                     await viewModel.loadFacilities(
                         lat: centerLat,
@@ -36,14 +37,10 @@ struct MainMapView: View {
                     onLocationChanged: { newLat, newLng in
                         mapCenter = NMGLatLng(lat: newLat, lng: newLng)
                     },
-                    zoomLevel: 16,
+                    zoomLevel: 17,
                     showMarker: false,
                     facilities: viewModel.homeFacilities
                 )
-                /*
-                Image("pin11")
-                    .frame(width: 46, height: 58.78)
-                 */
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .ignoresSafeArea(.container, edges: .bottom)
@@ -65,11 +62,12 @@ struct MainMapView: View {
 //MARK: - 상단 바
 
 struct MainTopBar: View {
+    @Binding var selectedIndex: Int
     var onSelect: (Convenient) -> Void = { _ in }
     var body: some View {
         VStack(spacing: 0) {
             HStack(spacing: 0) {
-                SearchBar()
+                MainSearchBar(selectedIndex: $selectedIndex)
                 Spacer()
                 NavigationLink {
                     SavedPlaceListView(collections: mockSavedPlaces)
@@ -77,19 +75,20 @@ struct MainTopBar: View {
                     HeartButton()
                 }
             } //h
+            .padding(.top, 10)
             .padding(.bottom, 14)
             .padding(.trailing, 20)
             TopConvenientBar(onSelect: onSelect)
                 .padding(.bottom, 21)
         }
-        .padding(.leading, 20)
+        .padding(.leading, 20) ///TopConvenientBar 때문에 leading 20 전체 패딩 주고 , 나머지는 trailing 으로 20 패딩 줬습니다!! 
     }
     
 }
 
 #Preview {
     NavigationStack {
-        MainMapView()
+        MainMapView(selectedIndex: .constant(0))
             .environment(NavigationRouter())
     }
 }

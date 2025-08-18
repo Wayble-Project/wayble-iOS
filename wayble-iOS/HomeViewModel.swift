@@ -22,7 +22,7 @@ class HomeViewModel {
         defer { isLoading = false }
 
         // 현재 위치 받아오기 (await 버전, 2초 타임아웃 적용)
-        var coordinate: CLLocationCoordinate2D? = await withCheckedContinuation { continuation in
+        let coordinate: CLLocationCoordinate2D? = await withCheckedContinuation { continuation in
             var resumed = false
             let timeout = DispatchWorkItem {
                 if !resumed {

@@ -11,6 +11,7 @@ import AVKit
 
 struct SearchHomeView: View {
     @State private var searchText: String = ""
+    @EnvironmentObject var searchRoute: SearchRouteState
     @Binding var selectedIndex: Int
     
 
@@ -44,6 +45,7 @@ struct SearchHomeView: View {
             // 상단 홍대입구역
             Button(action: {
                 withAnimation(.easeInOut(duration: 0.3)) {
+                    searchRoute.entryPoint = .directions
                     selectedIndex = 5
                 }
             }) {

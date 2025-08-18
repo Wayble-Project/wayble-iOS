@@ -24,6 +24,7 @@ struct SplashView: View {
             Text("Wayble")
                 .font(.mainTextBold30)
             ProgressView().padding(.top, 20)
+                .progressViewStyle(CircularProgressViewStyle(tint: .loading))
         }
         .background(.white)
         .onAppear {
