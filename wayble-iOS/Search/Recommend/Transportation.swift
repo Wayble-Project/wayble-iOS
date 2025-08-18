@@ -30,6 +30,7 @@ struct Transportation: View {
     @Binding var searchViewModel: SearchViewModel
     var transportation: TransportationModel
     @State private var lastTransitQueryKey: String? = nil
+    @State private var didKickTransitOnAppear: Bool = false
 
         private func makeTransitQueryKey() -> String? {
             guard let d = selectedDeparture, let a = selectedArrival else { return nil }
@@ -144,7 +145,9 @@ struct Transportation: View {
                         .frame(width: 15)
                     
                     Button(action: {
-                        //엑스버튼액션넣기
+                        withAnimation(.easeInOut(duration: 0.3)) {
+                            selectedIndex = 5
+                        }
                     }) {
                         Image("xButton")
                             .resizable()
@@ -290,10 +293,20 @@ struct Transportation: View {
                             }
                         }
                     }
+                    .task {
+                        // Kick off transit load automatically the first time the Transit tab becomes visible
+                        guard !didKickTransitOnAppear else { return }
+                        guard viewModel.transportation.selectedTab == .transit else { return }
+                        guard let dep = selectedDeparture, let arr = selectedArrival else { return }
+                        didKickTransitOnAppear = true
+                        await viewModel.resetTransit()
+                        await viewModel.fetchTransitFirst(departure: dep, arrival: arr)
+                    }
                 }
             }
         }
         .onChange(of: viewModel.transportation.selectedTab) { newTab in
+            if newTab != .transit { didKickTransitOnAppear = false }
             guard newTab == .transit else { return }
             // 출발/도착이 모두 있고 아직 불러오지 않았다면 첫 페이지 요청
             if let dep = selectedDeparture, let arr = selectedArrival,

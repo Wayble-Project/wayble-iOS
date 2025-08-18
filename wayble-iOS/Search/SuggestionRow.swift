@@ -5,9 +5,7 @@
 //  Created by 신민정 on 7/25/25.
 //
 
-// 자동완성
 
-// SuggestionRow.swift
 
 import SwiftUI
 

@@ -102,17 +102,17 @@ private extension RouteDetail {
                         // 호선 라벨("서울 지하철"/"수도권 전철" 제거 후 표기)
                         Text(cleanedLineName(step.title))
                             .font(.mainTextSemibold12)
-                          
+                        
                         let color: Color = {
                             let raw = cleanedLineName(step.title)
                             return step.subwayLine?.color ?? subwayColor(from: raw)
                         }()
-                    //색깔 맞춰서 선긋기
+                        //색깔 맞춰서 선긋기
                         Rectangle().fill(color)
                             .frame(width: 3)
                             .frame(maxHeight: .infinity, alignment: .bottom)
-                        
                     }
+                    .frame(width: 40, alignment: .center)
                 } else if step.type == .walk {
                     VStack(spacing: 2) {
                         if isFirst {
@@ -146,8 +146,12 @@ private extension RouteDetail {
                             }
                         }
                     }
+                    .frame(width: 40, alignment: .center)
                 } else {
-                    stepImage(for: step).frame(width: 18, height: 20)
+                    VStack(spacing: 2) {
+                        stepImage(for: step).frame(width: 18, height: 20)
+                    }
+                    .frame(width: 40, alignment: .center)
                 }
 
                 // RIGHT COLUMN (titles)
@@ -186,15 +190,21 @@ private extension RouteDetail {
                             HStack(spacing: 8) {
                                 Text("\(nextBoarding)까지")
                                     .font(.mainTextRegular12)
-                                   
+                                    .fixedSize()
+                                
                                 Image("mini")
                                 Text(distanceText)
                                     .font(.mainTextRegular12)
-                                  
+                                    .lineLimit(1)
+                                    .minimumScaleFactor(0.85)
+                                    .allowsTightening(true)
+                                    .fixedSize(horizontal: true, vertical: false)
                             }
+                            .frame(maxWidth: .infinity, alignment: .leading)
                             Rectangle()
                                 .fill(Color("F3"))
-                                .frame(width: 300, height: 1)
+                                .frame(height: 1)
+                                .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.top, 20)
                            
                         } else if isLast {
@@ -230,7 +240,7 @@ private extension RouteDetail {
                                     .font(.mainTextSemibold12)
                                     .foregroundStyle(Color.blue700)
                                 
-                                Text("엘레베이터와 가까운 승강장 \(step.elevator ?? "-")")
+                                Text("엘레베이터와 가까운 출구 번호 \(step.elevator ?? "-")")
                                     .font(.mainTextSemibold12)
                                     .foregroundStyle(Color.blue700)
                                 
@@ -247,7 +257,8 @@ private extension RouteDetail {
                         }
                         Rectangle()
                             .fill(Color("F3"))
-                            .frame(width: 300, height: 1)
+                            .frame(height: 1)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.top, 18)
                        
                         
@@ -319,15 +330,21 @@ private extension RouteDetail {
                             HStack(spacing: 8) {
                                 Text("\(boardingBase)까지")
                                     .font(.mainTextRegular12)
+                                    .fixedSize()
                                   
                                 Image("mini")
                                 Text(distanceText)
                                     .font(.mainTextRegular12)
-                                  
+                                    .lineLimit(1)
+                                    .minimumScaleFactor(0.85)
+                                    .allowsTightening(true)
+                                    .fixedSize(horizontal: true, vertical: false)
                             }
+                            .frame(maxWidth: .infinity, alignment: .leading)
                             Rectangle()
                                 .fill(Color("F3"))
-                                .frame(width: 300, height: 1)
+                                .frame(height: 1)
+                                .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.top, 20)
                             
                         }
@@ -416,11 +433,30 @@ struct BusStepView: View {
     let step: RouteStep
     let nextStep: RouteStep?
     let afterStep: RouteStep?
-    
+
+    // Helper function to chunk the label for bus step titles
+    private func chunkedLabel(_ s: String) -> String {
+        let chars = Array(s)
+        // Apply only when length >= 5
+        guard chars.count >= 5 else { return s }
+
+        // 1) Prefer split immediately AFTER first 'A' or 'B' if present
+        if let idx = chars.firstIndex(where: { $0 == "A" || $0 == "B" }) {
+            let first = String(chars[...idx])
+            let rest = (idx + 1 < chars.count) ? String(chars[(idx+1)...]) : ""
+            return rest.isEmpty ? first : (first + "\n" + rest)
+        }
+
+        // 2) Fallback: 3 + rest
+        let first = String(chars.prefix(3))
+        let rest = String(chars.dropFirst(3))
+        return first + "\n" + rest
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             Spacer().frame(maxHeight: 13)
-            HStack(alignment: .top, spacing: 8) {
+            HStack(alignment: .top, spacing: 12) {
                 // LEFT: Bus circle, number, line
                 VStack(spacing: 0) {
                     let busColor: Color = step.busType?.color ?? .gray
@@ -433,7 +469,8 @@ struct BusStepView: View {
                             .offset(x: -1.2, y: 2.5)
                     }
                     .frame(width: 16, height: 16)
-                    Text(step.title)
+                    Text(chunkedLabel(step.title))
+                        .multilineTextAlignment(.center)
                         .font(.mainTextSemibold12)
                         .foregroundStyle(.black)
                         .padding(.top, 2)
@@ -442,7 +479,8 @@ struct BusStepView: View {
                         .frame(width: 3)
                         .frame(maxHeight: .infinity, alignment: .bottom)
                 }
-                
+                .frame(width: 40, alignment: .center)
+
                 // 버스 승차 부분
                 VStack(alignment: .leading, spacing: 2) {
                     let base = step.subTitle ?? step.title
@@ -455,13 +493,13 @@ struct BusStepView: View {
                         .font(.mainTextSemibold14)
                         .foregroundStyle(Color.gray900)
                     Spacer().frame(height:14)
-                    
+
                     HStack(spacing: 7) {
-                        if let extraBus = step.extraBus {
-                            Text(extraBus)
+                        if let low = step.Info {
+                            Text(low)
                                 .font(.mainTextSemibold12)
                                 .foregroundStyle(Color.blue700)
-                            Spacer().frame(width:7)
+                         
                             Image(.mini2)
                         }
                         if let busTime = step.busTime {
@@ -479,33 +517,35 @@ struct BusStepView: View {
                     }
                     Rectangle()
                         .fill(Color("F3"))
-                        .frame(width: 300, height: 1)
+                        .frame(height: 1)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.top, 18)
-                    
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
-            
+
             if let stops = step.stops, let lastStop = stops.last {
                 Spacer().frame(maxHeight:13)
-                HStack(alignment: .top, spacing: 8) {
+                HStack(alignment: .top, spacing: 12) {
                     VStack(spacing: 2) {
                         let busColor: Color = step.busType?.color ?? .gray
                         Circle()
                             .fill(busColor)
                             .frame(width: 16, height: 16)
-                        Text(step.title)
+                        Text(chunkedLabel(step.title))
+                            .multilineTextAlignment(.center)
                             .font(.mainTextSemibold12)
                             .foregroundStyle(.black)
                             .padding(.top, 2)
                         Image("dot3")
                     }
-                    
+                    .frame(width: 40, alignment: .center)
+
                     VStack(alignment: .leading, spacing: 2) {
                         Text(lastStop + " 하차")
                             .font(.mainTextSemibold14)
                             .foregroundStyle(Color.gray900)
-                        
-                        
+
                         let boardingBase: String = {
                             // 왼쪽/오른쪽 이름 추출 헬퍼
                             func leftName(_ raw: String) -> String {
@@ -564,17 +604,25 @@ struct BusStepView: View {
                             Text("\(boardingBase)까지")
                                 .font(.mainTextRegular12)
                                 .foregroundStyle(Color.gray900)
+                                .fixedSize()
+
                             Image("mini")
                             Text(distanceText)
                                 .font(.mainTextRegular12)
                                 .foregroundStyle(Color.gray900)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.85)
+                                .allowsTightening(true)
+                                .fixedSize(horizontal: true, vertical: false)
                         }
+                        .frame(maxWidth: .infinity, alignment: .leading)
                         Rectangle()
                             .fill(Color("F3"))
-                            .frame(width: 300, height: 1)
+                            .frame(height: 1)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.top, 20)
-                      
                     }
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 }
             }
         }

@@ -192,7 +192,7 @@ class TransportationViewModel {
                 )
 
             case .BUS:
-                let isLow = (s.busInfo?.isLowFloor?.contains(true) == true) //저상버스
+                let isLow = (s.busInfo?.isLowFloor?.first == true) //저상버스
                 let extraBus = isLow ? "저상버스" : nil
                 let dispatch = s.busInfo?.dispatchInterval
                 let busTime = (dispatch != nil) ? "배차간격 \(dispatch!)분" : nil
