@@ -31,6 +31,7 @@ struct SearchHomeView: View {
                     .font(.mainTextSemibold20)
             }
             .padding(.horizontal, 24)
+            .padding(.leading, 5.6)
             
             Spacer()
                 .frame(height: 52)
@@ -62,7 +63,7 @@ struct SearchHomeView: View {
                 }
                 .padding(.horizontal, 20)
                 .padding(.vertical, 15)
-                .frame(width: 350, height: 51)
+                .frame(maxWidth: .infinity, minHeight: 51, maxHeight: 51)
                 .background(Color.white)
                 .clipShape(RoundedRectangle(cornerRadius: 15))
                 .overlay(
@@ -79,11 +80,11 @@ struct SearchHomeView: View {
                 .frame(height:80)
             GeometryReader { geo in
                 MP4View(filename: "Search", fileExtension: "mp4", size: geo.size)
-                    .frame(height: 479)
-                    .padding(.bottom, 54)
                     .clipped()
             }
-            .frame(height: 479)
+            .frame(maxWidth: .infinity)
+            .aspectRatio(390.0/479.0, contentMode: .fit)
+            .padding(.bottom, 54)
         }
        
     }
