@@ -19,6 +19,7 @@ struct TopPlaceCard: View {
                     switch phase {
                     case .empty:
                         ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle(tint: .loading))
                             .frame(width: 90, height: 75)
                     case .success(let image):
                         image

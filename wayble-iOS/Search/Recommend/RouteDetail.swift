@@ -435,7 +435,7 @@ struct BusStepView: View {
                     .frame(width: 16, height: 16)
                     Text(step.title)
                         .font(.mainTextSemibold12)
-                        .foregroundColor(.black)
+                        .foregroundStyle(.black)
                         .padding(.top, 2)
                     Rectangle()
                         .fill(busColor)
@@ -495,7 +495,7 @@ struct BusStepView: View {
                             .frame(width: 16, height: 16)
                         Text(step.title)
                             .font(.mainTextSemibold12)
-                            .foregroundColor(.black)
+                            .foregroundStyle(.black)
                             .padding(.top, 2)
                         Image("dot3")
                     }

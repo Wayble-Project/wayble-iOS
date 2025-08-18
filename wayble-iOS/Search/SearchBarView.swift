@@ -8,12 +8,6 @@
 import SwiftUI
 import Foundation
 
-enum EntryPoint {
-    case home
-    case directions
-  
-}
-
 // MARK: - SearchRow
 struct SearchRow: View {
     let icon: String
@@ -39,12 +33,12 @@ struct SearchRow: View {
 
 struct SearchBarView: View {
     @Environment(NavigationRouter.self) private var router
+    @EnvironmentObject var searchRoute: SearchRouteState
     @Bindable var viewModel: SearchViewModel
     @FocusState private var isFocused: Bool
     @State private var mapDetailViewID = UUID()
     @Binding var place: PlaceModel
     @Binding var selectedIndex: Int
-    var entryPoint: EntryPoint = .directions
     var entryType: EntryType? = nil // 출발/도착 구분 필요 시만 사용
     // 선택 콜백 (부모에서 주입해주면 출발/도착 값을 안전하게 올려보낼 수 있음)
     var onSelectDeparture: ((PlaceModel) -> Void)? = nil
@@ -59,7 +53,7 @@ struct SearchBarView: View {
                 HStack() {
                     Button(action: {
                         withAnimation(.easeInOut(duration: 0.3)) {
-                            switch entryPoint {
+                            switch searchRoute.entryPoint {
                             case .home:
                                 $selectedIndex.wrappedValue = 0
                             case .directions:
@@ -76,13 +70,13 @@ struct SearchBarView: View {
                     ZStack(alignment: .leading) {
                         if viewModel.searchText.isEmpty {
                             Text("ex.숙대입구역 맛집")
-                                .foregroundColor(.gray500)
+                                .foregroundStyle(.gray500)
                                 .font(.mainTextRegular14)
                                 .padding(.leading, 4) // 살짝 들여쓰기 맞춰주기
                         }
                         
                         TextField("", text: $viewModel.searchText)
-                            .foregroundColor(.black)
+                            .foregroundStyle(.black)
                             .font(.mainTextRegular14)
                             .focused($isFocused)
                     }
@@ -131,7 +125,7 @@ struct SearchBarView: View {
             .padding(.horizontal, 20)
             
             Rectangle()
-                .foregroundColor(.clear)
+                .foregroundStyle(.clear)
                 .frame(maxWidth: .infinity)
                 .frame(height: 12)
                 .background(.white)

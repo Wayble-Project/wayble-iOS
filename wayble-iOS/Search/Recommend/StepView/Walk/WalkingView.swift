@@ -36,6 +36,7 @@ struct WalkingView: View {
 
                     if viewModel.isLoading {
                         ProgressView("경로 불러오는 중…")
+                            .progressViewStyle(CircularProgressViewStyle(tint: .loading))
                             .padding()
                             .background(.ultraThinMaterial)
                             .clipShape(RoundedRectangle(cornerRadius: 12))

@@ -33,7 +33,7 @@ struct CustomTabBarView: View {
                                 .renderingMode(.template)
                                 .resizable()
                                 .frame(width: 24, height: 24)
-                                .foregroundColor(selectedIndex == 0 ? Color("darkblue-500") : .gray500)
+                                .foregroundStyle(selectedIndex == 0 ? Color("darkblue-500") : .gray500)
                         }
                     }
                     .buttonStyle(.plain)

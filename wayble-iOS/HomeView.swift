@@ -21,9 +21,7 @@ struct HomeView: View {
     @Binding var selectedDeparture: PlaceModel?
     @Binding var selectedArrival: PlaceModel?
     
-#if DEBUG
-    @EnvironmentObject var authViewModel: AuthViewModel
-#endif
+
     var body: some View {
         VStack(alignment: .leading) {
             HStack{
@@ -233,22 +231,6 @@ struct HomeView: View {
         }
         
          
-#if DEBUG
-.overlay(alignment: .bottomTrailing) {
-    Button("로그아웃(키체인 삭제)") {
-        KeychainManager.standard.deleteSession(for: "tokenInfoKey")
-        authViewModel.state = .loggedOut
-    }
-    .padding(.horizontal, 12)
-    .padding(.vertical, 8)
-    .background(.ultraThinMaterial)
-    .clipShape(Capsule())
-    .shadow(radius: 3)
-    .padding(.trailing, 16)
-    .padding(.bottom, 100)   // ← 탭바보다 위로 올림. 필요하면 숫자 조절
-    .zIndex(999)
-}
-#endif
     }
       
 }

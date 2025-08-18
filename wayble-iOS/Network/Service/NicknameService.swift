@@ -28,10 +28,10 @@ final class NicknameService {
         }
 
         // 정상 응답: data가 있는 경우
-        if let data = decodedResponse.data {
+        if decodedResponse.data != nil {
             return decodedResponse
         }
-
+        
         // 바디가 비정상적으로 비어있는 경우
         print("⚠️ 닉네임 응답에 유효한 정보 없음")
         throw URLError(.badServerResponse)

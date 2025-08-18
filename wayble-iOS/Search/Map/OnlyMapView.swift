@@ -63,10 +63,10 @@ struct OnlyMapView: View {
                     }
                 }) {
                     Image(systemName: "chevron.left")
-                        .foregroundColor(.black)
+                        .foregroundStyle(.black)
                     
                     Text("ex.숙대입구역 맛집")
-                        .foregroundColor(.gray500)
+                        .foregroundStyle(.gray500)
                         .font(.mainTextRegular14)
                         .padding(.leading, 4)
                 }

@@ -98,7 +98,6 @@ struct RouterViewModifier: ViewModifier {
                     viewModel: searchViewModel,
                     place: $place,
                     selectedIndex: $selectedIndex,
-                    entryPoint: .directions,
                     entryType: entryType
                 )
                 .navigationBarBackButtonHidden(true)
@@ -113,8 +112,7 @@ struct RouterViewModifier: ViewModifier {
             return AnyView(
                 SearchBarView(
                     viewModel: searchViewModel, place: $place,
-                    selectedIndex: $selectedIndex,
-                    entryPoint: .directions
+                    selectedIndex: $selectedIndex
                 )
                 .navigationBarBackButtonHidden(true)
             )
@@ -151,7 +149,7 @@ struct RouterViewModifier: ViewModifier {
             )
             
         case .mainMapView:
-            return AnyView(MainMapView()
+            return AnyView(MainMapView(selectedIndex: $selectedIndex)
                 .navigationBarBackButtonHidden(true))
             
         }

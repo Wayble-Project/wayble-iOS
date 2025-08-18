@@ -86,22 +86,3 @@ struct CustomTextField: View {
     }
 }
 
-#Preview {
-    @State var dummyNickname = ""
-    @State var validationState: ValidationState = .invalidBirthFormat
-    return CustomTextField(
-        text: "생년월일",
-        placeHolder: "YYYY-MM-DD 형식으로 입력해주세요",
-        textValue: $dummyNickname,
-        keyboardType: .default,
-        validationState: $validationState
-    )
-}
-
-
-
-/*
-#Preview {
-    CustomTextField()
-}
-*/

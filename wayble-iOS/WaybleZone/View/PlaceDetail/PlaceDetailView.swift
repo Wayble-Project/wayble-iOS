@@ -28,6 +28,7 @@ struct PlaceDetailView: View {
                     PlaceReView(waybleZone: zone, reviews: vm.reviews)
                 } else {
                     ProgressView("정보를 불러오는 중...")
+                        .progressViewStyle(CircularProgressViewStyle(tint: .loading))
                 }
                 
             }
