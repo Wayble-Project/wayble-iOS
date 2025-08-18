@@ -4,6 +4,7 @@
 //
 //  Created by 신민정 on 8/18/25.
 //
+//
 
 import Foundation
 import Moya
@@ -22,7 +23,7 @@ extension PlaceRouter: APITargetType {
         case .create:
             return "/api/v1/directions/place"         // POST 저장
         case .histories:
-            return "/api/v1/directions/searches"      // GET 히스토리
+            return "/api/v1/directions/searches" //사실상없음 
         }
     }
 

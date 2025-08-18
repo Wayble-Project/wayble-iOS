@@ -252,11 +252,11 @@ class SearchViewModel {
                 _ = try await PlaceService().createSingleSearch(name: name, address: address)
             }
 
-            // ✅ 네트워크 성공 이후, 메인액터에서 UI 즉시 반영
+            // 네트워크 성공 이후, 메인액터에서 UI 즉시 반영
             print("✅ 검색기록 저장 성공: \(name)")
             let out = DateFormatter()
             out.locale = Locale(identifier: "ko_KR")
-            out.dateFormat = "yyyy.MM.dd HH:mm"
+            out.dateFormat = "MM.dd"
             self.searchHistoryUI.removeAll { $0.title == name }
             self.searchHistoryUI.insert(
                 SearchModel(icon: "marker", title: name, date: out.string(from: Date())),

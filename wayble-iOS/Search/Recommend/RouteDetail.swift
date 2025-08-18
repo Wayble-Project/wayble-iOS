@@ -290,6 +290,7 @@ private extension RouteDetail {
                                 .font(.mainTextSemibold12)
                             Image("dot3")
                         }
+                        .frame(width: 40, alignment: .center)
                         VStack(alignment: .leading, spacing: 2) {
                             Spacer().frame(maxHeight:1)
                             Text(arrivalName + "역 하차")
