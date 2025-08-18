@@ -67,7 +67,7 @@ final class PlaceService {
         }
     }
 
-    /// 서버의 검색 기록을 불러와 UI용 모델로 변환
+    // 서버의 검색 기록을 불러와 UI용 모델로 변환
     func fetchHistories() async throws -> [SearchModel] {
         let response = try await provider.requestAsync(.histories)
         guard !response.data.isEmpty else { return [] }

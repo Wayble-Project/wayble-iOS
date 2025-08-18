@@ -44,6 +44,7 @@ struct WalkingView: View {
 
                     VStack {
                         Spacer()
+                        let isSingle = viewModel.routes.count == 1
                         HStack(spacing: 12) {
                             ForEach(Array(viewModel.routes.enumerated()), id: \.offset) { _, route in
                                 WalkBox(
@@ -56,7 +57,8 @@ struct WalkingView: View {
                                 )
                             }
                         }
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                        //한개면 .leading처럼 보이게 !! 
+                        .frame(maxWidth: .infinity, alignment: isSingle ? .leading : .center)
                         .padding(.horizontal, 20)
                         .padding(.bottom, 56)
                     }
