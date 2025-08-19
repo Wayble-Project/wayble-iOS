@@ -267,7 +267,7 @@ private extension RouteDetail {
                 
             }
             // 하차 밑에 ~까지
-                if (step.type == .subway || step.type == .bus), let next = nextStep, next.type == .walk, !(next.title.contains("도착")) {
+                if (step.type == .subway || step.type == .bus), let next = nextStep, next.type == .walk {
                 let base = next.subTitle ?? next.title
                 let parts: [String] = {
                     if base.contains("->") { return base.components(separatedBy: "->").map { $0.trimmingCharacters(in: .whitespaces) } }
@@ -607,6 +607,111 @@ struct BusStepView: View {
                                 .foregroundStyle(Color.gray900)
                                 .fixedSize()
 
+                            Image("mini")
+                            Text(distanceText)
+                                .font(.mainTextRegular12)
+                                .foregroundStyle(Color.gray900)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.85)
+                                .allowsTightening(true)
+                                .fixedSize(horizontal: true, vertical: false)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        Rectangle()
+                            .fill(Color("F3"))
+                            .frame(height: 1)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.top, 20)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                }
+            }
+            else {
+                Spacer().frame(maxHeight:13)
+                HStack(alignment: .top, spacing: 12) {
+                    VStack(spacing: 2) {
+                        let busColor: Color = step.busType?.color ?? .gray
+                        Circle()
+                            .fill(busColor)
+                            .frame(width: 16, height: 16)
+                        Text(chunkedLabel(step.title))
+                            .multilineTextAlignment(.center)
+                            .font(.mainTextSemibold12)
+                            .foregroundStyle(.black)
+                            .padding(.top, 2)
+                        Image("dot3")
+                    }
+                    .frame(width: 40, alignment: .center)
+
+                    VStack(alignment: .leading, spacing: 2) {
+                        // 하차 정류장 이름 추정 (stops가 없을 때)
+                        let base = step.subTitle ?? step.title
+                        let parts: [String] = {
+                            if base.contains("->") { return base.components(separatedBy: "->").map { $0.trimmingCharacters(in: .whitespaces) } }
+                            if base.contains("→") { return base.components(separatedBy: "→").map { $0.trimmingCharacters(in: .whitespaces) } }
+                            return [base]
+                        }()
+                        let fallbackStop = parts.last ?? base
+                        Text(fallbackStop + " 하차")
+                            .font(.mainTextSemibold14)
+                            .foregroundStyle(Color.gray900)
+
+                        let boardingBase: String = {
+                            func leftName(_ raw: String) -> String {
+                                var s = raw
+                                if let pipe = s.range(of: "|") { s = String(s[..<pipe.lowerBound]).trimmingCharacters(in: .whitespaces) }
+                                if s.contains("->") {
+                                    s = s.components(separatedBy: "->").map { $0.trimmingCharacters(in: .whitespaces) }.first ?? s
+                                } else if s.contains("→") {
+                                    s = s.components(separatedBy: "→").map { $0.trimmingCharacters(in: .whitespaces) }.first ?? s
+                                }
+                                return s.replacingOccurrences(of: "<b>", with: "")
+                                        .replacingOccurrences(of: "</b>", with: "")
+                                        .replacingOccurrences(of: "승차", with: "")
+                                        .trimmingCharacters(in: .whitespaces)
+                            }
+                            func destName(_ raw: String) -> String {
+                                var s = raw
+                                if let pipe = s.range(of: "|") { s = String(s[..<pipe.lowerBound]).trimmingCharacters(in: .whitespaces) }
+                                if s.contains("->") {
+                                    s = s.components(separatedBy: "->").map { $0.trimmingCharacters(in: .whitespaces) }.last ?? s
+                                } else if s.contains("→") {
+                                    s = s.components(separatedBy: "→").map { $0.trimmingCharacters(in: .whitespaces) }.last ?? s
+                                }
+                                return s.replacingOccurrences(of: "<b>", with: "")
+                                        .replacingOccurrences(of: "</b>", with: "")
+                                        .replacingOccurrences(of: "도착", with: "")
+                                        .trimmingCharacters(in: .whitespaces)
+                            }
+
+                            if let next = nextStep, next.type == .walk {
+                                if let after = afterStep, (after.type == .bus || after.type == .subway) {
+                                    return leftName(after.subTitle ?? after.title)
+                                }
+                                let raw = next.subTitle ?? next.title
+                                if afterStep == nil || raw.contains("도착") {
+                                    return destName(raw)
+                                }
+                                return leftName(raw)
+                            }
+                            return ""
+                        }()
+
+                        let distanceText: String = {
+                            if let walk = nextStep, walk.type == .walk {
+                                if let m = walk.moveCount { return "도보 \(m)m" }
+                                if let right = walk.title.split(separator: "|").last { return right.trimmingCharacters(in: .whitespaces) }
+                                return "도보"
+                            }
+                            return "도보"
+                        }()
+
+                        Spacer().frame(maxHeight:15)
+                        HStack(spacing: 8) {
+                            Text("\(boardingBase)까지")
+                                .font(.mainTextRegular12)
+                                .foregroundStyle(Color.gray900)
+                                .fixedSize()
                             Image("mini")
                             Text(distanceText)
                                 .font(.mainTextRegular12)

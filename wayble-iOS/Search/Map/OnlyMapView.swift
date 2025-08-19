@@ -16,6 +16,8 @@ import NMapsMap
 struct OnlyMapView: View {
     @Binding var place: PlaceModel
     @Binding var selectedIndex: Int
+    @Binding var selectedDeparture: PlaceModel?
+    @Binding var selectedArrival: PlaceModel?
     @Binding var searchBarViewID: UUID
     @Environment(\.dismiss) private var dismiss
 
@@ -94,7 +96,10 @@ struct OnlyMapView: View {
                     place: place,
                     title: $placeTitle,
                     roadAddress: $placeRoadAddress,
-                    category: $placeCategory
+                    category: $placeCategory,
+                    selectedIndex: $selectedIndex,
+                    selectedDeparture: $selectedDeparture,
+                    selectedArrival: $selectedArrival
                 )
             }
         }
@@ -163,6 +168,8 @@ extension OnlyMapView {
             isWaybleZone: true
         )),
         selectedIndex: .constant(0),
+        selectedDeparture: .constant(nil),
+        selectedArrival: .constant(nil),
         searchBarViewID: .constant(UUID())
     )
 }
