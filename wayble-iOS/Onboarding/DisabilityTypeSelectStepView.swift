@@ -29,7 +29,7 @@ struct DisabilityTypeSelectView: View {
             OnboardingBar(currentStep: $step)
                 .padding(.top, 21)
                 .padding(.bottom, 55)
-                .padding(.horizontal, 20)
+                .padding(.horizontal, 7)
 
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 0) {
@@ -67,6 +67,9 @@ struct DisabilityTypeSelectView: View {
                         selectedIndex: $selectedIndex,
                         isNextDisabled: selectedDisabilities.isEmpty || selectedAssistTools.isEmpty,
                         //isNextDisabled: !viewModel.isDisabilityStepValid,
+                        onPreviousAction: {
+                            resetDisabilitySelection()
+                        },
                         onNextAction: {
                             viewModel.userInfo.hasDisability = true
                             viewModel.userInfo.disabilityType = selectedDisabilities.compactMap { label in
@@ -97,5 +100,14 @@ struct DisabilityTypeSelectView: View {
 
         }
         .padding(.horizontal, 13)
+        .onAppear { resetDisabilitySelection() }
+    }
+    
+    private func resetDisabilitySelection() {
+        selectedDisabilities.removeAll()
+        selectedAssistTools.removeAll()
+        viewModel.userInfo.hasDisability = false
+        viewModel.userInfo.disabilityType = []
+        viewModel.userInfo.mobilityAid = []
     }
 }

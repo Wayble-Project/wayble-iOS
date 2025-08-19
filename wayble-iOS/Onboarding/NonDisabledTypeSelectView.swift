@@ -50,7 +50,7 @@ struct NonDisabledTypeSelectView: View {
                 selectedIndex: $selectedIndex,
                 isNextDisabled: selectedItem == nil,
                 onPreviousAction: {
-                    selectedItem = nil
+                    resetNonDisabledSelection()
                 },
                 onNextAction: {
                     guard let selected = selectedItem else {
@@ -64,6 +64,10 @@ struct NonDisabledTypeSelectView: View {
             .padding(.horizontal, 7)
         } //v
         .padding(.horizontal, 13)
+        .onAppear { resetNonDisabledSelection() }
+    }
+    
+    private func resetNonDisabledSelection() {
+        selectedItem = nil
     }
 }
-
