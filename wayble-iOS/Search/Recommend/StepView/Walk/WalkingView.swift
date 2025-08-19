@@ -66,8 +66,8 @@ struct WalkingView: View {
             }
         }
         .onAppear { triggerIfReady() }
-        .onChange(of: selectedDeparture) { _ in triggerIfReady() }
-        .onChange(of: selectedArrival) { _ in triggerIfReady() }
+        .onChange(of: selectedDeparture) { triggerIfReady() }
+        .onChange(of: selectedArrival) { triggerIfReady() }
     }
 
     private func triggerIfReady() {

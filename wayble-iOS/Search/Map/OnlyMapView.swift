@@ -122,9 +122,8 @@ struct OnlyMapView: View {
         }
          */
 
-        .onChange(of: viewModel.selectedPlace) { newPlace in
-            guard newPlace != self.place else { return }
-            
+        .onChange(of: viewModel.selectedPlace) { _, newValue in
+            let newPlace = newValue
             DispatchQueue.main.async {
 
                 /*

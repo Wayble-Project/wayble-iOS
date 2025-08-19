@@ -80,7 +80,7 @@ struct MapBoxView: View {
 
                            //  아직 출발이 없다면: 현재 위치를 출발로 자동 설정 (기존 동작)
                            locationManager.requestLocation { coordinate in
-                               print("✅ 위치 업데이트됨: \(coordinate)")
+                               print("✅ 위치 업데이트됨: \(String(describing: coordinate))")
                                if let coord = coordinate {
                                    Task {
                                        do {
