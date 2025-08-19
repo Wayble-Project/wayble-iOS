@@ -56,6 +56,8 @@ struct MainView: View {
                         OnlyMapView(
                             place: $place,
                             selectedIndex: $selectedIndex,
+                            selectedDeparture: $selectedDeparture,
+                            selectedArrival: $selectedArrival,
                             searchBarViewID: $searchBarViewID
                         )
                     case 7: LoginView(selectedIndex: $selectedIndex, onboardingViewModel: onboardingViewModel, homeViewModel: homeViewModel)
