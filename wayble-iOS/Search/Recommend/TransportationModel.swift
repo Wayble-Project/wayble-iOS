@@ -35,12 +35,14 @@ class RouteOption: Identifiable, Hashable {
     let arrivalTime: String
     let cost: Int
     let steps: [RouteStep]
+    let routeIndex: Int?
     
-    init(totalTime: Int, arrivalTime: String, cost: Int, steps: [RouteStep]) {
+    init(totalTime: Int, arrivalTime: String, cost: Int, steps: [RouteStep], routeIndex: Int? = nil) {
         self.totalTime = totalTime
         self.arrivalTime = arrivalTime
         self.cost = cost
         self.steps = steps
+        self.routeIndex = routeIndex
     }
     
     // Hashable 구현
@@ -292,7 +294,7 @@ extension TransportationModel {
             }
 
             // 총시간/요금/도착시는 서버 스펙 추가되면 채우자
-            return RouteOption(totalTime: 0, arrivalTime: "-", cost: 0, steps: steps)
+            return RouteOption(totalTime: 0, arrivalTime: "-", cost: 0, steps: steps, routeIndex: route.routeIndex)
         }
 
         self.recommendedRoutes = options

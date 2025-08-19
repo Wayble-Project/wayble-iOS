@@ -113,7 +113,7 @@ class TransportationViewModel {
                           userInfo: [NSLocalizedDescriptionKey: "좌표 범위 오류 (lat=\(lat), lng=\(lng))"])
         }
 
-        let name = place.title.isEmpty ? (place.roadAddress ?? "-") : place.title
+        let name = place.title.isEmpty ? (place.roadAddress) : place.title
         print("[makePlacePoint] name=\(name) lat=\(lat), lng=\(lng)")
         return TransitRequest.PlacePoint(name: name, latitude: lat, longitude: lng)
     }

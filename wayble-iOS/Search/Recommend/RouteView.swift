@@ -10,6 +10,7 @@ import SwiftUI
 
 struct RouteView: View {
     let route: RouteOption
+    let displayIndex: Int? = nil
     var onRouteSelected: (() -> Void)? = nil
 
     var body: some View {
@@ -17,8 +18,14 @@ struct RouteView: View {
             VStack(alignment: .leading) {
                 // 상단 상태 바(필요하면 확장)
                 HStack {
-                    Text("추천경로")
-                        .font(.mainTextSemibold20)
+                    if let idx = displayIndex ?? route.routeIndex {
+                        VStack(alignment: .leading) {
+                            Text("추천경로 \(idx)")
+                                .font(.mainTextSemibold20)
+                                .foregroundStyle(Color.gray900)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                    }
                 }
                 Spacer().frame(height: 24)
 
@@ -252,6 +259,6 @@ struct RouteView: View {
             RouteStep(type: .walk, title: "도착", subTitle: "홍대정문", detail: nil, extra: nil, Info: nil, extraBus: nil, busTime: nil, simple: true)
         ]
     )
-    return RouteView(route: sample)
+    RouteView(route: sample)
         .environment(NavigationRouter())
 }
