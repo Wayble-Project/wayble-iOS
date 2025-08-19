@@ -4,6 +4,8 @@
 //
 //  Created by 신민정 on 7/15/25.
 //
+//
+
 import Foundation
 import SwiftUI
 
@@ -11,7 +13,14 @@ struct RouteDetail: View {
     var onBack: (() -> Void)? = nil
     @Environment(\.dismiss) private var dismiss
     let route: RouteOption
+    let displayIndex: Int?
     @State private var expandedIndex: Int? = nil
+
+    init(onBack: (() -> Void)? = nil, route: RouteOption, displayIndex: Int? = nil) {
+        self.onBack = onBack
+        self.route = route
+        self.displayIndex = displayIndex
+    }
     
     var body: some View {
         ScrollView {
@@ -59,6 +68,8 @@ private extension RouteDetail {
                 .foregroundStyle(Color.gray700)
 
             Spacer()
+
+
         }
         .padding(.horizontal, 20)
         .padding(.top, 30)
