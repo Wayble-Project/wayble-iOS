@@ -31,6 +31,20 @@ struct RouteDetail: View {
 
 // MARK: - Subviews (split to reduce type-check complexity)
 private extension RouteDetail {
+    /// 지하철 라벨 줄바꿈 규칙: 4글자 이하면 한 줄, 5글자 이상이면 4/나머지로 개행.
+    /// 예) "경의중앙"(4) → 한 줄, "수인분당선"(5+) → "수인분당\n선"
+    private func chunkedSubwayLabel(_ s: String) -> String {
+        let raw = s
+        // 이미 숫자호선 패턴(예: "2호선", "7호선")은 그대로 반환
+        if raw.range(of: "^[0-9]+호선$", options: .regularExpression) != nil {
+            return raw
+        }
+        let chars = Array(raw)
+        guard chars.count > 4 else { return raw } // 4글자 이하면 한 줄
+        let first = String(chars.prefix(4))
+        let rest  = String(chars.dropFirst(4))
+        return first + "\n" + rest
+    }
     var headerView: some View {
         HStack(spacing: 8) {
             Image("back2")
@@ -102,7 +116,8 @@ private extension RouteDetail {
                         stepImage(for: step)
                             .frame(width: 18, height: 20)
                         // 호선 라벨("서울 지하철"/"수도권 전철" 제거 후 표기)
-                        Text(cleanedLineName(step.title))
+                        Text(chunkedSubwayLabel(cleanedLineName(step.title)))
+                            .multilineTextAlignment(.center)
                             .font(.mainTextSemibold12)
                         
                         let color: Color = {
@@ -238,18 +253,24 @@ private extension RouteDetail {
                         //지하철 상세 정보
                         VStack(alignment: .leading, spacing: 8) {
                             Spacer().frame(maxHeight:18)
+                            HStack(spacing:5){
+                                Image(.chair04)
                                 Text("휠체어 전용석 \(step.chair ?? "-")")
                                     .font(.mainTextSemibold12)
                                     .foregroundStyle(Color.blue700)
-                                
+                            }
+                            HStack(spacing:5){
+                                Image(.lift04)
                                 Text("엘레베이터와 가까운 출구 번호 \(step.elevator ?? "-")")
                                     .font(.mainTextSemibold12)
                                     .foregroundStyle(Color.blue700)
-                                
-                           
+                            }
+                            HStack(spacing:5){
+                                Image(.chair04)
                                 Text("장애인 화장실 \(step.toilet ?? "X")")
                                     .font(.mainTextSemibold12)
                                     .foregroundStyle(Color.blue700)
+                            }
                                
                             }
                         Spacer().frame(height:10)
@@ -288,7 +309,8 @@ private extension RouteDetail {
                             Circle()
                                 .fill(color)
                                 .frame(width: 16, height: 16)
-                            Text(cleanedLineName(step.title))
+                            Text(chunkedSubwayLabel(cleanedLineName(step.title)))
+                                .multilineTextAlignment(.center)
                                 .font(.mainTextSemibold12)
                             Image("dot3")
                         }

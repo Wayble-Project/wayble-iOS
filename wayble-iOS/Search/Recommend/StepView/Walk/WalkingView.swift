@@ -30,9 +30,15 @@ struct WalkingView: View {
                 }
             } else {
                 ZStack(alignment: .top) {
-                    NaverMapViewWrapper(route: viewModel.selectedRoute)
-                        .id(viewModel.mapRefreshTrigger)
-                        .edgesIgnoringSafeArea(.all)
+                    if !viewModel.isLoading {
+                        NaverMapViewWrapper(route: viewModel.selectedRoute)
+                            .id(viewModel.mapRefreshTrigger)
+                            .edgesIgnoringSafeArea(.all)
+                    } else {
+                        // 로딩 중에는 이전 경로가 보이지 않도록 흰 배경만
+                        Color.white
+                            .ignoresSafeArea()
+                    }
 
                     if viewModel.isLoading {
                         ProgressView("경로 불러오는 중…")
@@ -42,25 +48,27 @@ struct WalkingView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 12))
                     }
 
-                    VStack {
-                        Spacer()
-                        let isSingle = viewModel.routes.count == 1
-                        HStack(spacing: 12) {
-                            ForEach(Array(viewModel.routes.enumerated()), id: \.offset) { _, route in
-                                WalkBox(
-                                    route: route,
-                                    onTap: {
-                                        
-                                        viewModel.selectRoute(route)
-                                    },
-                                    isSelected: .constant(viewModel.selectedRoute.title == route.title)
-                                )
+                    if !viewModel.isLoading && !viewModel.routes.isEmpty {
+                        VStack {
+                            Spacer()
+                            let isSingle = viewModel.routes.count == 1
+                            HStack(spacing: 12) {
+                                ForEach(Array(viewModel.routes.enumerated()), id: \.offset) { _, route in
+                                    WalkBox(
+                                        route: route,
+                                        onTap: {
+                                            
+                                            viewModel.selectRoute(route)
+                                        },
+                                        isSelected: .constant(viewModel.selectedRoute.title == route.title)
+                                    )
+                                }
                             }
+                            //한개면 .leading처럼 보이게 !!
+                            .frame(maxWidth: .infinity, alignment: isSingle ? .leading : .center)
+                            .padding(.horizontal, 20)
+                            .padding(.bottom, 56)
                         }
-                        //한개면 .leading처럼 보이게 !! 
-                        .frame(maxWidth: .infinity, alignment: isSingle ? .leading : .center)
-                        .padding(.horizontal, 20)
-                        .padding(.bottom, 56)
                     }
                 }
             }
