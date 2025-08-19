@@ -48,7 +48,7 @@ struct Transportation: View {
                 await viewModel.fetchWalkingRoute(departure: dep, arrival: arr)
                 // 대중교통 탭일 때만 대중교통 새로고침
                 if viewModel.transportation.selectedTab == .transit {
-                    await viewModel.resetTransit()           // 커서/리스트/에러 초기화
+                    viewModel.resetTransit()           // 커서/리스트/에러 초기화
                     await viewModel.fetchTransitFirst(departure: dep, arrival: arr)
                 }
             }
@@ -124,7 +124,7 @@ struct Transportation: View {
                         }) {
                             HStack() {
                                 Text(selectedArrival?.title.htmlStripped ?? "도착지 입력")
-                                    .foregroundStyle(Color("darkblue-500") ?? Color("gray-400"))
+                                    .foregroundStyle(Color("darkblue-500"))
                                     .font(.mainTextSemibold14)
                                 Spacer()
                             }
@@ -299,13 +299,13 @@ struct Transportation: View {
                         guard viewModel.transportation.selectedTab == .transit else { return }
                         guard let dep = selectedDeparture, let arr = selectedArrival else { return }
                         didKickTransitOnAppear = true
-                        await viewModel.resetTransit()
+                        viewModel.resetTransit()
                         await viewModel.fetchTransitFirst(departure: dep, arrival: arr)
                     }
                 }
             }
         }
-        .onChange(of: viewModel.transportation.selectedTab) { newTab in
+        .onChange(of: viewModel.transportation.selectedTab) { oldTab, newTab in
             if newTab != .transit { didKickTransitOnAppear = false }
             guard newTab == .transit else { return }
             // 출발/도착이 모두 있고 아직 불러오지 않았다면 첫 페이지 요청
@@ -355,7 +355,7 @@ struct Transportation: View {
             }
         }
         
-        .onChange(of: selectedArrival) { newValue in
+        .onChange(of: selectedArrival) { oldValue, newValue in
             guard let dep = selectedDeparture, let arr = newValue else { return }
             let newKey = makeTransitQueryKey()
             if newKey == lastTransitQueryKey { return }
@@ -364,7 +364,7 @@ struct Transportation: View {
                 await viewModel.fetchWalkingRoute(departure: dep, arrival: arr)
                 
                 // 탭과 상관없이 항상 대중교통 초기화
-                await viewModel.resetTransit()
+                viewModel.resetTransit()
                 await viewModel.fetchTransitFirst(departure: dep, arrival: arr)
             }
         }

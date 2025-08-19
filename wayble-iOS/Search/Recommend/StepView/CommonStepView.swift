@@ -24,7 +24,7 @@ struct CommonStepView: View {
                                 Spacer()
                                     .frame(height:4)
                                 
-                                let color: Color = {
+                                let _: Color = {
                                     switch step.type {
                                     case .subway: return step.subwayLine?.color ?? .gray
                                     case .bus: return step.busType?.color ?? .gray

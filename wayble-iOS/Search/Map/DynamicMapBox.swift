@@ -73,7 +73,8 @@ struct DynamicMapBoxView: View {
 
                       
                            locationManager.requestLocation { coordinate in
-                               print("✅ 위치 업데이트됨: \(coordinate)")
+                               let coordDesc = coordinate.map { "(\($0.latitude), \($0.longitude))" } ?? "nil"
+                               print("✅ 위치 업데이트됨: \(coordDesc)")
                                if let coord = coordinate {
                                    Task {
                                        do {

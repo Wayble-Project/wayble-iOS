@@ -67,7 +67,7 @@ struct MapDetailView: View {
             )
             .padding(.horizontal, 20)
             .padding(.top, 12)
-            if let zone = SearchViewModel.shared.waybleZones.first(where: { $0.name == place.title }) {
+            if SearchViewModel.shared.waybleZones.first(where: { $0.name == place.title }) != nil {
                 VStack {
                     Spacer()
 

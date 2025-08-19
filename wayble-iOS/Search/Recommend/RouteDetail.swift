@@ -53,7 +53,9 @@ private extension RouteDetail {
     var stepsListView: some View {
         VStack(alignment: .leading, spacing: 0) {
             ForEach(Array(route.steps.enumerated()), id: \.offset) { i, step in
-                if !(step.type == .subway && (step.title.isEmpty || step.subTitle == nil) && (step.stops == nil || step.stops?.isEmpty == true)) {
+                if !(step.type == .subway
+                      && (step.title.isEmpty || step.subTitle.isEmpty)
+                      && ((step.stops?.isEmpty) ?? true)) {
                     let prev = i > 0 ? route.steps[i - 1] : nil
                     let next = i < route.steps.count - 1 ? route.steps[i + 1] : nil
                     let isTransferWalk = (step.type == .walk) && ((prev?.type == .subway || prev?.type == .bus)) && ((next?.type == .subway || next?.type == .bus))
@@ -158,7 +160,7 @@ private extension RouteDetail {
                 VStack(alignment: .leading, spacing: 2) {
                     if step.type == .walk {
                         // 출발/도착 외의 walk는 from + "하차"로 표시
-                        let baseText = step.subTitle ?? step.title
+                        let baseText = step.subTitle
                         let parts: [String] = {
                             if baseText.contains("->") { return baseText.components(separatedBy: "->").map { $0.trimmingCharacters(in: .whitespaces) } }
                             if baseText.contains("→") { return baseText.components(separatedBy: "→").map { $0.trimmingCharacters(in: .whitespaces) } }
@@ -223,7 +225,7 @@ private extension RouteDetail {
                         }
                     } else if step.type == .subway {
                         // Subway: from + "승차"
-                        let base = step.subTitle ?? step.title
+                        let base = step.subTitle
                         let parts: [String] = {
                             if base.contains("->") { return base.components(separatedBy: "->").map { $0.trimmingCharacters(in: .whitespaces) } }
                             if base.contains("→") { return base.components(separatedBy: "→").map { $0.trimmingCharacters(in: .whitespaces) } }
@@ -268,7 +270,7 @@ private extension RouteDetail {
             }
             // 하차 밑에 ~까지
                 if (step.type == .subway || step.type == .bus), let next = nextStep, next.type == .walk {
-                let base = next.subTitle ?? next.title
+                    let base = next.subTitle
                 let parts: [String] = {
                     if base.contains("->") { return base.components(separatedBy: "->").map { $0.trimmingCharacters(in: .whitespaces) } }
                     if base.contains("→") { return base.components(separatedBy: "→").map { $0.trimmingCharacters(in: .whitespaces) } }
@@ -299,7 +301,7 @@ private extension RouteDetail {
                            
                             let boardingBase: String = {
                                 if let after = afterStep, (after.type == .subway || after.type == .bus) {
-                                    var s = after.subTitle ?? after.title
+                                    var s = after.subTitle
                                     if s.contains("->") {
                                         s = s.components(separatedBy: "->").map { $0.trimmingCharacters(in: .whitespaces) }.first ?? s
                                     } else if s.contains("→") {
@@ -309,7 +311,7 @@ private extension RouteDetail {
                                     s = s.replacingOccurrences(of: "<b>", with: "").replacingOccurrences(of: "</b>", with: "")
                                     return s
                                 } else if let next = nextStep {
-                                    var s = next.subTitle ?? next.title
+                                    var s = next.subTitle
                                     if s.contains("->") {
                                         s = s.components(separatedBy: "->").map { $0.trimmingCharacters(in: .whitespaces) }.first ?? s
                                     } else if s.contains("→") {
@@ -484,7 +486,7 @@ struct BusStepView: View {
 
                 // 버스 승차 부분
                 VStack(alignment: .leading, spacing: 2) {
-                    let base = step.subTitle ?? step.title
+                    let base = step.subTitle
                     let parts: [String] = {
                         if base.contains("->") { return base.components(separatedBy: "->").map { $0.trimmingCharacters(in: .whitespaces) } }
                         if base.contains("→") { return base.components(separatedBy: "→").map { $0.trimmingCharacters(in: .whitespaces) } }
@@ -579,14 +581,14 @@ struct BusStepView: View {
                             // 1) 다음이 WALK면: 우선 afterStep(다음 승차 지점)이 있으면 그 출발 이름 사용
                             if let next = nextStep, next.type == .walk {
                                 if let after = afterStep, (after.type == .bus || after.type == .subway) {
-                                    return leftName(after.subTitle ?? after.title)     // 예: "한국경제인협회"
+                                    return leftName(after.subTitle)     // 예: "한국경제인협회"
                                 }
                                 // 2) afterStep이 없거나 다음 WALK가 '도착'이면 목적지 이름 사용
-                                let raw = next.subTitle ?? next.title
+                                let raw = next.subTitle
                                 if afterStep == nil || raw.contains("도착") {
                                     return destName(raw)                               // 예: "카페 아임히어"
                                 }
-                                // 3) 그 외엔 WALK 텍스트의 왼쪽 이름(ランド마크) 사용
+                                // 3) 그 외엔 WALK 텍스트의 왼쪽 이름 사용
                                 return leftName(raw)                                   // 예: "용산e편한세상"
                             }
 
@@ -645,7 +647,7 @@ struct BusStepView: View {
 
                     VStack(alignment: .leading, spacing: 2) {
                         // 하차 정류장 이름 추정 (stops가 없을 때)
-                        let base = step.subTitle ?? step.title
+                        let base = step.subTitle
                         let parts: [String] = {
                             if base.contains("->") { return base.components(separatedBy: "->").map { $0.trimmingCharacters(in: .whitespaces) } }
                             if base.contains("→") { return base.components(separatedBy: "→").map { $0.trimmingCharacters(in: .whitespaces) } }
@@ -686,9 +688,9 @@ struct BusStepView: View {
 
                             if let next = nextStep, next.type == .walk {
                                 if let after = afterStep, (after.type == .bus || after.type == .subway) {
-                                    return leftName(after.subTitle ?? after.title)
+                                    return leftName(after.subTitle)
                                 }
-                                let raw = next.subTitle ?? next.title
+                                let raw = next.subTitle
                                 if afterStep == nil || raw.contains("도착") {
                                     return destName(raw)
                                 }
