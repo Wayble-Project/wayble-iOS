@@ -36,7 +36,7 @@ struct NicknameStepView: View {
                 selectedIndex: $selectedIndex,
                 isNextDisabled: viewModel.userInfo.nickname.trimmingCharacters(in: .whitespacesAndNewlines).count < 2,
                 onPreviousAction: {
-                    viewModel.userInfo.nickname = ""
+                    resetNickname()
                     selectedIndex = 7
                 },
                 onNextAction: {
@@ -68,5 +68,11 @@ struct NicknameStepView: View {
             
         } //v
         .padding(.horizontal, 20)
+        .onAppear { resetNickname() }
+    }
+    
+    private func resetNickname() {
+        viewModel.userInfo.nickname = ""
+        viewModel.nicknameValidationState = .valid
     }
 }

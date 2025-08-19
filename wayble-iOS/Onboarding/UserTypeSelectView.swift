@@ -27,7 +27,7 @@ struct UserTypeSelectView: View {
                 .padding(.horizontal, 7)
             
             TitleText(text: "해당하는 항목을 선택해주세요")
-                .padding(.bottom, 74)
+                .padding(.bottom, 78)
                 .padding(.horizontal, 7)
 
             LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 0), count: 2), spacing: 0) {
@@ -48,7 +48,7 @@ struct UserTypeSelectView: View {
                 selectedIndex: $selectedIndex,
                 isNextDisabled: selectedItem == nil,
                 onPreviousAction: {
-                    selectedItem = nil
+                    resetUserTypeSelection()
                 },
                 onNextAction: {
                     viewModel.userInfo.hasDisability = (selectedItem == "장애인")
@@ -58,6 +58,11 @@ struct UserTypeSelectView: View {
             .padding(.horizontal, 7)
         } //v
         .padding(.horizontal, 13)
+        .onAppear { resetUserTypeSelection() }
+    }
+    
+    private func resetUserTypeSelection() {
+        selectedItem = nil
     }
 }
 
