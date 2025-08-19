@@ -284,10 +284,10 @@ class SearchViewModel {
         Task {
             let currentCoord = CLLocationCoordinate2D(latitude: lat, longitude: lng)
 
-            // 이미 비슷한 좌표로 요청했는지 확인 (10미터 이내면 중복으로 간주)
+            // 이미 비슷한 좌표로 요청했는지 확인 (1미터 이내면 중복으로 간주)
             if let lastCoord = lastRequestedCoordinate {
                 let distance = CLLocation(latitude: lat, longitude: lng).distance(from: CLLocation(latitude: lastCoord.latitude, longitude: lastCoord.longitude))
-                if distance < 10 {
+                if distance < 0.01 {
                     print("너무 가까운 위치 - 중복 호출 방지됨 (\(distance)m)")
                     return
                 }
