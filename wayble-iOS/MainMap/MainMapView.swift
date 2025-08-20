@@ -12,7 +12,7 @@ struct MainMapView: View {
     
     // MARK: - Map dependencies (ported from OnlyMapView)
     //@State private var mapCenter: NMGLatLng = NMGLatLng(lat: 37.5386, lng: 126.9628) - 용산
-    @State private var mapCenter: NMGLatLng = NMGLatLng(lat: 37.4831, lng: 127.0326)
+    @State private var mapCenter: NMGLatLng = NMGLatLng(lat: 37.4831, lng: 127.0326) ///서초구
     @StateObject private var viewModel = MainMapViewModel()
     @Binding var selectedIndex: Int
     @Environment(NavigationRouter.self) private var router
