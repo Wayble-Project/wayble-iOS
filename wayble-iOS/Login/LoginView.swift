@@ -113,11 +113,13 @@ struct LoginView: View {
             } //v
             .padding(.horizontal, 20)
             .disabled(isLoading)
+            /*
             .alert("로그인 실패", isPresented: $loginFailed) {
                 Button("확인", role: .cancel) { }
             } message: {
                 Text("이메일 또는 비밀번호를 확인해주세요.")
             }
+             */
             if isLoading {
                 Color.black.opacity(0.1).ignoresSafeArea()
                 ProgressView()
