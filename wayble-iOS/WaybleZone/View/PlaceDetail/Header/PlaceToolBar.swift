@@ -16,7 +16,7 @@ struct PlaceToolbar: View {
             
             HStack(spacing: 14) {
                 Button {
-                   
+                    
                 } label: {
                     Image("share")
                 }
@@ -28,8 +28,8 @@ struct PlaceToolbar: View {
                 }.sheet(isPresented: $showSheet) {
                     SavePlaceSheetView(
                         zoneId: zone.id,
-                        zoneName: zone.name, vm: UserPlaceViewModel()
-                        
+                        zoneName: zone.name, isPresented: $showSheet,
+                        selectedIndex: $selectedIndex, vm: UserPlaceViewModel()
                     )
                     .presentationDetents([.fraction(0.45)])
                 }
@@ -41,7 +41,7 @@ struct PlaceToolbar: View {
 }
 
 /*
-#Preview {
-    PlaceToolbar(onBack: {}, onShare: {}).withRouter(selectedIndex: .constant(0))
-}
-*/
+ #Preview {
+ PlaceToolbar(onBack: {}, onShare: {}).withRouter(selectedIndex: .constant(0))
+ }
+ */

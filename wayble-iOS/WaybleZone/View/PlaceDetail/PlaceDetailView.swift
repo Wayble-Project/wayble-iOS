@@ -2,10 +2,10 @@ import SwiftUI
 
 struct PlaceDetailView: View {
     @Bindable var vm: PlaceDetailViewModel
-    @Environment(NavigationRouter.self) var router
     @State private var sortLabel: String = "추천순"
     @Binding var selectedIndex: Int
-    
+    @Binding var writeReviewPlace: PlaceIdent?
+
     var body: some View {
         ScrollView {
             VStack {
@@ -18,10 +18,17 @@ struct PlaceDetailView: View {
                             x: "\(zone.longitude)",  // ← 실제 좌표
                             y: "\(zone.latitude)",
                             category: zone.category
-                        ), selectedIndex: $selectedIndex
+                        ),
+                        selectedIndex: $selectedIndex
                     )
                     PlaceInfoView(waybleZone: zone)
-                    PlaceReView(selected: $sortLabel, waybleZone: zone, reviews: vm.reviews)
+                    PlaceReView(
+                        selected: $sortLabel,
+                        waybleZone: zone,
+                        reviews: vm.reviews,
+                        selectedIndex: $selectedIndex,
+                        writeReviewPlace: $writeReviewPlace
+                    )
                 }
             }
         }
@@ -31,26 +38,17 @@ struct PlaceDetailView: View {
             await vm.fetchReviews(zoneID: vm.zoneID, sort: sortLabel.toReviewSort())
         }
         .task(id: sortLabel) {
-                    await vm.fetchReviews(zoneID: vm.zoneID, sort: sortLabel.toReviewSort())
-                }
-        //        .refreshable {
-        //            await vm.fetchPlaceDetail()
-        //            await vm.fetchReviews(zoneID: vm.zoneID, sort: sortLabel.toReviewSort())
-        //        }
+            await vm.fetchReviews(zoneID: vm.zoneID, sort: sortLabel.toReviewSort())
+        }
     }
 }
 
 private extension String {
     func toReviewSort() -> ReviewSort {
-            switch self {
-            case "추천순": return .rating
-            case "최신순": return .latest
-            default:       return .latest
-            }
+        switch self {
+        case "추천순": return .rating
+        case "최신순": return .latest
+        default:       return .latest
         }
+    }
 }
-
-//#Preview {
-//    PlaceDetailView(vm: PlaceDetailViewModel(zoneID: 1))
-//        .environment(NavigationRouter())
-//}

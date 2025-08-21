@@ -9,9 +9,7 @@
 import SwiftUI
 
 struct WZMainSearchBar: View {
-    @Environment(NavigationRouter.self) var router
-    @Environment(\.dismiss) private var dismiss
-    //@EnvironmentObject var searchRoute: SearchRouteState
+
     @State private var searchText: String = ""
     @Binding var selectedIndex: Int
     
@@ -23,14 +21,14 @@ struct WZMainSearchBar: View {
 
             // 2) 검색 영역 버튼 (나머지 전부 차지)
             Button {
-                router.push(.waybleZoneSearch)
+                withAnimation { selectedIndex = 20 }
             } label: {
                 HStack {
                     Text("ex.숙대입구역 맛집")
                         .font(.mainTextRegular14)
                         .foregroundStyle(Color("gray-500"))
                         .tracking(-0.28)
-                        .padding(.horizontal, 7)
+                        .padding(.horizontal, 10)
                     Spacer()
                 }
                 .frame(height: 50)

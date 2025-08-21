@@ -1,16 +1,16 @@
 import SwiftUI
 
 struct PlaceReView: View {
-    @Environment(NavigationRouter.self) var router
-    
-    @Binding var selected: String
     
     @State private var showAll: Bool = false
     
     @State private var showSortMenu: Bool = false
-    
+    @Binding var selected: String
     let waybleZone: WaybleZone
     let reviews: [Review]
+    
+    @Binding var selectedIndex: Int
+      @Binding var writeReviewPlace: PlaceIdent?
     
     var body: some View {
         ZStack(alignment: .topLeading) {
@@ -32,27 +32,10 @@ struct PlaceReView: View {
                 }
                 .padding(.horizontal, 20)
                 
-//                Button {
-//                    print("PlaceReView router:", ObjectIdentifier(router))
-//                    router.push(.writeReview(PlaceIdent(id: waybleZone.id, name: waybleZone.name)))
-//                    print("\(waybleZone.id),\(waybleZone.name)")
-//                } label: {
-//                    HStack(spacing: 4) {
-//                        Text("리뷰 작성하기")
-//                            .font(.mainTextSemibold14)
-//                            .foregroundStyle(Color("gray-900"))
-//                        Image("pencil")
-//                    }
-//                    .frame(maxWidth: .infinity, minHeight: 44)
-//                    .background(
-//                        RoundedRectangle(cornerRadius: 12)
-//                            .stroke(Color("gray-300"), lineWidth: 1)
-//                    )
-//                }
-//                .padding(.horizontal, 20)
-//                .padding(.vertical, 15)
-                
-                NavigationLink(value: Route.writeReview(PlaceIdent(id: waybleZone.id, name: waybleZone.name))) {
+                Button {
+                    writeReviewPlace = PlaceIdent(id: waybleZone.id, name: waybleZone.name)
+                           withAnimation { selectedIndex = 22 }
+                } label: {
                     HStack(spacing: 4) {
                         Text("리뷰 작성하기")
                             .font(.mainTextSemibold14)
@@ -67,6 +50,22 @@ struct PlaceReView: View {
                 }
                 .padding(.horizontal, 20)
                 .padding(.vertical, 15)
+                
+//                NavigationLink(value: Route.writeReview(PlaceIdent(id: waybleZone.id, name: waybleZone.name))) {
+//                    HStack(spacing: 4) {
+//                        Text("리뷰 작성하기")
+//                            .font(.mainTextSemibold14)
+//                            .foregroundStyle(Color("gray-900"))
+//                        Image("pencil")
+//                    }
+//                    .frame(maxWidth: .infinity, minHeight: 44)
+//                    .background(
+//                        RoundedRectangle(cornerRadius: 12)
+//                            .stroke(Color("gray-300"), lineWidth: 1)
+//                    )
+//                }
+//                .padding(.horizontal, 20)
+//                .padding(.vertical, 15)
           
 
                 

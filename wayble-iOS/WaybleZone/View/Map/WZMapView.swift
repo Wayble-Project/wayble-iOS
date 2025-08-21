@@ -1,57 +1,3 @@
-//
-//
-//import SwiftUI
-//import NMapsMap
-//
-//struct WZMainMapView: View {
-//    
-//    // MARK: - Map dependencies (ported from OnlyMapView)
-//    //@State private var mapCenter: NMGLatLng = NMGLatLng(lat: 37.5386, lng: 126.9628) - 용산
-//    @State private var mapCenter: NMGLatLng = NMGLatLng(lat: 37.4831, lng: 127.0326) ///서초구
-//    @StateObject private var viewModel = MainMapViewModel()
-//    @Binding var selectedIndex: Int
-//    @Environment(NavigationRouter.self) private var router
-//    
-//    var body: some View {
-//        VStack(spacing: 0) {
-//            WZMainTopBar(selectedIndex: $selectedIndex) { kind in
-//                Task {
-//                    await viewModel.loadFacilities(
-//                        lat: centerLat,
-//                        lng: centerLng,
-//                        facilityType: kind.apiParam
-//                    )
-//                }
-//            }
-//            
-//            //MARK: - 지도 뷰
-//            ZStack() {
-//                NaverMapView(
-//                    centerX: centerLng,
-//                    centerY: centerLat,
-//                    onLocationChanged: { newLat, newLng in
-//                        mapCenter = NMGLatLng(lat: newLat, lng: newLng)
-//                    },
-//                    zoomLevel: 17,
-//                    showMarker: false,
-//                    facilities: viewModel.homeFacilities
-//                )
-//            }
-//            .frame(maxWidth: .infinity, maxHeight: .infinity)
-//            .ignoresSafeArea(.container, edges: .bottom)
-//            
-//        } //v
-//        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-//        .appToast($viewModel.errorMessage) ///0815 ToastUI
-//        ///MainMapViewModel.errorMessage에 문자열이 들어가면, 화면 하단에 토스트가 뜨고 자동으로 사라지면서 errorMessage도 알아서 nil로 정리
-//    }
-//    
-//    
-//    
-//    // MARK: - Computed center coordinates for NaverMapView
-//    private var centerLat: Double { mapCenter.lat }
-//    private var centerLng: Double { mapCenter.lng }
-//}
 
 
 struct WZMainTopBar: View {
@@ -63,8 +9,8 @@ struct WZMainTopBar: View {
             HStack(spacing: 0) {
                 WZMainSearchBar(selectedIndex: $selectedIndex)
                 Spacer()
-                NavigationLink {
-                    SavedPlaceListView(vm: UserPlaceViewModel(), selectedIndex: $selectedIndex)
+                Button {
+                    withAnimation { selectedIndex = 19 }
                 } label: {
                     HeartButton()
                 }
@@ -83,148 +29,6 @@ struct WZMainTopBar: View {
 import SwiftUI
 import NMapsMap
 import CoreLocation
-//
-//struct WZMainMapView: View {
-//
-//    // 기존: 설비별 마커 로딩용
-//    @StateObject private var viewModel = MainMapViewModel()
-//
-//    // 추가: 지도 중심 기반 검색용 (@Observable)
-//    @State private var searchVM = MapSearchViewModel()
-//
-//    @State private var mapCenter: NMGLatLng = .init(lat: 37.4831, lng: 127.0326) // 서초구
-//    @Binding var selectedIndex: Int
-//    @Environment(NavigationRouter.self) private var router
-//
-//    // 디바운스용 태스크
-//    @State private var centerUpdateTask: Task<Void, Never>?
-//
-//    var body: some View {
-//        VStack(spacing: 0) {
-//            WZMainTopBar(selectedIndex: $selectedIndex) { kind in
-//                Task {
-//                    // 1) 기존 설비 마커 로딩 유지
-//                    await viewModel.loadFacilities(
-//                        lat: centerLat, lng: centerLng,
-//                        facilityType: kind.apiParam
-//                    )
-//                    // 2) 검색 VM에도 카테고리(업종) 반영 후 재검색
-//                    // 예: 휠체어충전소 등은 업종이 아니라 설비라서,
-//                    // 업종 필터가 필요 없으면 zoneType은 nil로.
-//                    searchVM.zoneType = nil
-//                    await searchVM.refresh()
-//                }
-//            }
-//
-//            // 지도
-//            ZStack {
-//                NaverMapView(
-//                    centerX: centerLng,
-//                    centerY: centerLat,
-//                    onLocationChanged: { newLat, newLng in
-//                        mapCenter = NMGLatLng(lat: newLat, lng: newLng)
-//
-//                        // 지도 이동 → 검색 좌표 갱신 + 디바운스 후 재검색
-//                        searchVM.latitude = newLat
-//                        searchVM.longitude = newLng
-//
-//                        centerUpdateTask?.cancel()
-//                        centerUpdateTask = Task { @MainActor in
-//                            try? await Task.sleep(nanoseconds: 350_000_000) // 350ms
-//                            await searchVM.refresh()
-//                        }
-//                    },
-//                    zoomLevel: 17,
-//                    showMarker: true,
-//                    facilities: viewModel.homeFacilities // 설비 마커는 기존 로직 유지
-//                )
-//            }
-//            .frame(maxWidth: .infinity, maxHeight: .infinity)
-//            .ignoresSafeArea(.container, edges: .bottom)
-//
-//            // 검색 결과 리스트 (기존 카드 재사용)
-//            ScrollView {
-//                LazyVStack(spacing: 16) {
-//                    ForEach(searchVM.items, id: \.waybleZoneInfo.zoneId) { item in
-//                        WaybleZoneCard(zone: toWaybleZone(item))
-//                            .onAppear {
-//                                // 무한 스크롤 로드
-//                                if item.waybleZoneInfo.zoneId == searchVM.items.last?.waybleZoneInfo.zoneId {
-//                                    Task { await searchVM.loadMore() }
-//                                }
-//                            }
-//                    }
-//
-//                    if searchVM.isLoading {
-//                        ProgressView().padding(.vertical, 16)
-//                    }
-//                }
-//                .padding(.vertical, 16)
-//            }
-//            .refreshable { await searchVM.refresh() }
-//        }
-//        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-//        // 에러는 공통 토스트로
-//        .appToast($searchVM.errorMessage)
-//        .task {
-//            // 최초 진입 시 검색 1회
-//            if searchVM.items.isEmpty { await searchVM.refresh() }
-//        }
-//    }
-//
-//    private var centerLat: Double { mapCenter.lat }
-//    private var centerLng: Double { mapCenter.lng }
-//
-//    // 검색 아이템 → 기존 카드 모델로 매핑 (프로젝트 내 패턴 재사용)
-//    private func toWaybleZone(_ item: WaybleZoneMapSearchItem) -> WaybleZone {
-//        let info = item.waybleZoneInfo
-//
-//        // facility가 nil일 수도 있으므로 안전하게 기본값 구성
-//        let fac: Facilities = {
-//            if let f = info.facility {
-//                return Facilities(
-//                    hasSlope: f.hasSlope,
-//                    hasNoDoorStep: f.hasNoDoorStep,
-//                    hasElevator: f.hasElevator,
-//                    hasTableSeat: f.hasTableSeat,
-//                    hasDisabledToilet: f.hasDisabledToilet,
-//                    floorInfo: f.floorInfo ?? ""    // 서버에서 nil일 수 있으니 기본값
-//                )
-//            } else {
-//                return Facilities(
-//                    hasSlope: false,
-//                    hasNoDoorStep: false,
-//                    hasElevator: false,
-//                    hasTableSeat: false,
-//                    hasDisabledToilet: false,
-//                    floorInfo: ""
-//                )
-//            }
-//        }()
-//
-//        return WaybleZone(
-//            id: info.zoneId,                           // CodingKeys가 waybleZoneId로 매핑
-//            name: info.zoneName,
-//            category: info.zoneType.rawValue,          // "CAFE" / "RESTAURANT"
-//            address: info.address,
-//            rating: info.averageRating,
-//            reviewCount: info.reviewCount,
-//            contactNumber: "",                         // 검색 응답에 없으므로 빈 문자열 등 기본값
-//            imageUrl: info.thumbnailImageUrl ?? "",    // non-optional이므로 기본값 필요
-//            facilities: fac,
-//            businessHours: [:],                        // 목록 응답에 없으니 비워둠
-//            photos: info.thumbnailImageUrl.map { [$0] } ?? [],
-//            latitude: info.latitude,
-//            longitude: info.longitude
-//        )
-//    }
-//
-//
-//}
-
-
-
-
 
 // MARK: - 메인 지도 화면
 
@@ -237,12 +41,12 @@ struct WZMainMapView: View {
     @State private var searchVM = MapSearchViewModel()
 
     // 카메라 초기 위치(프로퍼티로는 "초기값"만 넘기고, 이후 이동은 onLocationChanged로만 처리)
-    @State private var initialCenter: NMGLatLng = .init(lat: 37.4831, lng: 127.0326) // 서초구
+    @State private var initialCenter: NMGLatLng = .init(lat: 37.543861, lng: 126.951028) // 공덕역
     // 현재 지도 중심(우리 로직에서만 사용; NaverMapView centerX/centerY로는 넘기지 않음)
-    @State private var mapCenter: NMGLatLng = .init(lat: 37.4831, lng: 127.0326)
+    @State private var mapCenter: NMGLatLng = .init(lat: 37.543861, lng: 126.951028)
 
     @Binding var selectedIndex: Int
-    @Environment(NavigationRouter.self) private var router
+    @Binding var selectedPlaceID: Int?
 
     // 지도 중심 변경 디바운스
     @State private var centerUpdateTask: Task<Void, Never>?
@@ -299,7 +103,8 @@ struct WZMainMapView: View {
             ScrollView {
                 LazyVStack(spacing: 0) {
                     ForEach(searchVM.items, id: \.waybleZoneInfo.zoneId) { item in
-                        WaybleZoneCard(zone: toWaybleZone(item))
+                        WaybleZoneCard(zone: toWaybleZone(item), selectedIndex: $selectedIndex,
+                                       selectedPlaceID: $selectedPlaceID)
                             .onAppear {
                                 // 무한 스크롤
                                 if item.waybleZoneInfo.zoneId == searchVM.items.last?.waybleZoneInfo.zoneId {
@@ -316,7 +121,7 @@ struct WZMainMapView: View {
                     }
                 }
                 .padding(.top, 16)
-                .background(Color("gray-50"))
+                .background(Color("gray-100"))
             }
             .refreshable { await searchVM.refresh() }
         }
@@ -345,7 +150,7 @@ struct WZMainMapView: View {
     // - 기존 편의시설 마커(facilityVM.homeFacilities)
     // - 검색 결과(searchVM.items)를 핀으로 변환
     private var mapPins: [HomeFacility] {
-        let facilityPins = facilityVM.homeFacilities
+       // let facilityPins = facilityVM.homeFacilities
         let zonePins = searchVM.items.map { item in
             let i = item.waybleZoneInfo
             return HomeFacility(
@@ -354,7 +159,8 @@ struct WZMainMapView: View {
                 facilityType: i.zoneType.rawValue   // "CAFE" or "RESTAURANT"
             )
         }
-        return facilityPins + zonePins
+       // return facilityPins + zonePins
+        return zonePins
     }
 
     // 검색 아이템 → 카드 모델 매핑 (필수 필드 기본값 보정)

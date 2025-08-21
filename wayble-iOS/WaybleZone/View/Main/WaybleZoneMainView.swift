@@ -6,20 +6,24 @@ struct WaybleZoneMainView: View {
     @Binding var selectedIndex: Int
     //@Environment(WaybleZoneNavigationRouter.self) var router
    // @AppStorage("selectedDong") private var selectedDong: String = "효창동"
+    //@State private var selectedSavedPlace: SimpleSavedPlaceResponse? = nil
+    @Binding var selectedSavedPlace: SimpleSavedPlaceResponse?
+    @Binding var selectedPlaceID: Int?
     
     var body: some View {
             ScrollView {
                 VStack(alignment: .leading) {
 
-                    WaybleZoneHeaderView().padding(.bottom, 34)
+                    WaybleZoneHeaderView(selectedIndex: $selectedIndex).padding(.bottom, 34)
          
                     WaybleZoneHeaderCardsView(selectedIndex: $selectedIndex).padding(.bottom, 59)
                     
 
-                    TopPlaceView(vm: TopPlaceViewModel())
+                    TopPlaceView(selectedIndex: $selectedIndex, selectedPlaceID: $selectedPlaceID, vm: TopPlaceViewModel())
                     
   
-                    SavedPlacesGroupView(vm: UserPlaceViewModel(), selectedIndex: $selectedIndex)
+                    SavedPlacesGroupView(vm: UserPlaceViewModel(), selectedIndex: $selectedIndex,  selectedSavedPlace: $selectedSavedPlace
+                                        )
                     
 
                 }

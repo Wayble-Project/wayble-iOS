@@ -81,7 +81,7 @@
 //                    ReviewTextEditorView(reviewText: $reviewText, maxCharacters: maxCharacters)
 //
 //                    Button {
-//                       
+//
 //                        onSave()
 //                    } label: {
 //                        Text("저장")
@@ -149,13 +149,13 @@
 //                rating: rating,
 //                visitDate: visitDate,
 //                facilities: facilities,
-//                images: []  
+//                images: []
 //            )
 //
 //            // 단일이어도 배열
 //            let items: [PhotosPickerItem] = pickedItem.map { [$0] } ?? []
-//            
-//            
+//
+//
 //            print("FORM: \(form)")
 //            print("FORM: \(items)")
 //
@@ -180,28 +180,26 @@ import PhotosUI
 import UIKit
 
 struct WriteReView: View {
-    // 라우터/의존성
-    @Environment(NavigationRouter.self) var router
+    
     @Bindable var viewModel: FacilitySelectionViewModel
     @Bindable var writeVM = WriteReviewViewModel()
     @Binding var selectedIndex: Int
-    @Environment(\.dismiss) private var dismiss
     
     // 대상 장소
     let place: PlaceIdent
-
+    
     // UI 상태
     @State private var showModal = false
-
+    
     // 단일 이미지 선택
     @State private var pickedItem: PhotosPickerItem?
     @State private var pickedImage: Image?
-
+    
     // 입력값
     @State private var rating: Int = 0
     @State private var reviewText: String = ""
     private let maxCharacters: Int = 1000
-
+    
     var body: some View {
         ZStack {
             ScrollView(.vertical) {
@@ -209,21 +207,21 @@ struct WriteReView: View {
                 HStack {
                     WZBackButton(selectedIndex: $selectedIndex, toTab: 4)
                         .padding(.trailing, 12)
-
+                    
                     Text("리뷰 작성")
                         .font(.mainTextSemibold20)
                         .foregroundStyle(Color("gray-900"))
                     Spacer()
                 }
                 .padding(.horizontal, 20)
-
+                
                 VStack(alignment: .leading, spacing: 20) {
                     // 장소명
                     Text(place.name)
                         .font(.mainTextSemibold24)
                         .foregroundStyle(Color("gray-900"))
                         .padding(.horizontal, 20)
-
+                    
                     // 사진 선택 (단일)
                     PhotosPicker(
                         selection: $pickedItem,
@@ -260,25 +258,25 @@ struct WriteReView: View {
                     .onChange(of: pickedItem) { _, newValue in
                         guard let newValue else { return }
                         Task { @MainActor in
-                               do {
-                                   // Data로 로드 → UIImage 복원 → SwiftUI.Image로 프리뷰
-                                   if let data = try await newValue.loadTransferable(type: Data.self),
-                                      let ui = UIImage(data: data) {
-                                       pickedImage = Image(uiImage: ui)
-                                   } else {
-                                       pickedImage = nil
-                                   }
-                               } catch {
-                                   pickedImage = nil
-                               }
-                           }
+                            do {
+                                // Data로 로드 → UIImage 복원 → SwiftUI.Image로 프리뷰
+                                if let data = try await newValue.loadTransferable(type: Data.self),
+                                   let ui = UIImage(data: data) {
+                                    pickedImage = Image(uiImage: ui)
+                                } else {
+                                    pickedImage = nil
+                                }
+                            } catch {
+                                pickedImage = nil
+                            }
+                        }
                     }
-
+                    
                     // 별점/태그/텍스트
                     RatingView(rating: $rating)
                     TagSelectorView(viewModel: viewModel)
                     ReviewTextEditorView(reviewText: $reviewText, maxCharacters: maxCharacters)
-
+                    
                     // 저장 버튼
                     Button {
                         onSave()
@@ -302,14 +300,14 @@ struct WriteReView: View {
                 }
                 .padding(.top)
             }
-        
-
+            
+            
             // 성공 시 모달
             .onChange(of: writeVM.successMessage) { _, msg in
                 guard msg != nil else { return }
                 withAnimation { showModal = true }
             }
-
+            
             // 실패 얼럿
             .alert(
                 "업로드 실패",
@@ -322,38 +320,27 @@ struct WriteReView: View {
             } message: {
                 Text(writeVM.submitError?.localizedDescription ?? "")
             }
-
+            
             // 커스텀 성공 모달
             if showModal {
                 Color.black.opacity(0.7)
                     .ignoresSafeArea()
                     .onTapGesture { withAnimation { showModal = false } }
-
+                
                 WaybleZoneModal(
                     title: "소중한 리뷰가 작성되었어요!",
                     buttonText: "홈으로",
                     onButtonTap: {
                         
-                    
-                           // dismiss()
-
-                       // router.push(.wayblezone)
-                          
-//                            router.reset()
-//
-//                            withAnimation(.default) {
-//                                //selectedIndex = 0
-//                                router.push(.wayblezone)
-//                            }
-//                        
-                        withAnimation {
-                            selectedIndex = 0
-                            showModal = false
-                           
-                        }
-//                        //router.pop()
-                        //selectedIndex = 0
-                       
+                        
+                        
+                        withAnimation { showModal = false }
+                        
+                        
+                        selectedIndex = 4
+                        
+                        
+                        
                     }
                 )
                 .transition(.scale.combined(with: .opacity))
@@ -361,20 +348,20 @@ struct WriteReView: View {
             }
         }
     }
-
+    
     private func onSave() {
         Task { @MainActor in
             // 중복 탭 방지
             guard writeVM.isSubmitting == false else { return }
-
+            
             // 유효성
             let text = reviewText.trimmingCharacters(in: .whitespacesAndNewlines)
             guard rating > 0, !text.isEmpty else { return }
-
+            
             // 폼 구성
             let facilities = Array(viewModel.selected.map(\.rawValue))
             let visitDate  = Date.now.formatted(.iso8601.year().month().day()) // "yyyy-MM-dd"
-
+            
             var form = ReviewPostRequestModel(
                 content: text,
                 rating: rating,
@@ -382,13 +369,13 @@ struct WriteReView: View {
                 facilities: facilities,
                 images: [] // 업로드 후 ViewModel에서 URL 채움
             )
-
+            
             // 단일이어도 배열 형태로 전달
             let items: [PhotosPickerItem] = pickedItem.map { [$0] } ?? []
-
+            
             print("FORM: \(form)")
             print("FORM Images Count: \(items.count)")
-
+            
             await writeVM.submit(
                 zoneID: place.id,
                 form: form,

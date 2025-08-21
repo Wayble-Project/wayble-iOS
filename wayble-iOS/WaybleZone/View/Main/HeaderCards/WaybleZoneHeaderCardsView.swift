@@ -9,14 +9,7 @@ struct WaybleZoneHeaderCardsView: View {
                 
                 NavigationStack {
                     HStack(spacing: 20) {
-//                        NavigationLink {
-////                                           HomeDiscoverView(category: .restaurant)
-//                            WZMainMapView(selectedIndex: $selectedIndex)
-//                                       } label: {
-//                                           CategoryCard(title: "음식점", subtitle: "누구나 편하게\n식사해요", imageName: "spoon") {
-//                                               // router.push(.restaurantList)
-//                                           }
-//                                       }
+
                         
                         CategoryCard(
                                        title: "음식점",
@@ -39,9 +32,7 @@ struct WaybleZoneHeaderCardsView: View {
                                    }
                    
                         
-    //                    CategoryCard(title: "편의점", subtitle: "언제나 편하게\n들려요", imageName: "convenienceStore") {
-    //                        // router.push(.storeList)
-    //                    }
+
                     }.frame(maxWidth: .infinity, alignment: .center)
                 }
               
