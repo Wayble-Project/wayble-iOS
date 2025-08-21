@@ -30,7 +30,7 @@ struct OnlyMapView: View {
         var latitude: Double
         var longitude: Double
     }
-    @State private var mapCenter: NMGLatLng = NMGLatLng(lat: 37.5665, lng: 126.9780)
+    @State private var mapCenter: NMGLatLng = NMGLatLng(lat: 37.5453577, lng: 126.9525465)
 
     @State private var viewModel = SearchViewModel()
 
