@@ -45,7 +45,7 @@
              TextField("*wayble*@gmail.com", text: $email)
                  .foregroundStyle(textColor(for: fieldState))
                  .keyboardType(.emailAddress)
-                 .textInputAutocapitalization(.none) //.autocapitalization()은 deprecated!
+                 .textInputAutocapitalization(.never) //.autocapitalization()은 deprecated!
                  .autocorrectionDisabled(true) // 자동완성 해제
                  .padding(.horizontal, 20)
                  .padding(.vertical, 15)

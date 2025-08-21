@@ -168,6 +168,10 @@ struct WaybleZoneSearchView: View {
     @State private var query: String = ""
     @FocusState private var isFocused: Bool
 
+//    @Environment(NavigationRouter.self) var router
+//    @Binding var selectedDeparture: PlaceModel?
+//    @Binding var selectedArrival: PlaceModel?
+
 
     var body: some View {
         @Bindable var mapVM = mapVM
@@ -258,11 +262,25 @@ struct WaybleZoneSearchView: View {
         let name = item.waybleZoneInfo.zoneName
         let meters = item.distance * 1000.0
 
+
         Button {
        
                   selectedPlaceID = item.waybleZoneInfo.zoneId
             
                   withAnimation { selectedIndex = 21 }
+//=======
+//        let zoneID = item.waybleZoneInfo.zoneId
+//
+//        NavigationLink {
+//            // 목적지 뷰를 직접 생성해서 전달
+//            PlaceDetailView(
+//                vm: PlaceDetailViewModel(zoneID: zoneID),
+//                selectedIndex: $selectedIndex,
+//                selectedDeparture: $selectedDeparture,
+//                selectedArrival: $selectedArrival
+//            )
+//            .navigationBarBackButtonHidden(true)
+//>>>>>>> 27ec205d5f4141ca568a4865a64617a8dcf98225
         } label: {
             HStack(alignment: .firstTextBaseline) {
                 highlightedText(name, keyword: query)

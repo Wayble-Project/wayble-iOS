@@ -4,8 +4,11 @@ struct PlaceDetailView: View {
     @Bindable var vm: PlaceDetailViewModel
     @State private var sortLabel: String = "추천순"
     @Binding var selectedIndex: Int
-    @Binding var writeReviewPlace: PlaceIdent?
 
+    @Binding var writeReviewPlace: PlaceIdent?
+    @Binding var selectedDeparture: PlaceModel?
+    @Binding var selectedArrival: PlaceModel?
+    
     var body: some View {
         ScrollView {
             VStack {
@@ -15,11 +18,14 @@ struct PlaceDetailView: View {
                         place: PlaceModel(
                             title: zone.name,
                             roadAddress: zone.address,
-                            x: "\(zone.longitude)",  // ← 실제 좌표
+                            x: "\(zone.longitude)",
                             y: "\(zone.latitude)",
                             category: zone.category
-                        ),
-                        selectedIndex: $selectedIndex
+
+                        ), selectedIndex: $selectedIndex,
+                           selectedDeparture: $selectedDeparture,
+                           selectedArrival: $selectedArrival
+
                     )
                     PlaceInfoView(waybleZone: zone)
                     PlaceReView(

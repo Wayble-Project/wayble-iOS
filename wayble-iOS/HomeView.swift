@@ -378,7 +378,7 @@ struct HomeView: View {
                     // 아이콘 웨이블존 껄로 다시
                    // let facilityItems = FacilityUtils.cardFacilityItems(from: WaybleviewModel.facilities)
 
-                    HStack(spacing: 32) {
+                    HStack(spacing: 28) {
                         ForEach(facilityItems, id: \.label) { item in
                             VStack(spacing: 5.6) {
                                 Image(item.icon)
@@ -396,7 +396,7 @@ struct HomeView: View {
                     }
                     .padding(.leading, 25)
                     .padding(.top, 6)
-                    
+                    .padding(.trailing,12)
                     
                 }
                 

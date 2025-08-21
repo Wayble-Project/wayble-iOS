@@ -1,4 +1,3 @@
-
 //
 //  MainView.swift
 //  wayble_iOS
@@ -118,7 +117,9 @@ struct MainView: View {
                                 PlaceDetailView(
                                     vm: PlaceDetailViewModel(zoneID: id),
                                     selectedIndex: $selectedIndex,
-                                    writeReviewPlace: $writeReviewPlace
+                                    writeReviewPlace: $writeReviewPlace,
+                                    selectedDeparture: $selectedDeparture,
+                                    selectedArrival: $selectedArrival
                                 )
                                 .id(id) // <- id 바뀌면 뷰/VM 새로 만들어서 .task 재실행
                             } else {
@@ -205,13 +206,22 @@ struct MainView: View {
                             .navigationBarBackButtonHidden(true)
                         
                     case .waybleZoneSearch:
+
                         WaybleZoneSearchView(selectedIndex: $selectedIndex, selectedPlaceID: $selectedPlaceID)
                             .navigationBarBackButtonHidden(true)
                         
+                  
                     case .placeDetailView(let id):
-                        PlaceDetailView(vm: PlaceDetailViewModel(zoneID: id),selectedIndex: $selectedIndex,writeReviewPlace: $writeReviewPlace )
-                            .navigationBarBackButtonHidden(true)
-                        
+                        PlaceDetailView(
+                            vm: PlaceDetailViewModel(zoneID: id),
+                            selectedIndex: $selectedIndex,
+                            writeReviewPlace: $writeReviewPlace,
+                            selectedDeparture: $selectedDeparture,
+                            selectedArrival: $selectedArrival
+                        )
+                        .navigationBarBackButtonHidden(true)
+                    
+
                     case .writeReview(let place):
                         WriteReView(viewModel: FacilitySelectionViewModel(),selectedIndex: $selectedIndex ,place: place)
                             .navigationBarBackButtonHidden(true)
