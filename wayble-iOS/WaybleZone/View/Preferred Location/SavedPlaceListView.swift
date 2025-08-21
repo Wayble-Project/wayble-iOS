@@ -3,13 +3,16 @@ import SwiftUI
 struct SavedPlaceListView: View {
     @State private var selected = "최신순"
     @State var collections: [SavedPlace]
+    @Binding var selectedIndex: Int
     
 
     var body: some View {
         VStack(alignment: .leading) {
 
             HStack() {
-                BackButton()
+                BackButton(action: {
+                    selectedIndex = 18
+                })
                     .padding(.trailing, 5)
                 
                 Text("내가 저장한 장소")
@@ -87,5 +90,5 @@ struct SavedPlaceListView: View {
 
 
 #Preview {
-    SavedPlaceListView(collections: mockSavedPlaces).withRouter(selectedIndex: .constant(0))
+    SavedPlaceListView(collections: mockSavedPlaces, selectedIndex: .constant(0)).withRouter(selectedIndex: .constant(0))
 }

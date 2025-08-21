@@ -12,7 +12,7 @@ struct MainMapView: View {
     
     // MARK: - Map dependencies (ported from OnlyMapView)
     //@State private var mapCenter: NMGLatLng = NMGLatLng(lat: 37.5386, lng: 126.9628) - 용산
-    @State private var mapCenter: NMGLatLng = NMGLatLng(lat: 37.4831, lng: 127.0326) ///서초구
+    @State private var mapCenter: NMGLatLng? = nil  /// 최초에는 nil로 두고 현재 위치를 받으면 세팅
     @StateObject private var viewModel = MainMapViewModel()
     @Binding var selectedIndex: Int
     @Environment(NavigationRouter.self) private var router
@@ -21,26 +21,32 @@ struct MainMapView: View {
         VStack(spacing: 0) {
             MainTopBar(selectedIndex: $selectedIndex) { kind in
                 Task {
-                    await viewModel.loadFacilities(
-                        lat: centerLat,
-                        lng: centerLng,
-                        facilityType: kind.apiParam
-                    )
+                    if let center = mapCenter {
+                        await viewModel.loadFacilities(
+                            lat: center.lat,
+                            lng: center.lng,
+                            facilityType: kind.apiParam
+                        )
+                    }
                 }
             }
             
             //MARK: - 지도 뷰
             ZStack() {
-                NaverMapView(
-                    centerX: centerLng,
-                    centerY: centerLat,
-                    onLocationChanged: { newLat, newLng in
-                        mapCenter = NMGLatLng(lat: newLat, lng: newLng)
-                    },
-                    zoomLevel: 17,
-                    showMarker: false,
-                    facilities: viewModel.homeFacilities
-                )
+                if let center = mapCenter {
+                    NaverMapView(
+                        centerX: center.lng,
+                        centerY: center.lat,
+                        onLocationChanged: { newLat, newLng in
+                            mapCenter = NMGLatLng(lat: newLat, lng: newLng)
+                        },
+                        zoomLevel: 16,
+                        showMarker: false,
+                        facilities: viewModel.homeFacilities
+                    )
+                } else {
+                    ProgressView("현재 위치 가져오는 중…")
+                }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .ignoresSafeArea(.container, edges: .bottom)
@@ -49,13 +55,24 @@ struct MainMapView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .appToast($viewModel.errorMessage) ///0815 ToastUI
         ///MainMapViewModel.errorMessage에 문자열이 들어가면, 화면 하단에 토스트가 뜨고 자동으로 사라지면서 errorMessage도 알아서 nil로 정리
+        .task { ///0821
+            LocationManager.shared.requestLocation { coordinate in
+                DispatchQueue.main.async {
+                    if let c = coordinate {
+                        mapCenter = NMGLatLng(lat: c.latitude, lng: c.longitude)
+                    } else {
+                        // 권한 거부/실패 시 공덕역으로 폴백
+                        mapCenter = NMGLatLng(lat: 37.543617, lng: 126.951508)
+                    }
+                }
+            }
+        }
     }
     
     
-    
-    // MARK: - Computed center coordinates for NaverMapView
-    private var centerLat: Double { mapCenter.lat }
-    private var centerLng: Double { mapCenter.lng }
+
+//    private var centerLat: Double { mapCenter.lat }
+//    private var centerLng: Double { mapCenter.lng }
 }
 
 
@@ -69,11 +86,7 @@ struct MainTopBar: View {
             HStack(spacing: 0) {
                 MainSearchBar(selectedIndex: $selectedIndex)
                 Spacer()
-                NavigationLink {
-                    SavedPlaceListView(collections: mockSavedPlaces)
-                } label: {
-                    HeartButton()
-                }
+                HeartButton(action: {selectedIndex = 19})
             } //h
             .padding(.top, 10)
             .padding(.bottom, 14)
@@ -81,7 +94,7 @@ struct MainTopBar: View {
             TopConvenientBar(onSelect: onSelect)
                 .padding(.bottom, 21)
         }
-        .padding(.leading, 20) ///TopConvenientBar 때문에 leading 20 전체 패딩 주고 , 나머지는 trailing 으로 20 패딩 줬습니다!! 
+        .padding(.leading, 20) ///TopConvenientBar 때문에 leading 20 전체 패딩 주고 , 나머지는 trailing 으로 20 패딩 줬습니다!!
     }
     
 }
@@ -92,4 +105,3 @@ struct MainTopBar: View {
             .environment(NavigationRouter())
     }
 }
-
