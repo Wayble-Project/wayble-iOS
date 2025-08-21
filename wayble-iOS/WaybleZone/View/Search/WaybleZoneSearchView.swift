@@ -218,8 +218,10 @@ struct WaybleZoneSearchView: View {
     private var searchBar: some View {
         HStack(spacing: 10) {
             HStack(spacing: 10) {
-                BackButton()
-
+                BackButton(action: {
+                    selectedIndex = 7
+                })
+               // WZBackButton(router: router)
                 TextField("검색", text: $query)
                     .font(.mainTextRegular14)
                     .foregroundStyle(Color("darkblue-500"))

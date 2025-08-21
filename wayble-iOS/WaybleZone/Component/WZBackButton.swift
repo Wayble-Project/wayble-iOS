@@ -46,19 +46,23 @@ struct WZBackButton: View {
 
     var body: some View {
         Button {
-            Task { @MainActor in
-           
-                dismiss()
-
-        
-                try? await Task.sleep(nanoseconds: 0)
-                router.reset()
-
-                try? await Task.sleep(nanoseconds: 0)
-                withAnimation(.default) {
-                    selectedIndex = toTab
-                }
-            }
+                            withAnimation(.default) {
+                                selectedIndex = toTab
+                            }
+          
+//            Task { @MainActor in
+//           
+//                dismiss()
+//
+//        
+//                try? await Task.sleep(nanoseconds: 0)
+//                router.reset()
+//
+//                try? await Task.sleep(nanoseconds: 0)
+//                withAnimation(.default) {
+//                    selectedIndex = toTab
+//                }
+//            }
         } label: {
             Image("back").foregroundStyle(.black)
         }

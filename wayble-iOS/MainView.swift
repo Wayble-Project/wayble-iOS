@@ -107,6 +107,7 @@ struct MainView: View {
                     case 18: MainMapView(selectedIndex: $selectedIndex)
 
                     case 19: SavedPlaceListView(vm: UserPlaceViewModel(), selectedIndex: $selectedIndex)
+                    case 20: WaybleZoneSearchView(selectedIndex: $selectedIndex)
 
                     default:
                         Text("오류!")

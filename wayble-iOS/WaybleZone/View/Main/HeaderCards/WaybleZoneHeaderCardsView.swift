@@ -8,7 +8,7 @@ struct WaybleZoneHeaderCardsView: View {
                 RegionSelectionView()
                 
                 NavigationStack {
-                    HStack(spacing: 10) {
+                    HStack(spacing: 20) {
 //                        NavigationLink {
 ////                                           HomeDiscoverView(category: .restaurant)
 //                            WZMainMapView(selectedIndex: $selectedIndex)
@@ -28,15 +28,15 @@ struct WaybleZoneHeaderCardsView: View {
                                        router.push(.wzMainMapView)
                                    }
                         
-                        NavigationLink {
-                                         //  HomeDiscoverView(category: .restaurant)
-                            WZMainMapView(selectedIndex: $selectedIndex)
-                                       } label: {
-                                           CategoryCard(title: "카페", subtitle: "편하게 머물 수\n있어요", imageName: "cafePlace") {
-                                               // router.push(.cafeList)
-                                           }
-                                       }
-                       
+                        CategoryCard(
+                                       title: "카페",
+                                       subtitle: "편하게 머물 수\n있어요",
+                                       imageName: "cafePlace"
+                                   ) {
+//                                       selectedIndex = 0
+//                                       print("fdsa")
+                                       router.push(.wzMainMapView)
+                                   }
                    
                         
     //                    CategoryCard(title: "편의점", subtitle: "언제나 편하게\n들려요", imageName: "convenienceStore") {
