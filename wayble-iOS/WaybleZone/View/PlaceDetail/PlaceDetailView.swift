@@ -5,6 +5,8 @@ struct PlaceDetailView: View {
     @Environment(NavigationRouter.self) var router
     @State private var sortLabel: String = "추천순"
     @Binding var selectedIndex: Int
+    @Binding var selectedDeparture: PlaceModel?
+    @Binding var selectedArrival: PlaceModel?
     
     var body: some View {
         ScrollView {
@@ -15,10 +17,12 @@ struct PlaceDetailView: View {
                         place: PlaceModel(
                             title: zone.name,
                             roadAddress: zone.address,
-                            x: "\(zone.longitude)",  // ← 실제 좌표
+                            x: "\(zone.longitude)",
                             y: "\(zone.latitude)",
                             category: zone.category
-                        ), selectedIndex: $selectedIndex
+                        ), selectedIndex: $selectedIndex,
+                           selectedDeparture: $selectedDeparture,
+                           selectedArrival: $selectedArrival
                     )
                     PlaceInfoView(waybleZone: zone)
                     PlaceReView(selected: $sortLabel, waybleZone: zone, reviews: vm.reviews)

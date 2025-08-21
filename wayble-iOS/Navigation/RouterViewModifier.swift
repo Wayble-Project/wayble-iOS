@@ -1,4 +1,3 @@
-
 //  wayble-iOS
 //
 //  Created by 햄무 on 7/12/25.
@@ -77,11 +76,16 @@ struct RouterViewModifier: ViewModifier {
                 .navigationBarBackButtonHidden(true))
             
         case .waybleZoneSearch:
-            return AnyView(WaybleZoneSearchView(selectedIndex: $selectedIndex)
+            return AnyView(WaybleZoneSearchView(selectedIndex: $selectedIndex,
+                                                selectedDeparture: $selectedDeparture,
+                                                selectedArrival: $selectedArrival)
                 .navigationBarBackButtonHidden(true))
             
         case .placeDetailView(let id): // let zone 넣고
-            return  AnyView(PlaceDetailView(vm: PlaceDetailViewModel(zoneID: id),selectedIndex: $selectedIndex)
+            return  AnyView(PlaceDetailView(vm: PlaceDetailViewModel(zoneID: id),
+                                            selectedIndex: $selectedIndex,
+                                            selectedDeparture: $selectedDeparture,
+                                            selectedArrival: $selectedArrival)
                 .navigationBarBackButtonHidden(true))
             
             /// NavigationRouter 에 case placeDetailView 를 case placeDetailView(let zone)으로 넣음
@@ -216,4 +220,3 @@ extension RouterViewModifier {
         routeView(for: route)
     }
 }
-

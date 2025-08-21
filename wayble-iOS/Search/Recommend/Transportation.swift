@@ -146,6 +146,8 @@ struct Transportation: View {
                     
                     Button(action: {
                         withAnimation(.easeInOut(duration: 0.3)) {
+                            selectedDeparture = nil
+                            selectedArrival = nil
                             selectedIndex = 5
                         }
                     }) {
