@@ -1,4 +1,3 @@
-
 //
 //  MainView.swift
 //  wayble_iOS
@@ -145,12 +144,21 @@ struct MainView: View {
                             .navigationBarBackButtonHidden(true)
                         
                     case .waybleZoneSearch:
-                        WaybleZoneSearchView(selectedIndex: $selectedIndex)
-                            .navigationBarBackButtonHidden(true)
+                        WaybleZoneSearchView(
+                            selectedIndex: $selectedIndex,
+                            selectedDeparture: $selectedDeparture,
+                            selectedArrival: $selectedArrival
+                        )
+                        .navigationBarBackButtonHidden(true)
                   
                     case .placeDetailView(let id):
-                        PlaceDetailView(vm: PlaceDetailViewModel(zoneID: id),selectedIndex: $selectedIndex)
-                            .navigationBarBackButtonHidden(true)
+                        PlaceDetailView(
+                            vm: PlaceDetailViewModel(zoneID: id),
+                            selectedIndex: $selectedIndex,
+                            selectedDeparture: $selectedDeparture,
+                            selectedArrival: $selectedArrival
+                        )
+                        .navigationBarBackButtonHidden(true)
                     
                     case .writeReview(let place):
                         WriteReView(viewModel: FacilitySelectionViewModel(),selectedIndex: $selectedIndex ,place: place)

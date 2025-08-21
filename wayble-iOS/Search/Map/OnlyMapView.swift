@@ -112,31 +112,18 @@ struct OnlyMapView: View {
                 
             })
         })
-        /*
         .onAppear {
-            #if !targetEnvironment(simulator)
-            if let coord = locationManager.currentCoordinate {
-                mapCenter = NMGLatLng(lat: coord.latitude, lng: coord.longitude)
+            locationManager.requestLocation { coordinate in
+                guard let coordinate else { return }
+                DispatchQueue.main.async {
+                    mapCenter = NMGLatLng(lat: coordinate.latitude, lng: coordinate.longitude)
+                }
             }
-            #endif
         }
-         */
-
         .onChange(of: viewModel.selectedPlace) { _, newValue in
             let newPlace = newValue
             DispatchQueue.main.async {
 
-                /*
-                 <<<<<<< HEAD
-                 self.place = place
-                 self.placeTitle = place.title
-                 self.placeRoadAddress = place.roadAddress
-                 self.placeCategory = place.category.components(separatedBy: ">").last ?? place.category
-                 }
-                 }
-                 // TODO: - 둘 중에 어떤 코드가 최신인지 몰라서 살려둠
-                 =======
-                 */
                 self.place = newPlace
                 self.placeTitle = newPlace.title
                 self.placeRoadAddress = newPlace.roadAddress
