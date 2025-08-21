@@ -55,6 +55,7 @@ struct MainMapView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .appToast($viewModel.errorMessage) ///0815 ToastUI
         ///MainMapViewModel.errorMessage에 문자열이 들어가면, 화면 하단에 토스트가 뜨고 자동으로 사라지면서 errorMessage도 알아서 nil로 정리
+        ///
         .task { ///0821
             LocationManager.shared.requestLocation { coordinate in
                 DispatchQueue.main.async {
@@ -86,13 +87,6 @@ struct MainTopBar: View {
             HStack(spacing: 0) {
                 MainSearchBar(selectedIndex: $selectedIndex)
                 Spacer()
-
-                NavigationLink {
-                    SavedPlaceListView(vm: UserPlaceViewModel(), selectedIndex: $selectedIndex)
-                } label: {
-                    HeartButton()
-                }
-
                 HeartButton(action: {selectedIndex = 19})
 
             } //h

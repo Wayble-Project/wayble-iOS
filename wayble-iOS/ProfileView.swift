@@ -27,6 +27,10 @@ struct ProfileView: View {
             .shadow(radius: 3)
             .padding(.top, 100)
             */
+            Image(.waybleLogo4)
+                .resizable()
+                .frame(width: 140, height: 90)
+                .padding(.top,130)
             Spacer()
             
             OkButton(title: "로그아웃", isDisabled: false) {
@@ -34,7 +38,9 @@ struct ProfileView: View {
                 authViewModel.state = .loggedOut
                 selectedIndex = 7
             }
+            .padding(.bottom, 140)
         }
+        .padding(.horizontal, 20)
     }
 }
 
