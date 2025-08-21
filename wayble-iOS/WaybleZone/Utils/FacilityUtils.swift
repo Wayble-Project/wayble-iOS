@@ -8,6 +8,15 @@ enum FacilityUtils {
         let isAvailable: Bool
     }
     
+
+    
+    static func makeCafeItems(from category: PlaceCategory) -> [FacilityItem] {
+        return [
+            .init(icon: "cafe", label: "카페", isAvailable: PlaceCategory.cafe.rawValue == "CAFE"),
+            .init(icon: "food", label: "음식점", isAvailable: PlaceCategory.restaurant.rawValue == "RESTAURANT")
+        ]
+    }
+    
     static func makeFacilityItems(from facilities: Facilities) -> [FacilityItem] {
         return [
             .init(icon: "chair01", label: "경사로", isAvailable: facilities.hasSlope),

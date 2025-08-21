@@ -18,15 +18,15 @@ struct WaybleZone: Codable, Identifiable {
     let name: String
     let category: String
     let address: String
-    let rating: Double
-    let reviewCount: Int
-    let contactNumber: String
-    let imageUrl: String
-    let facilities: Facilities
-    let businessHours: [String: OpeningHours]
-    let photos: [String]
-    let latitude: Double
-    let longitude: Double
+    let rating: Double?
+    let reviewCount: Int?
+    let contactNumber: String?
+    let imageUrl: String?
+    let facilities: Facilities?
+    let businessHours: [String: OpeningHours]?
+    let photos: [String]?
+    let latitude: Double?
+    let longitude: Double?
     
     // JSON 키가 Swift 변수 이름과 다를 때
     enum CodingKeys: String, CodingKey {
@@ -88,6 +88,29 @@ struct Facilities: Codable {
     }
 }
 
+extension Facilities {
+    static let empty = Facilities(
+        hasSlope: false,
+        hasNoDoorStep: false,
+        hasElevator: false,
+        hasTableSeat: false,
+        hasDisabledToilet: false,
+        floorInfo: "1층"
+    )
+}
+
+extension WaybleZone {
+    /// 뷰단에선 이걸 쓰면 `!`가 필요없어요.
+    var safeFacilities: Facilities { facilities ?? .empty }
+
+    /// (선택) 시설 정보 자체가 있었는지 여부를 알고 싶으면
+    var hasFacilityData: Bool { facilities != nil }
+}
+
+enum PlaceCategory: String, Hashable, Codable, CaseIterable {
+    case cafe = "CAFE"
+    case restaurant = "RESTAURANT"
+}
 
 struct OpeningHours: Codable {
     let open: String
@@ -105,10 +128,10 @@ struct SavedPlace: Identifiable, Codable {
     var id: Int { placeID }
     
     enum CodingKeys: String, CodingKey {
-        case placeID = "place_id"
+        case placeID = "placeId"
         case title
         case color
-        case waybleZone = "wayble_zone"
+        case waybleZone
     }
 }
 
@@ -133,11 +156,11 @@ struct Review: Identifiable, Codable {
     let images: [String]
     
     enum CodingKeys: String, CodingKey {
-        case id = "review_id"
-        case userNickname = "user_nickname"
+        case id = "reviewId"
+        case userNickname 
         case rating
         case content
-        case visitDate = "visit_date"
+        case visitDate
         case likes
         case images
     }
@@ -157,6 +180,15 @@ struct ReviewPostRequestModel: Encodable {
     let facilities: [String] // 기본모델이랑 다름
     let images: [String]? // 이미지 업로드하고 주소 받아와서 넣어야함
 }
+
+
+
+struct UploadImagesBody: Codable {
+    let images: [String]
+}
+
+
+struct EmptyData: Decodable {}
 
 //MARK: TOP 3
 
@@ -220,10 +252,66 @@ struct FavWaybleZoneInfo: Decodable, Identifiable {
      let updatedAt: String?
 }
 
+ struct SaveList: Encodable {
 
- struct UploadImagesBody: Codable {
-     let images: [String]
+     let title: String
+     let color: String   // 서버에서 주는 값 체크
+    
+}
+
+struct SavePlacesPayload: Encodable {
+    let placeIds: [Int]
+    let waybleZoneId: Int
+}
+
+public enum UserPlaceSort: String, Sendable {
+    case latest
+    case name
+}
+
+struct SimpleAPIResponse<T: Decodable>: Decodable {
+    let data: T // why 스웨거랑 다름?
+}
+
+ struct SimpleSavedPlaceResponse: Decodable, Identifiable {
+     let placeId: Int
+     let title: String
+     let color: String
+     let savedCount: Int
+     
+     var id: Int { placeId } 
+}
+
+struct PlaceListResponse: Decodable {
+    let placeId: Int
+    let title: String
+    let color: String
+    let message: String
 }
 
 
-struct EmptyData: Decodable {}
+
+ struct Page<T: Decodable & Sendable>: Decodable {
+     let content: [T]
+     let pageable: Pageable?
+    // 필요 시 totalElements/totalPages 등
+}
+
+ struct Pageable: Decodable {
+     let pageNumber: Int?
+     let pageSize: Int?
+     let offset: Int?
+     let paged: Bool?
+     let unpaged: Bool?
+     let sort: SortInfo?
+}
+
+ struct SortInfo: Decodable {
+     let sorted: Bool?
+     let unsorted: Bool?
+     let empty: Bool?
+}
+
+
+
+

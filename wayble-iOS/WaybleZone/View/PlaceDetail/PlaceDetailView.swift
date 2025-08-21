@@ -2,17 +2,13 @@ import SwiftUI
 
 struct PlaceDetailView: View {
     @Bindable var vm: PlaceDetailViewModel
-
-//    init(zone: WaybleZone) {
-//        let vm = PlaceDetailViewModel()
-//        vm.waybleZone = zone
-//        self.vm = vm
-//    }
+    @Environment(NavigationRouter.self) var router
+    @State private var sortLabel: String = "추천순"
+    @Binding var selectedIndex: Int
     
     var body: some View {
         ScrollView {
-            VStack() {
-                
+            VStack {
                 if let zone = vm.waybleZone {
                     PlaceDetailHeaderView(
                         waybleZone: zone,
@@ -22,29 +18,39 @@ struct PlaceDetailView: View {
                             x: "\(zone.longitude)",  // ← 실제 좌표
                             y: "\(zone.latitude)",
                             category: zone.category
-                        )
+                        ), selectedIndex: $selectedIndex
                     )
                     PlaceInfoView(waybleZone: zone)
-                    PlaceReView(waybleZone: zone, reviews: vm.reviews)
-                } else {
-                    ProgressView("정보를 불러오는 중...")
+                    PlaceReView(selected: $sortLabel, waybleZone: zone, reviews: vm.reviews)
+                } 
+            }
+        }
+        // zoneID가 바뀌면 자동 재요청
+        .task(id: vm.zoneID) {
+            await vm.fetchZoneDetail()
+            await vm.fetchReviews(zoneID: vm.zoneID, sort: sortLabel.toReviewSort())
+        }
+        .task(id: sortLabel) {
+                    await vm.fetchReviews(zoneID: vm.zoneID, sort: sortLabel.toReviewSort())
                 }
-                
-            }
-        }
-        .task {
-            await vm.fetchPlaceDetail()
-            if let zone = vm.waybleZone {
-                await vm.fetchReviews(zoneID: zone.id)
-            }
-            
-        }
+        //        .refreshable {
+        //            await vm.fetchPlaceDetail()
+        //            await vm.fetchReviews(zoneID: vm.zoneID, sort: sortLabel.toReviewSort())
+        //        }
     }
 }
 
-
+private extension String {
+    func toReviewSort() -> ReviewSort {
+            switch self {
+            case "추천순": return .rating   
+            case "최신순": return .latest
+            default:       return .latest
+            }
+        }
+}
 
 //#Preview {
-//    PlaceDetailView().withRouter(selectedIndex: .constant(0))
+//    PlaceDetailView(vm: PlaceDetailViewModel(zoneID: 1))
+//        .environment(NavigationRouter())
 //}
-

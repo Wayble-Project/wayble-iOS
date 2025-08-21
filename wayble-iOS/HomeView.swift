@@ -111,11 +111,11 @@ struct HomeView: View {
                                     category: WaybleviewModel.mockZone.category,
                                     imageUrl: WaybleviewModel.mockZone.imageUrl,
                                     address: WaybleviewModel.mockZone.address,
-                                    latitude: WaybleviewModel.mockZone.latitude,
-                                    longitude: WaybleviewModel.mockZone.longitude,
-                                    rating: WaybleviewModel.mockZone.rating,
-                                    reviewCount: WaybleviewModel.mockZone.reviewCount,
-                                    facilities: WaybleviewModel.mockZone.facilities
+                                    latitude: WaybleviewModel.mockZone.latitude!,
+                                    longitude: WaybleviewModel.mockZone.longitude!,
+                                    rating: WaybleviewModel.mockZone.rating!,
+                                    reviewCount: WaybleviewModel.mockZone.reviewCount!,
+                                    facilities: WaybleviewModel.mockZone.facilities!
                                 )
 
                                 let arrival = PlaceModel(

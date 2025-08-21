@@ -13,12 +13,12 @@ struct MainMapView: View {
     // MARK: - Map dependencies (ported from OnlyMapView)
     @State private var mapCenter: NMGLatLng = NMGLatLng(lat: 37.5386, lng: 126.9628)
     @StateObject private var viewModel = MainMapViewModel()
-    
+    @Binding var selectedIndex: Int
     @Environment(NavigationRouter.self) private var router
     
     var body: some View {
         VStack(spacing: 0) {
-            MainTopBar { kind in
+            MainTopBar(selectedIndex: $selectedIndex) { kind in
                 Task {
                     await viewModel.loadFacilities(
                         lat: centerLat,
@@ -65,6 +65,7 @@ struct MainMapView: View {
 //MARK: - 상단 바
 
 struct MainTopBar: View {
+    @Binding var selectedIndex: Int
     var onSelect: (Convenient) -> Void = { _ in }
     var body: some View {
         VStack(spacing: 0) {
@@ -72,7 +73,7 @@ struct MainTopBar: View {
                 SearchBar()
                 Spacer()
                 NavigationLink {
-                    SavedPlaceListView(collections: mockSavedPlaces)
+                    SavedPlaceListView(vm: UserPlaceViewModel(), selectedIndex: $selectedIndex)
                 } label: {
                     HeartButton()
                 }
@@ -89,7 +90,7 @@ struct MainTopBar: View {
 
 #Preview {
     NavigationStack {
-        MainMapView()
+        MainMapView(selectedIndex: .constant(0))
             .environment(NavigationRouter())
     }
 }

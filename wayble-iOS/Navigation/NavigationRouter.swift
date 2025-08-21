@@ -38,9 +38,14 @@ enum Route: Hashable {
     case findPassword
     case login
     case wayblezone
-//    case waybleZoneSearch
-    //case placeDetailView(WaybleZone) // git 수정
-   // case writeReview
+   // case wayblezonerouter
+    case waybleZoneSearch
+    case placeDetailView(id: Int) // git 수정
+    case writeReview(PlaceIdent)
+    case savedPlaceListView
+    case addListView
+    case wzMainMapView
+    
     case onboardingCompleted
     case routeDetail
     case searchHome

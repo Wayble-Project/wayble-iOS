@@ -70,7 +70,7 @@ struct MapDetailView: View {
             if let zone = SearchViewModel.shared.waybleZones.first(where: { $0.name == place.title }) {
                 VStack {
                     Spacer()
-                    PlaceDetailView(vm: PlaceDetailViewModel())
+                    PlaceDetailView(vm: PlaceDetailViewModel(zoneID: zone.id), selectedIndex: $selectedIndex)
                 }
             } else {
                 VStack {

@@ -10,14 +10,11 @@ struct TopSearchedWaybleZoneRequest: APIRequest {
     var urlRequest: URLRequest {
         var components = URLComponents(string: "https://wayble.site/api/v1/wayble-zones/search/district/most-searches")!
         components.queryItems = [
-//            URLQueryItem(name: "district", value: district)
-            URLQueryItem(name: "district", value: "서초동")
+            URLQueryItem(name: "district", value: district)
         ]
         
         var request = URLRequest(url: components.url!)
         request.httpMethod = "GET"
-        //request.setValue("Bearer \(AuthManager.token ?? "")", forHTTPHeaderField: "Authorization")
-        request.setValue("Bearer valid_jwt_token", forHTTPHeaderField: "Authorization")
         return request
     }
 }

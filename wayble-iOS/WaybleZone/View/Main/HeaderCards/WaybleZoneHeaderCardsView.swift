@@ -1,25 +1,50 @@
 import SwiftUI
 
 struct WaybleZoneHeaderCardsView: View {
-   
+    @Binding var selectedIndex: Int
+    @Environment(NavigationRouter.self) var router
         var body: some View {
             VStack(alignment: .leading, spacing: 15) {
                 RegionSelectionView()
                 
-                
-                HStack(spacing: 10) {
-                    CategoryCard(title: "음식점", subtitle: "누구나 편하게\n식사해요", imageName: "spoon") {
-                        // router.push(.restaurantList)
-                    }
-                    
-                    CategoryCard(title: "카페", subtitle: "편하게 머물 수\n있어요", imageName: "cafePlace") {
-                        // router.push(.cafeList)
-                    }
-                    
-//                    CategoryCard(title: "편의점", subtitle: "언제나 편하게\n들려요", imageName: "convenienceStore") {
-//                        // router.push(.storeList)
-//                    }
-                }.frame(maxWidth: .infinity, alignment: .center)
+                NavigationStack {
+                    HStack(spacing: 10) {
+//                        NavigationLink {
+////                                           HomeDiscoverView(category: .restaurant)
+//                            WZMainMapView(selectedIndex: $selectedIndex)
+//                                       } label: {
+//                                           CategoryCard(title: "음식점", subtitle: "누구나 편하게\n식사해요", imageName: "spoon") {
+//                                               // router.push(.restaurantList)
+//                                           }
+//                                       }
+                        
+                        CategoryCard(
+                                       title: "음식점",
+                                       subtitle: "누구나 편하게\n식사해요",
+                                       imageName: "spoon"
+                                   ) {
+//                                       selectedIndex = 0
+//                                       print("fdsa")
+                                       router.push(.wzMainMapView)
+                                   }
+                        
+                        NavigationLink {
+                                         //  HomeDiscoverView(category: .restaurant)
+                            WZMainMapView(selectedIndex: $selectedIndex)
+                                       } label: {
+                                           CategoryCard(title: "카페", subtitle: "편하게 머물 수\n있어요", imageName: "cafePlace") {
+                                               // router.push(.cafeList)
+                                           }
+                                       }
+                       
+                   
+                        
+    //                    CategoryCard(title: "편의점", subtitle: "언제나 편하게\n들려요", imageName: "convenienceStore") {
+    //                        // router.push(.storeList)
+    //                    }
+                    }.frame(maxWidth: .infinity, alignment: .center)
+                }
+              
                 
             }
         }
@@ -80,6 +105,3 @@ struct CategoryCard: View {
 
 
 
-#Preview {
-    WaybleZoneHeaderCardsView()
-}

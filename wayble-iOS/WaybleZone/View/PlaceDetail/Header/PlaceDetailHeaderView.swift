@@ -1,6 +1,14 @@
 import SwiftUI
 import Foundation
 
+private func koCategory(_ raw: String) -> String {
+    switch raw.uppercased() {
+    case "CAFE": return "카페"
+    case "RESTAURANT": return "음식점"
+    default: return raw
+    }
+}
+
 struct PlaceDetailHeaderView: View {
     let waybleZone: WaybleZone
     
@@ -8,33 +16,47 @@ struct PlaceDetailHeaderView: View {
     @Environment(NavigationRouter.self) private var router
     let locationManager = LocationManager.shared
     let place: PlaceModel
-
+    
+    @Binding var selectedIndex: Int
+    
     var body: some View {
 
-        PlaceToolbar(onBack: {}, onShare: {}).padding(.bottom, 8)
+        PlaceToolbar(selectedIndex: $selectedIndex, zone: waybleZone).padding(.bottom, 8)
         
         ZStack(alignment: .top) {
-            //TODO: AsyncImage로 변경, 영업 중 로직
-            Image(waybleZone.imageUrl)
-                .resizable()
-                .scaledToFill()
-                .frame(height: 342)
-                .overlay(
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text(waybleZone.category)
-                            .font(.mainTextSemibold14)
-                            .foregroundStyle(Color("blue-200"))
-                        Text(waybleZone.name)
-                            .font(.mainTextSemibold24)
-                            .foregroundStyle(.white)
-                    }
-                        .padding(),
-                    alignment: .bottomLeading
-                )
+            //TODO:  영업 중 로직
+            AsyncImage(url: URL(string: waybleZone.imageUrl ?? "")) { phase in
+                switch phase {
+                case .success(let image):
+                    image
+                        .resizable()
+                        .scaledToFill()
+                case .failure(_), .empty:
+                    Image("cafeMockImage")
+                        .resizable()
+                        .scaledToFill()
+                @unknown default:
+                    EmptyView()
+                }
+            }
+            .frame(height: 342)
+            .overlay(
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(koCategory(waybleZone.category))
+                        .font(.mainTextSemibold14)
+                        .foregroundStyle(Color("blue-200"))
+                    Text(waybleZone.name)
+                        .font(.mainTextSemibold24)
+                        .foregroundStyle(.white)
+                }
+                    .padding(),
+                alignment: .bottomLeading
+            )
+
                 .overlay(
                     HStack(spacing: 4) {
                         Image("whiteStar")
-                        Text(String(format: "%.1f", waybleZone.rating))
+                        Text(String(format: "%.1f", waybleZone.rating!))
                             .font(.mainTextSemibold20)
                             .foregroundStyle(.white)
                     }

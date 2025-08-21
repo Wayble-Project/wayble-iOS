@@ -1,8 +1,8 @@
 import SwiftUI
 
 struct WaybleZoneHeaderView: View {
-    //@Environment(NavigationRouter.self) var router
-    @Environment(WaybleZoneNavigationRouter.self) var router
+    @Environment(NavigationRouter.self) var router
+    //@Environment(WaybleZoneNavigationRouter.self) var router
     
     var body: some View {
         VStack(spacing: 16) {
@@ -20,7 +20,7 @@ struct WaybleZoneHeaderView: View {
 
 
                 Button {
-                    router.push(.wZSearch)
+                    router.push(.waybleZoneSearch)
                 } label: {
                     Image("search")
                         .resizable()
@@ -39,8 +39,10 @@ struct WaybleZoneHeaderView: View {
 }
 
 
-#Preview {
-    //WaybleZoneHeaderView().withRouter(selectedIndex: .constant(0))
-    WaybleZoneHeaderView().withWaybleZoneRouter()
-}
+//#Preview {
+//   // WaybleZoneHeaderView().withRouter(selectedIndex: .constant(0))
+//    WaybleZoneHeaderView()
+//        //.environment(NavigationRouter())
+//        .environment(WaybleZoneNavigationRouter())
+//}
 

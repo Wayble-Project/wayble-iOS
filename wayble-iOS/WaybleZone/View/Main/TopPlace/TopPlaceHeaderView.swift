@@ -1,11 +1,11 @@
 import SwiftUI
 
 struct TopPlaceView: View {
-    @Environment(WaybleZoneNavigationRouter.self) var router
+    @Environment(NavigationRouter.self) var router
     @Bindable var vm: TopPlaceViewModel
     @Namespace private var underlineNamespace
     @AppStorage("selectedDong") private var selectedDong: String = "서초동"
-
+    private var reloadKey: String { "\(vm.selected.rawValue)|\(selectedDong)" }
     var body: some View {
         VStack(alignment: .leading) {
             Text(selectedDong)
@@ -55,20 +55,24 @@ struct TopPlaceView: View {
                 TopPlaceCard(zone: zone, rank: index + 1) // index는 0부터 시작하니 +1
                     .padding(.horizontal, 3)
                     .onTapGesture {
-                        router.push(.wZplaceDetailView)
+                        router.push(.placeDetailView(id: zone.id))
                             }
             }
+            
 
         }
-        .task {
-            await vm.fetchTop3(for: vm.selected)
-        }
+//        .task {
+//            await vm.fetchTop3(for: vm.selected)
+//        }
+        .task(id: reloadKey) {
+                    await vm.fetchTop3(for: vm.selected)
+                }
     }
 }
 
 #Preview {
 //    TopPlaceView(vm: TopPlaceViewModel()).withRouter(selectedIndex: .constant(0))
-    TopPlaceView(vm: TopPlaceViewModel()).withWaybleZoneRouter()
+    TopPlaceView(vm: TopPlaceViewModel()).environment(NavigationRouter())
 }
 
 //import SwiftUI

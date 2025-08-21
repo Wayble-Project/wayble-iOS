@@ -1,9 +1,9 @@
 import SwiftUI
 
 struct PlaceReView: View {
-    @Environment(WaybleZoneNavigationRouter.self) var router
+    @Environment(NavigationRouter.self) var router
     
-    @State private var selected = "추천순"
+    @Binding var selected: String
     
     @State private var showAll: Bool = false
     
@@ -32,9 +32,27 @@ struct PlaceReView: View {
                 }
                 .padding(.horizontal, 20)
                 
-                Button {
-                    router.push(.wZwritingReview(PlaceIdent(id: waybleZone.id, name: waybleZone.name)))
-                } label: {
+//                Button {
+//                    print("PlaceReView router:", ObjectIdentifier(router))
+//                    router.push(.writeReview(PlaceIdent(id: waybleZone.id, name: waybleZone.name)))
+//                    print("\(waybleZone.id),\(waybleZone.name)")
+//                } label: {
+//                    HStack(spacing: 4) {
+//                        Text("리뷰 작성하기")
+//                            .font(.mainTextSemibold14)
+//                            .foregroundStyle(Color("gray-900"))
+//                        Image("pencil")
+//                    }
+//                    .frame(maxWidth: .infinity, minHeight: 44)
+//                    .background(
+//                        RoundedRectangle(cornerRadius: 12)
+//                            .stroke(Color("gray-300"), lineWidth: 1)
+//                    )
+//                }
+//                .padding(.horizontal, 20)
+//                .padding(.vertical, 15)
+                
+                NavigationLink(value: Route.writeReview(PlaceIdent(id: waybleZone.id, name: waybleZone.name))) {
                     HStack(spacing: 4) {
                         Text("리뷰 작성하기")
                             .font(.mainTextSemibold14)
@@ -49,49 +67,52 @@ struct PlaceReView: View {
                 }
                 .padding(.horizontal, 20)
                 .padding(.vertical, 15)
+          
 
                 
                 
                 
-                WaybleZoneDropDown( options: ["추천순", "최신순"], selection: $selected).padding(.horizontal, 25)
+                WaybleZoneDropDown( options: ["최신순","추천순"], selection: $selected).padding(.horizontal, 25)
                     .padding(.bottom, 5)
                 
                 
                 
                 
                 VStack(spacing: 17) {
+                
                     ForEach(reviews) { review in
                         ReviewCardView(review: review)
                     }
                 }
                 
                 
-                if reviews.count > 0 && !showAll {
-                    ZStack {
-                        Rectangle()
-                            .fill(Color("gray-100"))
-                            .frame(height: 1)
-                        
-                        Button {
-                            showAll = true
-                        } label: {
-                            HStack(spacing: 4) {
-                                Text("더보기")
-                                    .font(.mainTextSemibold14)
-                                    .foregroundStyle(Color("gray-900"))
-                                Image(systemName: "chevron.right")
-                                    .foregroundStyle(Color("gray-700"))
-                                    .font(.system(size: 10))
-                                    .frame(width: 10, height: 5)
-                            }
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 6)
-                            .background(Color("gray-100"))
-                            .clipShape(Capsule())
-                        }
-                        .padding(.vertical, 20)
-                    }
-                }
+//                if reviews.count > 0 && !showAll {
+//                    
+//                    ZStack {
+//                        Rectangle()
+//                            .fill(Color("gray-100"))
+//                            .frame(height: 1)
+//                        
+//                        Button {
+//                            showAll = true
+//                        } label: {
+//                            HStack(spacing: 4) {
+//                                Text("더보기")
+//                                    .font(.mainTextSemibold14)
+//                                    .foregroundStyle(Color("gray-900"))
+//                                Image(systemName: "chevron.right")
+//                                    .foregroundStyle(Color("gray-700"))
+//                                    .font(.system(size: 10))
+//                                    .frame(width: 10, height: 5)
+//                            }
+//                            .padding(.horizontal, 16)
+//                            .padding(.vertical, 6)
+//                            .background(Color("gray-100"))
+//                            .clipShape(Capsule())
+//                        }
+//                        .padding(.vertical, 20)
+//                    }
+//                }
             }
             
             
@@ -99,13 +120,14 @@ struct PlaceReView: View {
     }
 }
 
-#Preview {
-    
-    PlaceReView(waybleZone: mockWaybleZoneResponse.data,reviews: mockReviewListResponse.data)
-        .withWaybleZoneRouter()
-            
-  /*
-    PlaceReView(reviews: mockReviewListResponse.data, onWrite: {})
-        .withRouter(selectedIndex: .constant(0),router: NavigationRouter())
-  */
-}
+//#Preview {
+//    
+//    PlaceReView( selected: .constant("최신순"), waybleZone: mockWaybleZoneResponse.data,reviews: mockReviewListResponse.data)
+//       // .environment(WaybleZoneNavigationRouter())
+//        .environment(NavigationRouter())
+//            
+//  /*
+//    PlaceReView(reviews: mockReviewListResponse.data, onWrite: {})
+//        .withRouter(selectedIndex: .constant(0),router: NavigationRouter())
+//  */
+//}
