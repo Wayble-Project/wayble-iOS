@@ -14,6 +14,7 @@ struct ProfileView: View {
     
     var body: some View {
         VStack {
+            /*
             Button("로그아웃(키체인 삭제)") {
                 KeychainManager.standard.deleteSession(for: "tokenInfoKey")
                 authViewModel.state = .loggedOut
@@ -25,7 +26,14 @@ struct ProfileView: View {
             .clipShape(Capsule())
             .shadow(radius: 3)
             .padding(.top, 100)
+            */
             Spacer()
+            
+            OkButton(title: "로그아웃", isDisabled: false) {
+                KeychainManager.standard.deleteSession(for: "tokenInfoKey")
+                authViewModel.state = .loggedOut
+                selectedIndex = 7
+            }
         }
     }
 }
