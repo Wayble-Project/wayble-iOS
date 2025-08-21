@@ -10,26 +10,21 @@ struct WaybleZoneHeaderCardsView: View {
                 NavigationStack {
                     HStack(spacing: 20) {
 
-                        
                         CategoryCard(
-                                       title: "음식점",
-                                       subtitle: "누구나 편하게\n식사해요",
-                                       imageName: "spoon"
-                                   ) {
-//                                       selectedIndex = 0
-//                                       print("fdsa")
-                                       router.push(.wzMainMapView)
-                                   }
-                        
-                        CategoryCard(
-                                       title: "카페",
-                                       subtitle: "편하게 머물 수\n있어요",
-                                       imageName: "cafePlace"
-                                   ) {
-//                                       selectedIndex = 0
-//                                       print("fdsa")
-                                       router.push(.wzMainMapView)
-                                   }
+                                          title: "음식점",
+                                          subtitle: "누구나 편하게\n식사해요",
+                                          imageName: "spoon"
+                                      ) {
+                                          withAnimation { selectedIndex = 23 }  
+                                      }
+
+                                      CategoryCard(
+                                          title: "카페",
+                                          subtitle: "편하게 머물 수\n있어요",
+                                          imageName: "cafePlace"
+                                      ) {
+                                          withAnimation { selectedIndex = 23 }
+                                      }
                    
                         
 
