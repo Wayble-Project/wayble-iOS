@@ -62,7 +62,7 @@ struct CustomTextField: View {
             TextField(placeHolder, text: $textValue)
                 .foregroundStyle(Color.gray900)
                 .keyboardType(keyboardType)
-                .textInputAutocapitalization(.none)
+                .textInputAutocapitalization(.never)
                 .autocorrectionDisabled(true)
                 .padding(.horizontal, 20)
                 .padding(.vertical, 15)
