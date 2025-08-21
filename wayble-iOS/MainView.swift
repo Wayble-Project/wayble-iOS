@@ -21,9 +21,10 @@ struct MainView: View {
     @State var homeViewModel = HomeViewModel()
     @State private var selectedDeparture: PlaceModel? = nil
     @State private var selectedArrival: PlaceModel? = nil
-
-
-
+    @State private var selectedPlaceID: Int? = nil
+    @State private var writeReviewPlace: PlaceIdent? = nil
+    @State private var selectedSavedPlace: SimpleSavedPlaceResponse? = nil
+    
     var body: some View {
         ZStack(alignment: .bottom) {
             NavigationStack(path: $router.path) {
@@ -33,11 +34,11 @@ struct MainView: View {
                         // 밑에 추가하고 싶은 뷰 적기
                     case 0: HomeView(selectedIndex: $selectedIndex, viewModel: onboardingViewModel, homeViewModel: homeViewModel, selectedDeparture: $selectedDeparture,
                                      selectedArrival: $selectedArrival)
-                           
+                        
                     case 1: MapView()
                     case 2: ProfileView(selectedIndex: $selectedIndex)
                     case 3: SearchHomeView(selectedIndex: $selectedIndex)
-                    case 4: WaybleZoneMainView(vm: TopPlaceViewModel(),selectedIndex: $selectedIndex)
+                    case 4: WaybleZoneMainView(vm: TopPlaceViewModel(),selectedIndex: $selectedIndex, selectedSavedPlace: $selectedSavedPlace, selectedPlaceID: $selectedPlaceID)
                     case 5:
                         
                         SearchBarView(
@@ -67,7 +68,7 @@ struct MainView: View {
                     case 12: OnboardingCompletedView(viewModel: onboardingViewModel, homeViewModel: homeViewModel, selectedIndex: $selectedIndex)
                     case 13: OnboardingRootView(viewModel: onboardingViewModel, selectedIndex: $selectedIndex)
                     case 14: SignupTermsView(selectedIndex: $selectedIndex)
-
+                        
                     case 15:
                         Transportation(
                             selectedIndex: $selectedIndex,
@@ -79,7 +80,7 @@ struct MainView: View {
                             transportation: SearchViewModel.shared.transportation
                         )
                         .id(UUID())
-                                                  
+                        
                     case 16:
                         VStack {
                             MapDetailView(
@@ -104,10 +105,71 @@ struct MainView: View {
                         )
                         
                     case 18: MainMapView(selectedIndex: $selectedIndex)
+                        
+                    case 19: SavedPlaceListView(vm: UserPlaceViewModel(),
+                                                selectedIndex: $selectedIndex,
+                                                selectedSavedPlace: $selectedSavedPlace,
+                                                selectedPlaceID: $selectedPlaceID)
+                    case 20: WaybleZoneSearchView(selectedIndex: $selectedIndex, selectedPlaceID: $selectedPlaceID)
+                    case 21:
+                        Group {
+                            if let id = selectedPlaceID {
+                                PlaceDetailView(
+                                    vm: PlaceDetailViewModel(zoneID: id),
+                                    selectedIndex: $selectedIndex,
+                                    writeReviewPlace: $writeReviewPlace,
+                                    selectedDeparture: $selectedDeparture,
+                                    selectedArrival: $selectedArrival
+                                )
+                                .id(id) // <- id 바뀌면 뷰/VM 새로 만들어서 .task 재실행
+                            } else {
+                                Text("선택된 장소가 없습니다.")
+                            }
+                        }
+                            
+                            
+                        case 22:
+                            Group {
+                                if let place = writeReviewPlace {
+                                    WriteReView(
+                                        viewModel: FacilitySelectionViewModel(),
+                                        selectedIndex: $selectedIndex,
+                                        place: place
+                                    )
+                                    .navigationBarBackButtonHidden(true)
+                                } else {
+                                    Text("작성할 장소를 찾을 수 없어요.")
+                                }
+                            }
+                    case 23:
+                        WZMainMapView(selectedIndex: $selectedIndex,
+                                      selectedPlaceID: $selectedPlaceID)
+                        
+                    case 24:
+                        Group {
+                            if let sp = selectedSavedPlace {
 
-                    case 19: SavedPlaceListView(vm: UserPlaceViewModel(), selectedIndex: $selectedIndex)
-                    case 20: WaybleZoneSearchView(selectedIndex: $selectedIndex)
+                                SavedPlaceListCardView(
+                                    selectedIndex: $selectedIndex,
+                                    selectedPlaceID: $selectedPlaceID, place: sp
+                                )
+                                .navigationBarBackButtonHidden(true)
+                            } else {
+                                Text("선택된 저장 리스트가 없습니다.")
+                            }
+                        }
+                        
+                    case 25:
+                        AddListView(
+                            selectedIndex: $selectedIndex,
+                            userPlaceVM: UserPlaceViewModel()
+                        )
+                        .navigationBarBackButtonHidden(true)
 
+                        
+                        
+                        
+                        
                     default:
                         Text("오류!")
                     }
@@ -129,7 +191,7 @@ struct MainView: View {
                     case .home:
                         HomeView(selectedIndex: $selectedIndex, viewModel: onboardingViewModel, homeViewModel: homeViewModel,  selectedDeparture: $selectedDeparture,
                                  selectedArrival: $selectedArrival)
-                            .navigationBarBackButtonHidden(true)
+                        .navigationBarBackButtonHidden(true)
                     case .signupEmail:
                         SignupEmailView(viewModel: signupViewModel, selectedIndex: $selectedIndex)
                             .navigationBarBackButtonHidden(true)
@@ -140,26 +202,26 @@ struct MainView: View {
                         LoginView(selectedIndex: $selectedIndex, onboardingViewModel: onboardingViewModel, homeViewModel: homeViewModel)
                             .navigationBarBackButtonHidden(true)
                     case .wayblezone:
-                        WaybleZoneMainView(vm: TopPlaceViewModel(),selectedIndex: $selectedIndex)
+                        WaybleZoneMainView(vm: TopPlaceViewModel(),selectedIndex: $selectedIndex, selectedSavedPlace: $selectedSavedPlace, selectedPlaceID: $selectedPlaceID)
                             .navigationBarBackButtonHidden(true)
                         
                     case .waybleZoneSearch:
-                        WaybleZoneSearchView(
-                            selectedIndex: $selectedIndex,
-                            selectedDeparture: $selectedDeparture,
-                            selectedArrival: $selectedArrival
-                        )
-                        .navigationBarBackButtonHidden(true)
+
+                        WaybleZoneSearchView(selectedIndex: $selectedIndex, selectedPlaceID: $selectedPlaceID)
+                            .navigationBarBackButtonHidden(true)
+                        
                   
                     case .placeDetailView(let id):
                         PlaceDetailView(
                             vm: PlaceDetailViewModel(zoneID: id),
                             selectedIndex: $selectedIndex,
+                            writeReviewPlace: $writeReviewPlace,
                             selectedDeparture: $selectedDeparture,
                             selectedArrival: $selectedArrival
                         )
                         .navigationBarBackButtonHidden(true)
                     
+
                     case .writeReview(let place):
                         WriteReView(viewModel: FacilitySelectionViewModel(),selectedIndex: $selectedIndex ,place: place)
                             .navigationBarBackButtonHidden(true)
@@ -169,11 +231,11 @@ struct MainView: View {
                             .navigationBarBackButtonHidden(true)
                         
                     case .wzMainMapView:
-                        WZMainMapView(selectedIndex: $selectedIndex)
+                        WZMainMapView(selectedIndex: $selectedIndex, selectedPlaceID: $selectedPlaceID)
                             .navigationBarBackButtonHidden(true)
                         
                     case .savedPlaceListView:
-                         SavedPlaceListView(vm: UserPlaceViewModel(),selectedIndex: $selectedIndex)
+                        SavedPlaceListView(vm: UserPlaceViewModel(),selectedIndex: $selectedIndex,selectedSavedPlace: $selectedSavedPlace, selectedPlaceID: $selectedPlaceID )
                             .navigationBarBackButtonHidden(true)
                         
                     case .signupCompleted:
@@ -188,7 +250,7 @@ struct MainView: View {
                         )
                         RouteDetail(route: routeOption)
                             .navigationBarBackButtonHidden(true)
-                            
+                        
                     case .searchBar:
                         SearchBarView(
                             viewModel: searchViewModel,
@@ -221,7 +283,7 @@ struct MainView: View {
                             entryType: entryType,
                             selectedArrival: Binding(get: { arrival }, set: { selectedArrival = $0 }),
                             selectedDeparture: Binding(get: { departure }, set: { selectedDeparture = $0 }),
-                            viewModel: transportationVM,  
+                            viewModel: transportationVM,
                             searchViewModel: $searchViewModel,
                             transportation: SearchViewModel.shared.transportation
                         )
@@ -241,18 +303,18 @@ struct MainView: View {
                     case .mainMapView:
                         MainMapView(selectedIndex: $selectedIndex)
                             .navigationBarBackButtonHidden(true)
-                    
-                  
+                        
+                        
                     }
                 }
             }
             .id(selectedIndex)
-
             
-                if !shouldHideTabBar {
-                    CustomTabBarView(selectedIndex: $selectedIndex)
-                        .offset(y:20)
-                     
+            
+            if !shouldHideTabBar {
+                CustomTabBarView(selectedIndex: $selectedIndex)
+                    .offset(y:20)
+                
             }
         }
         .environment(router)

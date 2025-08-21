@@ -71,7 +71,7 @@ private struct CategoryTagLabel: View {
         .padding(.horizontal, 12)
         .padding(.vertical, 8)
         .background(isSelected ? Color(.white) : Color("gray-100"))
-        .foregroundStyle(isSelected ? .black : Color("gray-500"))
+        .foregroundStyle(isSelected ? Color("darkblue-500") : Color("gray-500"))
         .clipShape(Capsule())
         .overlay(
                     Capsule()

@@ -1,7 +1,9 @@
 import SwiftUI
 
 struct TopPlaceView: View {
-    @Environment(NavigationRouter.self) var router
+ //   @Environment(NavigationRouter.self) var router
+    @Binding var selectedIndex: Int
+    @Binding var selectedPlaceID: Int? 
     @Bindable var vm: TopPlaceViewModel
     @Namespace private var underlineNamespace
     @AppStorage("selectedDong") private var selectedDong: String = "서초동"
@@ -55,7 +57,9 @@ struct TopPlaceView: View {
                 TopPlaceCard(zone: zone, rank: index + 1) // index는 0부터 시작하니 +1
                     .padding(.horizontal, 3)
                     .onTapGesture {
-                        router.push(.placeDetailView(id: zone.id))
+                       // router.push(.placeDetailView(id: zone.id))
+                        selectedPlaceID = zone.id          // 상세에서 사용할 id 바인딩 세팅
+                                   withAnimation { selectedIndex = 21 } // 상세 탭으로 전환
                             }
             }
             

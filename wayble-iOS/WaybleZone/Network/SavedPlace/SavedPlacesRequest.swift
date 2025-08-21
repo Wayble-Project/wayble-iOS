@@ -1,7 +1,7 @@
 import Foundation
 
 struct SavePlacesRequest: APIRequest {
-    typealias Response = APIResponse<EmptyData>
+    typealias Response = SimpleAPIResponse<String>
 
     let payload: SavePlacesPayload
 

@@ -161,14 +161,17 @@ import Observation
 
 struct WaybleZoneSearchView: View {
     // MapSearchViewModel 직접 사용 (DI 필요 없으면 내부 보관)
-    @State private var mapVM = MapSearchViewModel()
-    @Binding var selectedIndex: Int
+         @State private var mapVM = MapSearchViewModel()
+        @Binding var selectedIndex: Int
+         @Binding var selectedPlaceID: Int?
     // TextField는 Optional을 바인딩 못 하므로 로컬 query 유지
     @State private var query: String = ""
     @FocusState private var isFocused: Bool
-    @Environment(NavigationRouter.self) var router
-    @Binding var selectedDeparture: PlaceModel?
-    @Binding var selectedArrival: PlaceModel?
+
+//    @Environment(NavigationRouter.self) var router
+//    @Binding var selectedDeparture: PlaceModel?
+//    @Binding var selectedArrival: PlaceModel?
+
 
     var body: some View {
         @Bindable var mapVM = mapVM
@@ -221,7 +224,7 @@ struct WaybleZoneSearchView: View {
         HStack(spacing: 10) {
             HStack(spacing: 10) {
                 BackButton(action: {
-                    selectedIndex = 7
+                    selectedIndex = 4
                 })
                // WZBackButton(router: router)
                 TextField("검색", text: $query)
@@ -254,45 +257,34 @@ struct WaybleZoneSearchView: View {
         }
     }
 
-//    @ViewBuilder
-//    private func buttonRow(_ item: WaybleZoneMapSearchItem) -> some View {
-//        let name = item.waybleZoneInfo.zoneName
-//        let meters = item.distance * 1000.0
-//
-//        Button {
-//            router.push(.placeDetailView(id: item.waybleZoneInfo.zoneId))
-//        } label: {
-//            HStack(alignment: .firstTextBaseline) {
-//                highlightedText(name, keyword: query)
-//                    .lineLimit(1)
-//                Spacer(minLength: 12)
-//                Text(distanceString(meters))
-//                    .font(.mainTextSemibold14)
-//                    .foregroundStyle(Color("gray-900"))
-//            }
-//            .contentShape(Rectangle())
-//            .padding(.vertical, 8)
-//        }
-//        .buttonStyle(.plain)
-//    }
     @ViewBuilder
     private func buttonRow(_ item: WaybleZoneMapSearchItem) -> some View {
         let name = item.waybleZoneInfo.zoneName
         let meters = item.distance * 1000.0
-        let zoneID = item.waybleZoneInfo.zoneId
 
-        NavigationLink {
-            // 목적지 뷰를 직접 생성해서 전달
-            PlaceDetailView(
-                vm: PlaceDetailViewModel(zoneID: zoneID),
-                selectedIndex: $selectedIndex,
-                selectedDeparture: $selectedDeparture,
-                selectedArrival: $selectedArrival
-            )
-            .navigationBarBackButtonHidden(true)
+
+        Button {
+       
+                  selectedPlaceID = item.waybleZoneInfo.zoneId
+            
+                  withAnimation { selectedIndex = 21 }
+//=======
+//        let zoneID = item.waybleZoneInfo.zoneId
+//
+//        NavigationLink {
+//            // 목적지 뷰를 직접 생성해서 전달
+//            PlaceDetailView(
+//                vm: PlaceDetailViewModel(zoneID: zoneID),
+//                selectedIndex: $selectedIndex,
+//                selectedDeparture: $selectedDeparture,
+//                selectedArrival: $selectedArrival
+//            )
+//            .navigationBarBackButtonHidden(true)
+//>>>>>>> 27ec205d5f4141ca568a4865a64617a8dcf98225
         } label: {
             HStack(alignment: .firstTextBaseline) {
-                highlightedText(name, keyword: query).lineLimit(1)
+                highlightedText(name, keyword: query)
+                    .lineLimit(1)
                 Spacer(minLength: 12)
                 Text(distanceString(meters))
                     .font(.mainTextSemibold14)
@@ -301,8 +293,9 @@ struct WaybleZoneSearchView: View {
             .contentShape(Rectangle())
             .padding(.vertical, 8)
         }
-        .buttonStyle(.plain) // 리스트 하이라이트 줄이고 싶으면 유지
+        .buttonStyle(.plain)
     }
+
 
 
     // MARK: - Utils

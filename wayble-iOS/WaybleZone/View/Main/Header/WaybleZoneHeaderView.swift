@@ -1,8 +1,9 @@
 import SwiftUI
 
 struct WaybleZoneHeaderView: View {
-    @Environment(NavigationRouter.self) var router
+   // @Environment(NavigationRouter.self) var router
     //@Environment(WaybleZoneNavigationRouter.self) var router
+    @Binding var selectedIndex: Int
     
     var body: some View {
         VStack(spacing: 16) {
@@ -20,7 +21,9 @@ struct WaybleZoneHeaderView: View {
 
 
                 Button {
-                    router.push(.waybleZoneSearch)
+                    withAnimation {
+                                          selectedIndex = 20
+                                      }
                 } label: {
                     Image("search")
                         .resizable()

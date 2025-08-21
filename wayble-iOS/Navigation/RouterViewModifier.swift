@@ -17,8 +17,9 @@ struct RouterViewModifier: ViewModifier {
     
     @State private var searchViewModel = SearchViewModel.shared
     @State private var place: PlaceModel = PlaceModel()
-    
-    
+    @State private var selectedPlaceID: Int? = nil
+    @State private var writeReviewPlace: PlaceIdent? = nil
+    @State private var selectedSavedPlace: SimpleSavedPlaceResponse? = nil
     
     private func routeView(for route: Route) -> some View {
         switch route {
@@ -40,7 +41,7 @@ struct RouterViewModifier: ViewModifier {
             return AnyView(LoginView(selectedIndex: $selectedIndex, onboardingViewModel: onboardingViewModel, homeViewModel: homeViewModel))
             
         case .wayblezone:
-            return AnyView(WaybleZoneMainView(vm: TopPlaceViewModel(),selectedIndex: $selectedIndex)
+            return AnyView(WaybleZoneMainView(vm: TopPlaceViewModel(),selectedIndex: $selectedIndex, selectedSavedPlace:$selectedSavedPlace, selectedPlaceID: $selectedPlaceID)
                 .navigationBarBackButtonHidden(true))
             
             
@@ -76,16 +77,18 @@ struct RouterViewModifier: ViewModifier {
                 .navigationBarBackButtonHidden(true))
             
         case .waybleZoneSearch:
-            return AnyView(WaybleZoneSearchView(selectedIndex: $selectedIndex,
-                                                selectedDeparture: $selectedDeparture,
-                                                selectedArrival: $selectedArrival)
+
+            return AnyView(WaybleZoneSearchView(selectedIndex: $selectedIndex, selectedPlaceID: $selectedPlaceID)
                 .navigationBarBackButtonHidden(true))
+            
             
         case .placeDetailView(let id): // let zone 넣고
             return  AnyView(PlaceDetailView(vm: PlaceDetailViewModel(zoneID: id),
                                             selectedIndex: $selectedIndex,
+                                            writeReviewPlace: $writeReviewPlace,
                                             selectedDeparture: $selectedDeparture,
                                             selectedArrival: $selectedArrival)
+
                 .navigationBarBackButtonHidden(true))
             
             /// NavigationRouter 에 case placeDetailView 를 case placeDetailView(let zone)으로 넣음
@@ -101,11 +104,16 @@ struct RouterViewModifier: ViewModifier {
                 .navigationBarBackButtonHidden(true))
             
         case .wzMainMapView:
-            return AnyView(WZMainMapView(selectedIndex: $selectedIndex)
+            return AnyView(WZMainMapView(selectedIndex: $selectedIndex, selectedPlaceID: $selectedPlaceID)
                 .navigationBarBackButtonHidden(true))
             
         case .savedPlaceListView:
-            return AnyView(SavedPlaceListView(vm: UserPlaceViewModel(),selectedIndex: $selectedIndex)
+            return AnyView( SavedPlaceListView(
+                vm: UserPlaceViewModel(),
+                selectedIndex: $selectedIndex,
+                selectedSavedPlace: $selectedSavedPlace,
+                selectedPlaceID: $selectedPlaceID
+            )
                 .navigationBarBackButtonHidden(true))
             
         case let .searchBar(entryType):
@@ -168,9 +176,6 @@ struct RouterViewModifier: ViewModifier {
             return AnyView(MainMapView(selectedIndex: $selectedIndex)
                 .navigationBarBackButtonHidden(true))
             
-        case .savedPlaceListView:
-            return AnyView(SavedPlaceListView(vm: UserPlaceViewModel(),selectedIndex: $selectedIndex)
-                .navigationBarBackButtonHidden(true))
         }
     }
     

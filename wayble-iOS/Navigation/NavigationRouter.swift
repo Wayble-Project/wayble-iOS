@@ -45,6 +45,7 @@ enum Route: Hashable {
     case savedPlaceListView
     case addListView
     case wzMainMapView
+    //case savedPlaceEditView
     
     case onboardingCompleted
     case routeDetail(RouteOption)

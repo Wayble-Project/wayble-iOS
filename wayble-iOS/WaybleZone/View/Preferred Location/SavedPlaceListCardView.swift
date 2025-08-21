@@ -74,6 +74,7 @@ import SwiftUI
 struct SavedPlaceListCardView: View {
     @Environment(NavigationRouter.self) var router
     @Binding var selectedIndex: Int
+    @Binding var selectedPlaceID: Int?
     let place: SimpleSavedPlaceResponse
     @State private var _vm = UserPlaceViewModel()
 
@@ -123,7 +124,8 @@ struct SavedPlaceListCardView: View {
             ScrollView {
                 LazyVStack(spacing: 30) {
                     ForEach(vm.zones) { zone in
-                        WaybleZoneCard(zone: zone)
+                        WaybleZoneCard(zone: zone,selectedIndex: $selectedIndex,
+                                       selectedPlaceID: $selectedPlaceID)
                     }
                 }
                 .padding(.top, 10)
