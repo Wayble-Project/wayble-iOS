@@ -1,13 +1,14 @@
 import Foundation
 
 
-struct SearchRankWaybleZoneService: SearchRankWaybleZoneServiceProtocol {
+final class SearchRankWaybleZoneService: SearchRankWaybleZoneServiceProtocol {
     
-    private let apiClient: APIClient
+    private let apiClient: AuthAPIClient
 
-    init(apiClient: APIClient = APIClient()) {
+    init(apiClient: AuthAPIClient = AuthAPIClient()) {
         self.apiClient = apiClient
     }
+    
     
 
     func fetchTopSearchedZones(in district: String) async throws -> [FavoritesWaybleZone] {

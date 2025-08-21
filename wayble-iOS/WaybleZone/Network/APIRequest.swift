@@ -6,8 +6,4 @@ protocol APIRequest {
     var urlRequest: URLRequest { get }
 }
 
-extension APIRequest {
-    func makeURLRequest() throws -> URLRequest {
-        urlRequest
-    }
-}
+ 

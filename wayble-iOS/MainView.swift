@@ -38,7 +38,7 @@ struct MainView: View {
                     case 1: MapView()
                     case 2: ProfileView(selectedIndex: $selectedIndex)
                     case 3: SearchHomeView(selectedIndex: $selectedIndex)
-                    case 4: WaybleZoneMainView(vm: TopPlaceViewModel())
+                    case 4: WaybleZoneMainView(vm: TopPlaceViewModel(),selectedIndex: $selectedIndex)
                     case 5:
                         
                         SearchBarView(
@@ -105,7 +105,9 @@ struct MainView: View {
                         )
                         
                     case 18: MainMapView(selectedIndex: $selectedIndex)
-                    case 19: SavedPlaceListView(collections: mockSavedPlaces, selectedIndex: $selectedIndex)
+
+                    case 19: SavedPlaceListView(vm: UserPlaceViewModel(), selectedIndex: $selectedIndex)
+
                     default:
                         Text("오류!")
                     }
@@ -138,19 +140,33 @@ struct MainView: View {
                         LoginView(selectedIndex: $selectedIndex, onboardingViewModel: onboardingViewModel, homeViewModel: homeViewModel)
                             .navigationBarBackButtonHidden(true)
                     case .wayblezone:
-                        WaybleZoneMainView(vm: TopPlaceViewModel())
+                        WaybleZoneMainView(vm: TopPlaceViewModel(),selectedIndex: $selectedIndex)
                             .navigationBarBackButtonHidden(true)
-//                    case .waybleZoneSearch:
-//                        WaybleZoneSearchView()
-//                            .navigationBarBackButtonHidden(true)
-                    /*
-                    case .placeDetailView:
-                        PlaceDetailView()
+                        
+                    case .waybleZoneSearch:
+                        WaybleZoneSearchView(selectedIndex: $selectedIndex)
                             .navigationBarBackButtonHidden(true)
-                     */
-//                    case .writeReview:
-//                        WriteReView(viewModel: FacilitySelectionViewModel())
-//                            .navigationBarBackButtonHidden(true)
+                  
+                    case .placeDetailView(let id):
+                        PlaceDetailView(vm: PlaceDetailViewModel(zoneID: id),selectedIndex: $selectedIndex)
+                            .navigationBarBackButtonHidden(true)
+                    
+                    case .writeReview(let place):
+                        WriteReView(viewModel: FacilitySelectionViewModel(),selectedIndex: $selectedIndex ,place: place)
+                            .navigationBarBackButtonHidden(true)
+                        
+                    case .addListView:
+                        AddListView(selectedIndex: $selectedIndex,userPlaceVM: UserPlaceViewModel())
+                            .navigationBarBackButtonHidden(true)
+                        
+                    case .wzMainMapView:
+                        WZMainMapView(selectedIndex: $selectedIndex)
+                            .navigationBarBackButtonHidden(true)
+                        
+                    case .savedPlaceListView:
+                         SavedPlaceListView(vm: UserPlaceViewModel(),selectedIndex: $selectedIndex)
+                            .navigationBarBackButtonHidden(true)
+                        
                     case .signupCompleted:
                         SignupCompletedView(viewModel: signupViewModel, selectedIndex: $selectedIndex)
                             .navigationBarBackButtonHidden(true)
@@ -217,9 +233,7 @@ struct MainView: View {
                         MainMapView(selectedIndex: $selectedIndex)
                             .navigationBarBackButtonHidden(true)
                     
-                    case .savedPlaceList:
-                        SavedPlaceListView(collections: mockSavedPlaces, selectedIndex: $selectedIndex)
-                            .navigationBarBackButtonHidden(true)
+                  
                     }
                 }
             }

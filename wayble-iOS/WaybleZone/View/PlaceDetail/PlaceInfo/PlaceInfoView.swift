@@ -41,7 +41,7 @@ struct PlaceInfoView: View {
                         .scaledToFit()
                         .frame(width: 20, height: 20)
                     
-                    Text(waybleZone.contactNumber)
+                    Text(waybleZone.contactNumber!)
                         .font(.mainTextRegular14)
                         .foregroundStyle(Color("gray-900"))
                 }
@@ -89,11 +89,11 @@ struct PlaceInfoView: View {
 
 private extension PlaceInfoView {
     var businessHourDisplay: [(label: String, hours: OpeningHours)] {
-        DayUtils.BusinessHourDisplay(from: waybleZone.businessHours)
+        DayUtils.BusinessHourDisplay(from: waybleZone.businessHours!)
     }
     
     var facilityItems: [FacilityUtils.FacilityItem] {
-        FacilityUtils.makeFacilityItems(from: waybleZone.facilities)
+        FacilityUtils.makeFacilityItems(from: waybleZone.facilities!)
     }
 }
 

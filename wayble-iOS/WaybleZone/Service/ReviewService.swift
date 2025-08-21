@@ -1,9 +1,9 @@
 import Foundation
 
 struct ReviewService: ReviewServiceProtocol {
-    private let apiClient: APIClient
-
-    init(apiClient: APIClient = APIClient()) {
+    private let apiClient: AuthAPIClient
+    
+    init(apiClient: AuthAPIClient = AuthAPIClient()) {
         self.apiClient = apiClient
     }
 
@@ -25,6 +25,6 @@ struct ReviewPostService: ReviewPostServiceProtocol {
     func postReview(waybleZoneId: Int, review: ReviewPostRequest) async throws {
 
             // 응답을 반환하지 않으므로
-            let _: APIResponse<EmptyData> = try await apiClient.send(review)
+            _ = try await apiClient.send(review)
         }
 }

@@ -4,6 +4,10 @@ protocol WaybleZoneServiceProtocol {
     func fetchPlaceDetail(city: String, category: String) async throws -> WaybleZone
 }
 
+protocol ZoneDetailServiceProtocol {
+    func fetchZoneDetail(id: Int) async throws -> WaybleZone
+}
+
 protocol ReviewServiceProtocol {
     func fetchReviews(for zoneID: Int, sort: ReviewSort) async throws -> [Review]
 }
@@ -20,11 +24,30 @@ protocol SearchRankWaybleZoneServiceProtocol {
     func fetchTopSearchedZones(in district: String) async throws -> [FavoritesWaybleZone]
 }
 
-public protocol FilesServiceProtocol {
-    func uploadImagesBase64(_ imagesBase64: [String]) async throws -> [String]
+// protocol FilesServiceProtocol {
+//    func uploadImagesBase64(_ imagesBase64: [String]) async throws -> [String]
+//}
+
+protocol FilesServiceProtocol {
+    func uploadImagesMultipart(_ datas: [Data]) async throws -> [String]
 }
 
-//public protocol UserPlaceServiceProtocol {
-//    func createUserPlace(waybleZoneId: Int, title: String) async throws -> UserPlace
-//    func fetchUserPlaces() async throws -> [UserPlace]
-//}
+ protocol UserPlaceServiceProtocol {
+    func saveList(_ payload: SaveList) async throws
+    func savePlaces(_ payload: SavePlacesPayload) async throws
+    func deletePlace(placeId: Int, waybleZoneId: Int) async throws
+    func fetchSimpleSavedPlaces(sort: UserPlaceSort) async throws -> [SimpleSavedPlaceResponse]
+    func fetchPlaces(placeId: Int, page: Int, size: Int) async throws -> Page<WaybleZone>
+}
+
+protocol WaybleZoneMapSearchServiceProtocol {
+    func searchMaps(
+        latitude: Double,
+        longitude: Double,
+        radiusKm: Double?,
+        zoneName: String?,
+        zoneType: ZoneType?,
+        page: Int,
+        size: Int
+    ) async throws -> Page<WaybleZoneMapSearchItem>
+}

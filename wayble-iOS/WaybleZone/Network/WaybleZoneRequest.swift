@@ -7,7 +7,7 @@ struct WaybleZoneRequest: APIRequest {
     let category: String
 
     var urlRequest: URLRequest {
-        var components = URLComponents(string: "http://localhost:8080/wayble-zone")!
+        var components = URLComponents(string: "https://wayble.site/api/v1/wayble-zones")!
         components.queryItems = [
             URLQueryItem(name: "city", value: city),
             URLQueryItem(name: "category", value: category)
@@ -15,7 +15,6 @@ struct WaybleZoneRequest: APIRequest {
 
         var request = URLRequest(url: components.url!)
         request.httpMethod = "GET"
-        request.setValue("Bearer valid_jwt_token", forHTTPHeaderField: "Authorization")
         return request
     }
 }

@@ -99,6 +99,3 @@ struct EditListView: View {
     }
 }
 
-#Preview {
-    EditListView().withRouter(selectedIndex: .constant(0))
-}

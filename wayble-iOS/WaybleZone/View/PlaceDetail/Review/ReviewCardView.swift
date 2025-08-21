@@ -10,7 +10,9 @@ struct ReviewCardView: View {
         HStack(alignment: .top, spacing: 13) {
             VStack(alignment: .leading, spacing: 3) {
                 HStack(alignment: .top, spacing: 8) {
-                    Image("profile1")
+                    let profiles = ["profile1", "profile2"]
+
+                    Image(profiles.randomElement() ?? "profile1")
                         .resizable()
                         .clipShape(Circle())
                         .frame(width: 39, height: 39)
@@ -68,14 +70,35 @@ struct ReviewCardView: View {
             .frame(height: innerHeight)
             
             
-            if let imageName = review.images.first {
-                Image(imageName)
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: innerHeight, height: innerHeight)
-                    .clipShape(RoundedRectangle(cornerRadius: 15))
-                    .clipped()
+            if let imageName = review.images.first,
+               let url = URL(string: imageName) {
+                AsyncImage(url: url) { phase in
+                    switch phase {
+                    case .empty:
+                        ProgressView()
+                            .frame(width: innerHeight, height: innerHeight)
+
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: innerHeight, height: innerHeight)
+                            .clipShape(RoundedRectangle(cornerRadius: 15))
+                            .clipped()
+
+                    case .failure:
+                        Image(systemName: "photo")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: innerHeight, height: innerHeight)
+                            .foregroundColor(.gray)
+
+                    @unknown default:
+                        EmptyView()
+                    }
+                }
             }
+
         }
         .frame(maxWidth: .infinity)
         .frame(height: cardHeight)

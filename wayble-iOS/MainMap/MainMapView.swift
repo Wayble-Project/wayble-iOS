@@ -86,7 +86,15 @@ struct MainTopBar: View {
             HStack(spacing: 0) {
                 MainSearchBar(selectedIndex: $selectedIndex)
                 Spacer()
+
+                NavigationLink {
+                    SavedPlaceListView(vm: UserPlaceViewModel(), selectedIndex: $selectedIndex)
+                } label: {
+                    HeartButton()
+                }
+
                 HeartButton(action: {selectedIndex = 19})
+
             } //h
             .padding(.top, 10)
             .padding(.bottom, 14)

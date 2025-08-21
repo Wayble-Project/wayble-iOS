@@ -2,22 +2,22 @@ import SwiftUI
 
 struct PlaceToolbar: View {
     @State private var showSheet = false
+    @Binding var selectedIndex: Int
     
-    let place = mockWaybleZoneResponse.data
-    
-    let onBack: () -> Void
-    let onShare: () -> Void
+    let zone: WaybleZone
     
     var body: some View {
         
         HStack {
             
-            BackButton()
+            WZBackButton(selectedIndex: $selectedIndex, toTab: 4)
             
             Spacer()
             
             HStack(spacing: 14) {
-                Button(action: onShare) {
+                Button {
+                   
+                } label: {
                     Image("share")
                 }
                 
@@ -27,8 +27,9 @@ struct PlaceToolbar: View {
                     Image("heart02")
                 }.sheet(isPresented: $showSheet) {
                     SavePlaceSheetView(
-                        zoneName: place.name,
-                        collections: mockSavedPlaces
+                        zoneId: zone.id,
+                        zoneName: zone.name, vm: UserPlaceViewModel()
+                        
                     )
                     .presentationDetents([.fraction(0.45)])
                 }

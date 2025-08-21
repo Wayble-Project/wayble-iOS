@@ -143,7 +143,3 @@ struct SavedPlaceEditView: View {
 }
 
 
-#Preview {
-    SavedPlaceEditView(savedPlace: mockSavedPlaces[0])
-        .withRouter(selectedIndex: .constant(0))
-}

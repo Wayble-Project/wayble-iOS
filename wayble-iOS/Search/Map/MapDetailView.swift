@@ -70,8 +70,13 @@ struct MapDetailView: View {
             if SearchViewModel.shared.waybleZones.first(where: { $0.name == place.title }) != nil {
                 VStack {
                     Spacer()
+//<<<<<<< HEAD
+//                    PlaceDetailView(vm: PlaceDetailViewModel(zoneID: zone.id), selectedIndex: $selectedIndex)
+//=======
 
-                    PlaceDetailView(vm: PlaceDetailViewModel())
+                    //여기 에러가 나요!!!
+                 //   PlaceDetailView(vm: PlaceDetailViewModel(zoneID: place.id), selectedIndex: )
+
 
                 }
             } else {
