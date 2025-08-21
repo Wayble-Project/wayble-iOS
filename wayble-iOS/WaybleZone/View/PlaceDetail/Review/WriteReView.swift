@@ -333,21 +333,27 @@ struct WriteReView: View {
                     title: "소중한 리뷰가 작성되었어요!",
                     buttonText: "홈으로",
                     onButtonTap: {
-                        Task { @MainActor in
+                        
                     
-                            dismiss()
+                           // dismiss()
 
-             
-                            try? await Task.sleep(nanoseconds: 0)
-                            router.reset()
-
-                            try? await Task.sleep(nanoseconds: 0)
-                            withAnimation(.default) {
-                                selectedIndex = 0
-                            }
+                       // router.push(.wayblezone)
+                          
+//                            router.reset()
+//
+//                            withAnimation(.default) {
+//                                //selectedIndex = 0
+//                                router.push(.wayblezone)
+//                            }
+//                        
+                        withAnimation {
+                            selectedIndex = 0
+                            showModal = false
+                           
                         }
-                        withAnimation { showModal = false }
-                        //router.pop()
+//                        //router.pop()
+                        //selectedIndex = 0
+                       
                     }
                 )
                 .transition(.scale.combined(with: .opacity))

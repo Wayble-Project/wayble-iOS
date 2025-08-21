@@ -251,6 +251,7 @@ struct WaybleZoneCard: View {
         // router.push(.placeDetail( ... )) 등 실제 라우팅 넣기
         // print("Go to detail:", zone.name)
         router.push(.placeDetailView(id: zone.id))
+    
     }
 }
 
