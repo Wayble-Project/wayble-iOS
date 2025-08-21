@@ -16,6 +16,7 @@ class TransportationModel {
     var selectedTab: TransportationTab
     
     var recommendedRoutes: [RouteOption] = []  //추천경로 리스트들 (모음집)
+    var transitSteps: [RouteStep] = []   // 대중교통 스텝만 저장 (시간/요금 제외)
     
     init(
         departure: String = "서울시 마포구 와우산로 94",
@@ -28,21 +29,31 @@ class TransportationModel {
     }
 }
 
-class RouteOption: Identifiable {
+class RouteOption: Identifiable, Hashable {
     let id = UUID()
-    let totalTime: Int            // ex: 45 (분)
-    let arrivalTime: String       // ex: "오후 2:30 도착"
-    let cost: Int                 // ex: 1450 (원)
-    let steps: [RouteStep]        // 경로 단계들 (지하철, 버스, 도보 등)
+    let totalTime: Int
+    let arrivalTime: String
+    let cost: Int
+    let steps: [RouteStep]
+    let routeIndex: Int?
     
-    init(totalTime: Int, arrivalTime: String, cost: Int, steps: [RouteStep]) {
-            self.totalTime = totalTime
-            self.arrivalTime = arrivalTime
-            self.cost = cost
-            self.steps = steps
-        }
+    init(totalTime: Int, arrivalTime: String, cost: Int, steps: [RouteStep], routeIndex: Int? = nil) {
+        self.totalTime = totalTime
+        self.arrivalTime = arrivalTime
+        self.cost = cost
+        self.steps = steps
+        self.routeIndex = routeIndex
+    }
+    
+    // Hashable 구현
+    static func == (lhs: RouteOption, rhs: RouteOption) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
 }
-
 // 경로의 각 단계
 class RouteStep: Identifiable {
     let id = UUID()
@@ -69,8 +80,36 @@ class RouteStep: Identifiable {
     var showDest: Bool = false
     var bustitle: String? // 마을
     var role: StepRole? // 각 단계의 역할 정보 (출발, 지하철, 버스환승, 하차 등)
+    /// 정류장/역 이름 리스트 (moveInfo)
+    let stops: [String]?      // 정류장/역 이름 리스트 (moveInfo)
+    /// 건너뛴 개수 표시용 (moveNumber)
+    let moveCount: Int?       // 건너뛴 개수 표시용 (moveNumber)
     
-    init(type: RouteStepType, title: String, subTitle: String, detail: String? = nil, extra: String? = nil, Info: String? = nil, extraBus: String? = nil, busTime: String?, role: StepRole? = nil, isDeparture: Bool = false, isFinal: Bool = false, routeDetail: String? = nil, routeMeter: String? = nil, chair: String? = nil,toilet: String? = nil, elevator: String? = nil, transfer: [String]? = nil, destFinal: Bool = false, simple: Bool = false, showDest: Bool = false, bustitle: String? = nil ) {
+    init(
+        type: RouteStepType,
+        title: String,
+        subTitle: String,
+        detail: String? = nil,
+        extra: String? = nil,
+        Info: String? = nil,
+        extraBus: String? = nil,
+        busTime: String?,
+        role: StepRole? = nil,
+        isDeparture: Bool = false,
+        isFinal: Bool = false,
+        routeDetail: String? = nil,
+        routeMeter: String? = nil,
+        chair: String? = nil,
+        toilet: String? = nil,
+        elevator: String? = nil,
+        transfer: [String]? = nil,
+        destFinal: Bool = false,
+        simple: Bool = false,
+        showDest: Bool = false,
+        bustitle: String? = nil,
+        stops: [String]? = nil,
+        moveCount: Int? = nil
+    ) {
         self.type = type
         self.title = title
         self.subTitle = subTitle
@@ -93,7 +132,8 @@ class RouteStep: Identifiable {
         self.showDest = showDest
         self.bustitle = bustitle
         
-        
+        self.stops = stops
+        self.moveCount = moveCount
         
         
         
@@ -197,4 +237,67 @@ enum StepRole {
     case finalBusStop
     case destination
 
+}
+
+extension TransportationModel {
+    /// 서버 응답을 화면용 RouteOption 리스트로 변환해 recommendedRoutes 채움
+    func applyTransit(response: TransitResponse) {
+        func strip(_ s: String) -> String {
+            s.replacingOccurrences(of: "<b>", with: "")
+             .replacingOccurrences(of: "</b>", with: "")
+        }
+
+        let options: [RouteOption] = response.routes.map { route in
+            let steps: [RouteStep] = route.steps.map { s in
+                let type: RouteStepType = {
+                    switch s.mode {
+                    case .WALK:   return .walk
+                    case .SUBWAY: return .subway
+                    case .BUS:    return .bus
+                    }
+                }()
+
+                let rawName = s.routeName ?? ""
+                let title = rawName.isEmpty
+                    ? (type == .walk ? "도보" : (type == .subway ? "지하철" : "버스"))
+                    : rawName
+
+                // from → to
+                let sub = "\(strip(s.from)) → \(strip(s.to))"
+
+                let detail: String? = {
+                    guard let si = s.subwayInfo else { return nil }
+                    let lift = si.wheelchair?.count ?? 0
+                    let elev = si.elevator?.count ?? 0
+                    let toilet = (si.accessibleRestroom == true) ? "O" : "X"
+                    return "휠체어 리프트: \(lift)개 / 엘리베이터: \(elev)개 / 장애인 화장실: \(toilet)"
+                }()
+
+                let extraBus = (s.busInfo?.isShuttleBus == true) ? "마을버스" : nil
+                let busTime  = s.busInfo?.dispatchInterval.map { "배차간격 \($0)분" }
+                let isLowFloor  = (s.busInfo?.isLowFloor?.contains(true) == true) ? "저상버스" : nil
+                let lowTag: String?  = (isLowFloor != nil) ? "저상버스" : nil
+                
+                return RouteStep(
+                    type: type,
+                    title: title,
+                    subTitle: sub,
+                    detail: detail,
+                    extra: nil,
+                    Info: lowTag,
+                    extraBus: extraBus,
+                    busTime: busTime,
+                    simple: true,
+                    stops: s.moveInfo?.map { $0.nodeName },
+                    moveCount: s.moveNumber
+                )
+            }
+
+            // 총시간/요금/도착시는 서버 스펙 추가되면 채우자
+            return RouteOption(totalTime: 0, arrivalTime: "-", cost: 0, steps: steps, routeIndex: route.routeIndex)
+        }
+
+        self.recommendedRoutes = options
+        self.transitSteps = [] // 안 쓰면 비워두거나 유지
+    }
 }

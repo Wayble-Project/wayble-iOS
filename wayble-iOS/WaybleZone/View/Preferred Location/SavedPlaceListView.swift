@@ -4,6 +4,7 @@ import SwiftUI
 struct SavedPlaceListView: View {
     @Environment(NavigationRouter.self) var router
     @State private var selected = "최신순"
+
     @State var vm: UserPlaceViewModel
     @Binding var selectedIndex: Int
    
@@ -14,6 +15,12 @@ struct SavedPlaceListView: View {
        
             HStack {
                 WZBackButton(selectedIndex: $selectedIndex, toTab: 4).padding(.trailing, 5)
+                
+//                BackButton(action: {
+//                    selectedIndex = 18
+//                })
+//                    .padding(.trailing, 5)
+
                 Text("내가 저장한 장소")
                     .font(.mainTextSemibold20)
                     .foregroundStyle(Color("gray-900"))
@@ -103,19 +110,4 @@ struct SavedPlaceListView: View {
 }
 
 
-//extension UserPlaceViewModel {
-//    @MainActor static var previewLoaded: UserPlaceViewModel {
-//        let vm = UserPlaceViewModel()
-//        vm.places = [
-//            .init(placeId: 1, title: "강남 카페 리스트", color: "Blue",  savedCount: 20),
-//            .init(placeId: 2, title: "홍대 맛집",       color: "Red",   savedCount: 8),
-//        ]
-//        return vm
-//    }
-//}
-
-//#Preview {
-//    SavedPlaceListView(vm: .previewLoaded)    .environment(NavigationRouter())
-//     
-//}
 

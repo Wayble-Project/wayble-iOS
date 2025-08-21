@@ -13,8 +13,10 @@ struct RouterViewModifier: ViewModifier {
     @Bindable var signupViewModel: SignupViewModel
     @Bindable var onboardingViewModel: OnboardingViewModel
     @Bindable var homeViewModel: HomeViewModel
+    @State private var selectedDeparture: PlaceModel? = nil
+    @State private var selectedArrival: PlaceModel? = nil
     
-    @State private var searchViewModel = SearchViewModel()
+    @State private var searchViewModel = SearchViewModel.shared
     @State private var place: PlaceModel = PlaceModel()
     
     
@@ -22,7 +24,8 @@ struct RouterViewModifier: ViewModifier {
     private func routeView(for route: Route) -> some View {
         switch route {
         case .home:
-            return AnyView(HomeView(selectedIndex: $selectedIndex, viewModel: onboardingViewModel, homeViewModel: homeViewModel)
+            return AnyView(HomeView(selectedIndex: $selectedIndex, viewModel: onboardingViewModel, homeViewModel: homeViewModel,selectedDeparture: $selectedDeparture,
+                                    selectedArrival: $selectedArrival)
                 .navigationBarBackButtonHidden(true))
             
             
@@ -41,15 +44,17 @@ struct RouterViewModifier: ViewModifier {
             return AnyView(WaybleZoneMainView(vm: TopPlaceViewModel(),selectedIndex: $selectedIndex)
                 .navigationBarBackButtonHidden(true))
             
-
+            
             
         case .onboardingCompleted:
             return AnyView(OnboardingCompletedView(viewModel: onboardingViewModel, homeViewModel: homeViewModel, selectedIndex: $selectedIndex)
                 .navigationBarBackButtonHidden(true))
             
-        case .routeDetail:
-            return AnyView(RouteDetail()
-                .navigationBarBackButtonHidden(true))
+        case let .routeDetail(routeOption):
+            return AnyView(
+                RouteDetail(route: routeOption)
+                    .navigationBarBackButtonHidden(true)
+            )
             
         case .searchHome:
             return AnyView(SearchHomeView(selectedIndex: $selectedIndex)
@@ -78,7 +83,7 @@ struct RouterViewModifier: ViewModifier {
         case .placeDetailView(let id): // let zone 넣고
             return  AnyView(PlaceDetailView(vm: PlaceDetailViewModel(zoneID: id),selectedIndex: $selectedIndex)
                 .navigationBarBackButtonHidden(true))
-         
+            
             /// NavigationRouter 에 case placeDetailView 를 case placeDetailView(let zone)으로 넣음
             /// 그리고 RouterViewModifier 에 있는 case .placeDetailView(안에 let zone) 넣고 파라미터로 zone: zone 넣음
             
@@ -98,14 +103,13 @@ struct RouterViewModifier: ViewModifier {
         case .savedPlaceListView:
             return AnyView(SavedPlaceListView(vm: UserPlaceViewModel(),selectedIndex: $selectedIndex)
                 .navigationBarBackButtonHidden(true))
-                
+            
         case let .searchBar(entryType):
             return AnyView(
                 SearchBarView(
                     viewModel: searchViewModel,
                     place: $place,
                     selectedIndex: $selectedIndex,
-                    entryPoint: .directions,
                     entryType: entryType
                 )
                 .navigationBarBackButtonHidden(true)
@@ -120,8 +124,7 @@ struct RouterViewModifier: ViewModifier {
             return AnyView(
                 SearchBarView(
                     viewModel: searchViewModel, place: $place,
-                    selectedIndex: $selectedIndex,
-                    entryPoint: .directions
+                    selectedIndex: $selectedIndex
                 )
                 .navigationBarBackButtonHidden(true)
             )
@@ -142,7 +145,7 @@ struct RouterViewModifier: ViewModifier {
                 )
                 .navigationBarBackButtonHidden(true)
             )
-
+            
         case .transportation(let entryType, let arrivalPlace, let departurePlace):
             return AnyView(
                 Transportation(
@@ -161,6 +164,9 @@ struct RouterViewModifier: ViewModifier {
             return AnyView(MainMapView(selectedIndex: $selectedIndex)
                 .navigationBarBackButtonHidden(true))
             
+        case .savedPlaceListView:
+            return AnyView(SavedPlaceListView(vm: UserPlaceViewModel(),selectedIndex: $selectedIndex)
+                .navigationBarBackButtonHidden(true))
         }
     }
     

@@ -33,7 +33,7 @@ struct CustomTabBarView: View {
                                 .renderingMode(.template)
                                 .resizable()
                                 .frame(width: 24, height: 24)
-                                .foregroundColor(selectedIndex == 0 ? Color("darkblue-500") : .gray500)
+                                .foregroundStyle(selectedIndex == 0 ? Color("darkblue-500") : .gray500)
                         }
                     }
                     .buttonStyle(.plain)
@@ -102,10 +102,10 @@ struct CustomTabBarView: View {
     
 }
 
-#Preview {
+/*#Preview {
     CustomTabBarView(selectedIndex: .constant(1))
         .previewLayout(.sizeThatFits)
         .padding()
         .background(Color.gray.opacity(0.1))
         .withRouter(selectedIndex: .constant(0),router: NavigationRouter())
-}
+}*/

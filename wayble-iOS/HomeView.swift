@@ -1,4 +1,305 @@
+////
+////  HomeView.swift
+////  wayble_iOS
+////
+////  Created by 신민정 on 7/9/25.
+////
 //
+//import SwiftUI
+//import Foundation
+//import Observation
+//import AVKit
+//
+//
+//struct HomeView: View {
+//    @Bindable var WaybleviewModel = FacilitySelectionViewModel()
+//    @Binding var selectedIndex: Int
+//    @Environment(NavigationRouter.self) private var router
+//    @Bindable var viewModel: OnboardingViewModel ///0811
+//    //let zone: FavWaybleZoneInfo /// let으로 하는 게 맞나??
+//    @Bindable var homeViewModel: HomeViewModel
+//    @Binding var selectedDeparture: PlaceModel?
+//    @Binding var selectedArrival: PlaceModel?
+//    
+//
+//    var body: some View {
+//        VStack(alignment: .leading) {
+//            HStack{
+//                Image(.waybleLogo3)
+//                Text("wayble")
+//                    .font(.mainTextSemibold20)
+//            }
+//            .padding(.leading,10)
+//            Spacer()
+//                .frame(maxHeight:21)
+//            ZStack(alignment: .top) {
+//                GeometryReader { geo in
+//                    MP4View(filename: "Home", fileExtension: "mp4", size: geo.size)
+//                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+//                        .clipShape(RoundedRectangle(cornerRadius: 30))
+//                    
+//                }
+//                
+//                
+//                VStack(alignment: .leading,spacing: 0) {
+//                    VStack(alignment: .leading, spacing: 0) {
+//                    
+//                    VStack(alignment: .leading,spacing: 0) {
+//                        
+//                        Spacer()
+//                            .frame(height:19)
+//                        
+//                        Text("\(viewModel.userInfo.nickname)님, 안녕하세요")
+//                            .font(.mainTextSemibold16)
+//                        
+//                        Spacer()
+//                            .frame(maxHeight:9)
+//                        
+//                        let zoneName = homeViewModel.zone?.name ?? "아임히어"
+//                        (
+//                            Text("오늘은 ")
+//                                .font(.mainTextSemibold24)
+//                            + Text(zoneName)
+//                                .font(.mainTextSemibold24)
+//                                .foregroundStyle(Color("blue-700"))
+//                            + Text("를 추천해요")
+//                                .font(.mainTextSemibold24)
+//                        )
+//                        .lineLimit(2)
+//                        .truncationMode(.tail)
+//                        .fixedSize(horizontal: false, vertical: true)
+//                        .multilineTextAlignment(.leading)
+//                    }
+//                    .padding(.horizontal,25)
+//                    .padding(.bottom, 8)
+//                    
+//                    
+//
+//                    Spacer()
+//                        .frame(height:163)
+//                    
+//                    HStack() { ///길찾기 버튼
+//                        Button(action: {
+//                            withAnimation(.default) {
+//                                ///homeViewModel.zone가 없을 때 WaybleviewModel.mockZone를 FavWaybleZoneInfo 타입으로 변환해서 사용
+//                                let z: FavWaybleZoneInfo = homeViewModel.zone ?? FavWaybleZoneInfo(
+//                                    id: WaybleviewModel.mockZone.id,
+//                                    name: WaybleviewModel.mockZone.name,
+//                                    category: WaybleviewModel.mockZone.category,
+//                                    imageUrl: WaybleviewModel.mockZone.imageUrl,
+//                                    address: WaybleviewModel.mockZone.address,
+//                                    latitude: WaybleviewModel.mockZone.latitude ?? 0.0,        // 기본값 0.0
+//                                    longitude: WaybleviewModel.mockZone.longitude ?? 0.0,      // 기본값 0.0
+//                                    rating: WaybleviewModel.mockZone.rating ?? 0.0,            // 기본값 0.0
+//                                    reviewCount: WaybleviewModel.mockZone.reviewCount ?? 0,    // 기본값 0
+//                                    facilities: WaybleviewModel.mockZone.facilities ?? []      // 기본값 []
+//                                )
+//
+//                    // 아이콘 웨이블존 껄로 다시
+//                   // let facilityItems = FacilityUtils.cardFacilityItems(from: WaybleviewModel.facilities)
+//
+//
+//                    HStack(spacing: 32) {
+//                        ForEach(facilityItems, id: \.label) { item in
+//                            VStack(spacing: 5.6) {
+//                                Image(item.icon)
+//                                    .renderingMode(.template)
+//                                    .resizable()
+//                                    .frame(maxWidth: 23, maxHeight: 23)
+//                                    .foregroundStyle(item.isAvailable ? Color("blue-800") : Color("gray-500"))
+//
+//                                Text(item.label)
+//                                    .font(.mainTextSemibold9)
+//                                    .lineLimit(1)
+//                                    .foregroundStyle(item.isAvailable ? Color("blue-800") : Color("gray-500"))
+//                            }
+//                        }
+//                    }
+//                    .padding(.leading, 25)
+//                    .padding(.top, 6)
+//                    
+//                    
+//                }
+//                
+//                
+//                HStack { ///길찾기 버튼
+//                    Button(action: {
+//                        withAnimation(.default) {
+//                            // 1) 존 → 도착지 PlaceModel 변환
+//                            let z: FavWaybleZoneInfo = homeViewModel.zone ?? FavWaybleZoneInfo(
+//                                id: WaybleviewModel.mockZone.id,
+//                                name: WaybleviewModel.mockZone.name,
+//                                category: WaybleviewModel.mockZone.category,
+//                                imageUrl: WaybleviewModel.mockZone.imageUrl,
+//                                address: WaybleviewModel.mockZone.address,
+//                                latitude: WaybleviewModel.mockZone.latitude,
+//                                longitude: WaybleviewModel.mockZone.longitude,
+//                                rating: WaybleviewModel.mockZone.rating,
+//                                reviewCount: WaybleviewModel.mockZone.reviewCount,
+//                                facilities: WaybleviewModel.mockZone.facilities
+//                            )
+//
+//                            let arrival = PlaceModel(
+//                                title: z.name,
+//                                roadAddress: z.address,
+//                                x: "\(z.longitude)",   // 경도
+//                                y: "\(z.latitude)",    // 위도
+//                                category: z.category
+//                            )
+//
+//                            // 2) 도착지만 먼저 꽂고 길찾기 화면으로 이동
+//                            self.selectedArrival = arrival
+//                            SearchViewModel.shared.setPlace(arrival, for: .destination)
+//                           //onAppear의 자동 현재위치 강제 세팅
+//                            SearchViewModel.shared.hasUserSetDeparture = false
+//                            self.selectedDeparture = nil
+//                           
+//                            self.selectedIndex = 15
+//                            print("➡️ 길찾기 화면으로 이동. 도착지=\(arrival.title)")
+//
+//                        }
+//                    }) {
+//                        HStack(spacing: 0) {
+//                            Text("길찾기")
+//                                .font(.mainTextSemibold14)
+//                                .foregroundStyle(Color.white)
+//                                .fixedSize()
+//                            Image("right")
+//                        }
+//                        .frame(maxWidth: 55, maxHeight: 20)
+//                        .padding(.horizontal, 20)
+//                        .padding(.vertical, 10)
+//                        .background(Color("blue-700"))
+//                        .clipShape(RoundedRectangle(cornerRadius: 20))
+//                    }
+//                    .buttonStyle(.plain)
+//                }
+//                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
+//                .padding(.leading, 25)
+//                .padding(.bottom, 24)
+//                }
+//                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+//            }
+//            .frame(maxWidth: .infinity)
+//            .aspectRatio(360.0/343.0, contentMode: .fit)
+//            Spacer().frame(maxHeight:34)
+//            
+//            HStack(spacing: 10) {
+//                Button(action: {withAnimation(.default){
+//                    selectedIndex = 4
+//                }
+//                }) {
+//                    VStack(alignment:.leading, spacing: 6) {
+//                        Text("웨이블존")
+//                            .font(.mainTextSemibold16)
+//                        Text("우리 주변 접근성 정보를 보여드려요")
+//                            .font(.mainTextRegular14)
+//                            .foregroundStyle(Color.gray700)
+//                            .frame(maxWidth: .infinity, alignment: .leading)
+//                        
+//                        Spacer()
+//                        HStack {
+//                            Spacer()
+//                            Image("home1")
+//                        }
+//                    }
+//                    .padding(.all, 20.0)
+//                    .frame(maxWidth: .infinity)
+//                    .aspectRatio(170.0/210.0, contentMode: .fit)
+//                    .background(Color.white)
+//                    .cornerRadius(15)
+//                    .overlay(
+//                        RoundedRectangle(cornerRadius: 15)
+//                            .stroke(Color.gray300, lineWidth: 1)
+//                    )
+//                }
+//                .buttonStyle(.plain)
+//                
+//                Button(action : {
+//                    withAnimation(.default)
+//                    {
+//                        selectedIndex = 3 // 탭 인덱스를 이동
+//                    }
+//                    
+//                }) {
+//                    VStack(alignment:.leading, spacing: 6)  {
+//                        
+//                        Text("길찾기")
+//                            .font(.mainTextSemibold16)
+//                        Text("개인에 맞춘 최적 경로를 추천해요")
+//                            .font(.mainTextRegular14)
+//                            .foregroundStyle(Color.gray700)
+//                            .frame(maxWidth: .infinity, alignment: .leading)
+//                        
+//                        Spacer()
+//                        HStack {
+//                            Spacer()
+//                            Image("home2")
+//                        }
+//                    }
+//                    .padding(20)
+//                    .frame(maxWidth: .infinity)
+//                    .aspectRatio(170.0/210.0, contentMode: .fit)
+//                    .background(Color.white)
+//                    .cornerRadius(15)
+//                    .overlay(
+//                        RoundedRectangle(cornerRadius: 15)
+//                            .stroke(Color.gray300, lineWidth: 1)
+//                    )
+//                }
+//                .buttonStyle(.plain)
+//            }
+//            .frame(maxWidth: .infinity, alignment: .leading)
+//            Spacer()
+//        }
+//        .padding(.horizontal,20)
+//        .padding(.top, 12)
+//        .onAppear {
+//            WaybleviewModel.loadMockData()
+//        }
+//        
+//         
+//    }
+//      
+//}
+//
+//
+//// MARK: - Facilities Extension
+//extension Facilities {
+//    func value(for option: FacilityOption) -> Bool {
+//        switch option {
+//        case .hasSlope: return hasSlope
+//        case .hasNoDoorStep: return hasNoDoorStep
+//        case .hasElevator: return hasElevator
+//        case .hasTableSeat: return hasTableSeat
+//        case .hasDisabledToilet: return hasDisabledToilet
+//        default: return false
+//        }
+//    }
+//}
+//
+//extension HomeView {
+//    var facilityItems: [FacilityUtils.FacilityItem] {
+//        if let z = homeViewModel.zone {
+//            return FacilityUtils.cardFacilityItems(from: z.facilities)
+//        } else {
+//            return []
+//        }
+//    }
+//    
+//}
+//
+
+
+
+
+
+
+
+
+
+
+
 //  HomeView.swift
 //  wayble_iOS
 //
@@ -13,17 +314,15 @@ import AVKit
 
 struct HomeView: View {
     @Bindable var WaybleviewModel = FacilitySelectionViewModel()
-    @State private var selectedArrival: PlaceModel? = nil
-    @State private var selectedDeparture: PlaceModel? = nil
     @Binding var selectedIndex: Int
     @Environment(NavigationRouter.self) private var router
     @Bindable var viewModel: OnboardingViewModel ///0811
     //let zone: FavWaybleZoneInfo /// let으로 하는 게 맞나??
     @Bindable var homeViewModel: HomeViewModel
+    @Binding var selectedDeparture: PlaceModel?
+    @Binding var selectedArrival: PlaceModel?
     
-#if DEBUG
-    @EnvironmentObject var authViewModel: AuthViewModel
-#endif
+
     var body: some View {
         VStack(alignment: .leading) {
             HStack{
@@ -33,7 +332,7 @@ struct HomeView: View {
             }
             .padding(.leading,10)
             Spacer()
-                .frame(height:21)
+                .frame(maxHeight:21)
             ZStack(alignment: .top) {
                 GeometryReader { geo in
                     MP4View(filename: "Home", fileExtension: "mp4", size: geo.size)
@@ -41,244 +340,204 @@ struct HomeView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 30))
                     
                 }
-                .frame(width: 360, height: 343)
+                
                 
                 VStack(alignment: .leading,spacing: 0) {
+                    VStack(alignment: .leading, spacing: 0) {
                     
                     VStack(alignment: .leading,spacing: 0) {
-                        VStack(alignment: .leading,spacing: 0) {
-                            
-                            Spacer()
-                                .frame(height:19)
-                            
-                            Text("\(viewModel.userInfo.nickname)님, 안녕하세요")
-                                .font(.mainTextSemibold16)
-                            
-                            Spacer()
-                                .frame(height:9)
-                            
-                            (
-                                Text("오늘은 ")
-                                    .font(.mainTextSemibold24) +
-                                Text(homeViewModel.zone?.name ?? "추천존") //여기 웨이블존 모델 카페 이름으로 다시
-                                    .font(.mainTextSemibold24)
-                                    .foregroundStyle(Color("blue-700")) +
-                                Text("를 추천해요")
-                                    .font(.mainTextSemibold24)
-                            )
-                        }
-                        .padding(.horizontal,25)
-                        
                         
                         Spacer()
-                            .frame(height:6)
+                            .frame(height:19)
                         
-                        // 아이콘 웨이블존 껄로 다시
-                       // let facilityItems = FacilityUtils.cardFacilityItems(from: WaybleviewModel.facilities)
-
-                        HStack(spacing: 32) {
-                            ForEach(facilityItems, id: \.label) { item in
-                                VStack(spacing: 5.6) {
-                                    Image(item.icon)
-                                        .renderingMode(.template)
-                                        .resizable()
-                                        .frame(width: 23, height: 23)
-                                        .foregroundStyle(item.isAvailable ? Color("blue-800") : Color("gray-500"))
-
-                                    Text(item.label)
-                                        .font(.mainTextSemibold9)
-                                        .lineLimit(1)
-                                        .foregroundStyle(item.isAvailable ? Color("blue-800") : Color("gray-500"))
-                                }
-                            }
-                        }
-                        .padding(.leading, 25)
+                        Text("\(viewModel.userInfo.nickname)님, 안녕하세요")
+                            .font(.mainTextSemibold16)
                         
+                        Spacer()
+                            .frame(maxHeight:9)
                         
+                        let zoneName = homeViewModel.zone?.name ?? "아임히어"
+                        (
+                            Text("오늘은 ")
+                                .font(.mainTextSemibold24)
+                            + Text(zoneName)
+                                .font(.mainTextSemibold24)
+                                .foregroundStyle(Color("blue-700"))
+                            + Text("를 추천해요")
+                                .font(.mainTextSemibold24)
+                        )
+                        .lineLimit(2)
+                        .truncationMode(.tail)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .multilineTextAlignment(.leading)
                     }
+                    .padding(.horizontal,25)
+                    .padding(.bottom, 8)
                     
                     
-                    Spacer()
-                        .frame(height:163)
-                    
-                    HStack() { ///길찾기 버튼
-                        Button(action: {
-                            withAnimation(.default) {
-                                ///homeViewModel.zone가 없을 때 WaybleviewModel.mockZone를 FavWaybleZoneInfo 타입으로 변환해서 사용
-                                let z: FavWaybleZoneInfo = homeViewModel.zone ?? FavWaybleZoneInfo(
-                                    id: WaybleviewModel.mockZone.id,
-                                    name: WaybleviewModel.mockZone.name,
-                                    category: WaybleviewModel.mockZone.category,
-                                    imageUrl: WaybleviewModel.mockZone.imageUrl,
-                                    address: WaybleviewModel.mockZone.address,
-                                    latitude: WaybleviewModel.mockZone.latitude!,
-                                    longitude: WaybleviewModel.mockZone.longitude!,
-                                    rating: WaybleviewModel.mockZone.rating!,
-                                    reviewCount: WaybleviewModel.mockZone.reviewCount!,
-                                    facilities: WaybleviewModel.mockZone.facilities!
-                                )
+                    // 아이콘 웨이블존 껄로 다시
+                   // let facilityItems = FacilityUtils.cardFacilityItems(from: WaybleviewModel.facilities)
 
-                                let arrival = PlaceModel(
-                                    title: selectedDeparture?.title ?? z.name,
-                                    roadAddress: z.address,
-                                    x: "\(z.longitude)",
-                                    y: "\(z.latitude)",
-                                    category: z.category
-                                )
+                    HStack(spacing: 32) {
+                        ForEach(facilityItems, id: \.label) { item in
+                            VStack(spacing: 5.6) {
+                                Image(item.icon)
+                                    .renderingMode(.template)
+                                    .resizable()
+                                    .frame(maxWidth: 23, maxHeight: 23)
+                                    .foregroundStyle(item.isAvailable ? Color("blue-800") : Color("gray-500"))
 
-                                LocationManager.shared.requestLocation { coordinate in
-                                    guard let coordinate = coordinate else { return }
-
-                                    Task {
-                                        do {
-                                            let (title, roadAddress) = try await SearchViewModel.shared.callReverseGeocodeAPI(
-                                                lat: coordinate.latitude,
-                                                lng: coordinate.longitude
-                                            )
-
-                                            let departure = PlaceModel(
-                                                title: title,
-                                                roadAddress: roadAddress,
-                                                x: "\(coordinate.longitude)",
-                                                y: "\(coordinate.latitude)",
-                                                category: "기타"
-                                            )
-
-                                            router.push(
-                                                .transportation(
-                                                    entryType: .destination,
-                                                    selectedArrival: arrival,
-                                                    selectedDeparture: departure
-                                                )
-                                            )
-                                        } catch {
-                                            print("❌ 역지오코딩 실패: \(error)")
-                                        }
-                                    }
-                                }
+                                Text(item.label)
+                                    .font(.mainTextSemibold9)
+                                    .lineLimit(1)
+                                    .foregroundStyle(item.isAvailable ? Color("blue-800") : Color("gray-500"))
                             }
-                        }) {
-                            HStack(spacing: 0) {
-                                Text("길찾기")
-                                    .font(.mainTextSemibold14)
-                                    .foregroundStyle(Color.white)
-                                    .fixedSize()
-                                
-                                Image("right")
-                            }
-                            .frame(width: 55, height: 20)
-                            .padding(.horizontal, 20)
-                            .padding(.vertical, 10)
-                            .background(Color("blue-700"))
-                            .clipShape(RoundedRectangle(cornerRadius: 20))
                         }
-                        .buttonStyle(.plain)
                     }
-                    .padding(.leading, 20)
+                    .padding(.leading, 25)
+                    .padding(.top, 6)
                     
-                    Spacer()
-                        .frame(height: 45)
-
-                    HStack(spacing: 10) {
-                        Button(action: {withAnimation(.default){
-                            selectedIndex = 4
-                        }
-                        }) {
-                            VStack(alignment:.leading, spacing: 6) {
-                                Text("웨이블존")
-                                    .font(.mainTextSemibold16)
-                                Text("우리 주변 접근성 정보를 보여드려요")
-                                    .font(.mainTextRegular14)
-                                    .foregroundStyle(Color.gray700)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                
-                                Spacer()
-                                HStack {
-                                    Spacer()
-                                    Image("home1")
-                                }
-                            }
-                            .padding(.all, 20.0)
-                            .frame(width: 170, height: 210)
-                            .background(Color.white)
-                            .cornerRadius(15)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 15)
-                                    .stroke(Color.gray300, lineWidth: 1)
-                            )
-                        }
-                        .buttonStyle(.plain)
-                        
-                        Button(action : {
-                            withAnimation(.default)
-                            {
-                                selectedIndex = 3 // 탭 인덱스를 이동
-                            }
-                            
-                        }) {
-                            VStack(alignment:.leading, spacing: 6)  {
-                                
-                                Text("길찾기")
-                                    .font(.mainTextSemibold16)
-                                Text("개인에 맞춘 최적 경로를 추천해요")
-                                    .font(.mainTextRegular14)
-                                    .foregroundStyle(Color.gray700)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                
-                                Spacer()
-                                HStack {
-                                    Spacer()
-                                    Image("home2")
-                                }
-                            }
-                            .padding(20)
-                            .frame(width: 170, height: 210)
-                            .background(Color.white)
-                            .cornerRadius(15)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 15)
-                                    .stroke(Color.gray300, lineWidth: 1)
-                            )
-                        }
-                        .buttonStyle(.plain)
-                    }
-                    Spacer()
+                    
                 }
+                
+                
+                HStack { ///길찾기 버튼
+                    Button(action: {
+                        withAnimation(.default) {
+                            // 1) 존 → 도착지 PlaceModel 변환
+                            let z: FavWaybleZoneInfo = homeViewModel.zone ?? FavWaybleZoneInfo(
+                                id: WaybleviewModel.mockZone.id,
+                                name: WaybleviewModel.mockZone.name,
+                                category: WaybleviewModel.mockZone.category,
+                                imageUrl: WaybleviewModel.mockZone.imageUrl,
+                                address: WaybleviewModel.mockZone.address,
+                                latitude: WaybleviewModel.mockZone.latitude ?? 0.0,        // 기본값 0.0
+                                   longitude: WaybleviewModel.mockZone.longitude ?? 0.0,      // 기본값 0.0
+                                   rating: WaybleviewModel.mockZone.rating ?? 0.0,            // 기본값 0.0
+                                   reviewCount: WaybleviewModel.mockZone.reviewCount ?? 0,    // 기본값 0
+                                   facilities: WaybleviewModel.mockZone.facilities ?? .empty      // 기본값 []
+                            )
+
+                            let arrival = PlaceModel(
+                                title: z.name,
+                                roadAddress: z.address,
+                                x: "\(z.longitude)",   // 경도
+                                y: "\(z.latitude)",    // 위도
+                                category: z.category
+                            )
+
+                            // 2) 도착지만 먼저 꽂고 길찾기 화면으로 이동
+                            self.selectedArrival = arrival
+                            SearchViewModel.shared.setPlace(arrival, for: .destination)
+                           //onAppear의 자동 현재위치 강제 세팅
+                            SearchViewModel.shared.hasUserSetDeparture = false
+                            self.selectedDeparture = nil
+                           
+                            self.selectedIndex = 15
+                            print("➡️ 길찾기 화면으로 이동. 도착지=\(arrival.title)")
+
+                        }
+                    }) {
+                        HStack(spacing: 0) {
+                            Text("길찾기")
+                                .font(.mainTextSemibold14)
+                                .foregroundStyle(Color.white)
+                                .fixedSize()
+                            Image("right")
+                        }
+                        .frame(maxWidth: 55, maxHeight: 20)
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 10)
+                        .background(Color("blue-700"))
+                        .clipShape(RoundedRectangle(cornerRadius: 20))
+                    }
+                    .buttonStyle(.plain)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
+                .padding(.leading, 25)
+                .padding(.bottom, 24)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             }
-            .padding(.horizontal,5)
+            .frame(maxWidth: .infinity)
+            .aspectRatio(360.0/343.0, contentMode: .fit)
+            Spacer().frame(maxHeight:34)
+            
+            HStack(spacing: 10) {
+                Button(action: {withAnimation(.default){
+                    selectedIndex = 4
+                }
+                }) {
+                    VStack(alignment:.leading, spacing: 6) {
+                        Text("웨이블존")
+                            .font(.mainTextSemibold16)
+                        Text("우리 주변 접근성 정보를 보여드려요")
+                            .font(.mainTextRegular14)
+                            .foregroundStyle(Color.gray700)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        
+                        Spacer()
+                        HStack {
+                            Spacer()
+                            Image("home1")
+                        }
+                    }
+                    .padding(.all, 20.0)
+                    .frame(maxWidth: .infinity)
+                    .aspectRatio(170.0/210.0, contentMode: .fit)
+                    .background(Color.white)
+                    .cornerRadius(15)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 15)
+                            .stroke(Color.gray300, lineWidth: 1)
+                    )
+                }
+                .buttonStyle(.plain)
+                
+                Button(action : {
+                    withAnimation(.default)
+                    {
+                        selectedIndex = 3 // 탭 인덱스를 이동
+                    }
+                    
+                }) {
+                    VStack(alignment:.leading, spacing: 6)  {
+                        
+                        Text("길찾기")
+                            .font(.mainTextSemibold16)
+                        Text("개인에 맞춘 최적 경로를 추천해요")
+                            .font(.mainTextRegular14)
+                            .foregroundStyle(Color.gray700)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        
+                        Spacer()
+                        HStack {
+                            Spacer()
+                            Image("home2")
+                        }
+                    }
+                    .padding(20)
+                    .frame(maxWidth: .infinity)
+                    .aspectRatio(170.0/210.0, contentMode: .fit)
+                    .background(Color.white)
+                    .cornerRadius(15)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 15)
+                            .stroke(Color.gray300, lineWidth: 1)
+                    )
+                }
+                .buttonStyle(.plain)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            Spacer()
         }
         .padding(.horizontal,20)
         .padding(.top, 12)
         .onAppear {
             WaybleviewModel.loadMockData()
         }
-        /*
-        .task {
-            print("🚀 .task start")
-            async let nicknameTask: () = viewModel.fetchNicknameIfNeeded()
-            async let zoneTask: () = homeViewModel.fetchZone(size: 1)
-            await nicknameTask
-            await zoneTask
-            print("✅ home task all done")
-        }
-         */
+        
          
-#if DEBUG
-.overlay(alignment: .bottomTrailing) {
-    Button("로그아웃(키체인 삭제)") {
-        KeychainManager.standard.deleteSession(for: "tokenInfoKey")
-        authViewModel.state = .loggedOut
-    }
-    .padding(.horizontal, 12)
-    .padding(.vertical, 8)
-    .background(.ultraThinMaterial)
-    .clipShape(Capsule())
-    .shadow(radius: 3)
-    .padding(.trailing, 16)
-    .padding(.bottom, 100)   // ← 탭바보다 위로 올림. 필요하면 숫자 조절
-    .zIndex(999)
-}
-#endif
     }
       
 }

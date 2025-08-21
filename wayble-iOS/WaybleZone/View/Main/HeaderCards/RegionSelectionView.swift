@@ -84,7 +84,7 @@ struct RegionSheetView: View {
         VStack(alignment: .leading, spacing: 0) {
             Capsule()
                 .frame(width: 98, height: 6)
-                .foregroundColor(Color("gray-300"))
+                .foregroundStyle(Color("gray-300"))
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 14)
 

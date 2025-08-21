@@ -120,14 +120,3 @@ struct PlaceReView: View {
     }
 }
 
-//#Preview {
-//    
-//    PlaceReView( selected: .constant("최신순"), waybleZone: mockWaybleZoneResponse.data,reviews: mockReviewListResponse.data)
-//       // .environment(WaybleZoneNavigationRouter())
-//        .environment(NavigationRouter())
-//            
-//  /*
-//    PlaceReView(reviews: mockReviewListResponse.data, onWrite: {})
-//        .withRouter(selectedIndex: .constant(0),router: NavigationRouter())
-//  */
-//}

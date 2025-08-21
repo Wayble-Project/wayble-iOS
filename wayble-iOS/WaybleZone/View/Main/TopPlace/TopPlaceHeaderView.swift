@@ -70,11 +70,6 @@ struct TopPlaceView: View {
     }
 }
 
-#Preview {
-//    TopPlaceView(vm: TopPlaceViewModel()).withRouter(selectedIndex: .constant(0))
-    TopPlaceView(vm: TopPlaceViewModel()).environment(NavigationRouter())
-}
-
 //import SwiftUI
 //
 //struct TopPlaceView: View {

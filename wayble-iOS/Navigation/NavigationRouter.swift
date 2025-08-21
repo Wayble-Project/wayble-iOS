@@ -47,7 +47,7 @@ enum Route: Hashable {
     case wzMainMapView
     
     case onboardingCompleted
-    case routeDetail
+    case routeDetail(RouteOption)
     case searchHome
     case searchBar(entryType: EntryType)
     case mapDetail(place: PlaceModel)
@@ -62,4 +62,5 @@ enum Route: Hashable {
         selectedDeparture: PlaceModel?
     )
     case mainMapView
+   // case savedPlaceList
 }

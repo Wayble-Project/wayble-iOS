@@ -22,7 +22,7 @@ struct PlaceDetailView: View {
                     )
                     PlaceInfoView(waybleZone: zone)
                     PlaceReView(selected: $sortLabel, waybleZone: zone, reviews: vm.reviews)
-                } 
+                }
             }
         }
         // zoneID가 바뀌면 자동 재요청
@@ -43,7 +43,7 @@ struct PlaceDetailView: View {
 private extension String {
     func toReviewSort() -> ReviewSort {
             switch self {
-            case "추천순": return .rating   
+            case "추천순": return .rating
             case "최신순": return .latest
             default:       return .latest
             }

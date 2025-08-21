@@ -7,6 +7,7 @@
 
 import Foundation
 import Observation
+import CoreLocation
 
 @Observable
 class TransportationViewModel {
@@ -14,6 +15,19 @@ class TransportationViewModel {
     var walkViewModel = WalkViewModel()
     // 도보 최적경로 API 서비스
     let walkingService = WalkingService()
+    // 대중교통 API 서비스
+    private let transitService = TransitService()
+    // 대중교통 상태
+    var isTransitLoading: Bool = false
+    var transitError: String? = nil
+    private(set) var transitNextCursor: String? = nil
+    private(set) var transitHasNext: Bool = false
+
+    // 페이지네이션 리셋 (출발/도착 변경 후 첫 페이지 요청 전)
+    private func resetTransitPagination() {
+        transitNextCursor = nil
+        transitHasNext = false
+    }
 
     init() {
         self.transportation = TransportationModel(
@@ -60,6 +74,201 @@ class TransportationViewModel {
         
     }
     
+    // MARK: - Transit helpers
+    
+    /// 문자열 좌표 안전 파싱
+    private func parseCoord(_ s: String?) -> Double? {
+        guard let s = s?.trimmingCharacters(in: .whitespacesAndNewlines), !s.isEmpty else { return nil }
+        // 소수점 구분자/단위 문자 등 방어적 제거
+        let normalized = s
+            .replacingOccurrences(of: ",", with: "")
+            .replacingOccurrences(of: "°", with: "")
+        return Double(normalized)
+    }
+
+    /// PlaceModel → TransitRequest.PlacePoint 로 변환 (방어적 파싱 + 스왑 감지 + 네이버 스케일 보정)
+    private func makePlacePoint(from place: PlaceModel) throws -> TransitRequest.PlacePoint {
+        let rawX = place.x
+        let rawY = place.y
+        print("[makePlacePoint][raw] title=\(place.title) x=\(rawX ?? "nil") y=\(rawY ?? "nil")")
+
+        guard var lng = parseCoord(rawX), var lat = parseCoord(rawY) else {
+            throw NSError(domain: "Transit", code: -10,
+                          userInfo: [NSLocalizedDescriptionKey: "좌표 파싱 실패 (x=\(rawX ?? "nil"), y=\(rawY ?? "nil"))"])
+        }
+
+        // ✅ 네이버 지도 스케일 보정 (1e7 단위) — 값이 비정상적으로 큰 경우 자동으로 나눔
+        if abs(lat) > 1000 { lat /= 1e7 }
+        if abs(lng) > 1000 { lng /= 1e7 }
+
+        // lat 범위 초과 & lng는 위도 범위에 있으면 스왑 의심 → 교환
+        if abs(lat) > 90, abs(lng) <= 90 {
+            print("[makePlacePoint] swap lat/lng because lat=\(lat), lng=\(lng)")
+            swap(&lat, &lng)
+        }
+
+        // 최종 범위 검증
+        guard abs(lat) <= 90, abs(lng) <= 180 else {
+            throw NSError(domain: "Transit", code: -11,
+                          userInfo: [NSLocalizedDescriptionKey: "좌표 범위 오류 (lat=\(lat), lng=\(lng))"])
+        }
+
+        let name = place.title.isEmpty ? (place.roadAddress) : place.title
+        print("[makePlacePoint] name=\(name) lat=\(lat), lng=\(lng)")
+        return TransitRequest.PlacePoint(name: name, latitude: lat, longitude: lng)
+    }
+    
+    /// 아주 단순한 HTML 태그 제거 (서버에서 <b>...</b> 등 내려오는 케이스)
+    private func stripHTML(_ s: String) -> String {
+        return s.replacingOccurrences(of: "<b>", with: "")
+                .replacingOccurrences(of: "</b>", with: "")
+    }
+
+    /// 백엔드 TransitResponse → 앱의 RouteOption 으로 가볍게 매핑
+    /// 서버 스펙에 총 소요시간/도착시각/요금이 있다면 추후 채워주세요.
+    /// 백엔드 TransitResponse → 앱의 RouteOption 으로 가볍게 매핑
+    private func mapTransit(_ resp: TransitResponse) -> RouteOption {
+        // routeIndex 가장 작은 경로 우선
+        let chosenRoute: TransitRoute? =
+            resp.routes.sorted { (lhs, rhs) in
+                (lhs.routeIndex ?? Int.max) < (rhs.routeIndex ?? Int.max)
+            }.first ?? resp.routes.first
+
+        let stepsData: [TransitStep] = chosenRoute?.steps ?? []
+
+        let steps: [RouteStep] = stepsData.map { s in
+            let from = stripHTML(s.from)
+            let to = stripHTML(s.to)
+            let sub = "\(from) → \(to)"
+            let stops = (s.moveInfo ?? []).map { $0.nodeName }
+            let count = s.moveNumber
+
+            switch s.mode {
+            case .WALK:
+                return RouteStep(
+                    type: .walk,
+                    title: "도보",
+                    subTitle: sub,
+                    detail: nil, extra: nil, Info: nil,
+                    extraBus: nil, busTime: nil,
+                    simple: true, stops: nil, moveCount: nil
+                )
+
+            case .SUBWAY:
+                let hasElev = (s.subwayInfo?.elevator?.isEmpty == false)
+                let detail = hasElev ? "엘리베이터 있음" : nil
+                let name = (s.routeName?.isEmpty == false) ? s.routeName! : "지하철"
+
+                let chairInfo: String? = {
+                        if let arr = s.subwayInfo?.wheelchair, !arr.isEmpty {
+                            return arr.joined(separator: ", ")   // ex) ["6-1", "10-4"] → "6-1, 10-4"
+                        }
+                        return nil
+                    }()
+                    let elevatorInfo: String? = {
+                        if let arr = s.subwayInfo?.elevator, !arr.isEmpty {
+                            return arr.joined(separator: ", ")   // ex) ["8-1"] → "8-1"
+                        }
+                        return nil
+                    }()
+                    let restroomInfo: String = (s.subwayInfo?.accessibleRestroom == true) ? "O" : "X"
+                
+                
+                return RouteStep(
+                    type: .subway,
+                    title: name,
+                    subTitle: sub,
+                    detail: detail,
+                    extra: nil,
+                    Info: s.routeName,
+                    extraBus: nil,
+                    busTime: nil,
+                    chair: chairInfo,
+                    toilet: restroomInfo,
+                    elevator: elevatorInfo,
+                    simple: true,
+                    stops: stops,
+                    moveCount: count
+                )
+
+            case .BUS:
+                let isLow = (s.busInfo?.isLowFloor?.first == true) //저상버스
+                let extraBus = isLow ? "저상버스" : nil
+                let dispatch = s.busInfo?.dispatchInterval
+                let busTime = (dispatch != nil) ? "배차간격 \(dispatch!)분" : nil
+                let name = (s.routeName?.isEmpty == false) ? s.routeName! : "버스"
+
+                return RouteStep(
+                    type: .bus,
+                    title: name,
+                    subTitle: sub,
+                    detail: nil,
+                    extra: nil,
+                    Info: nil,
+                    extraBus: extraBus,
+                    busTime: busTime,
+                    simple: true,
+                    stops: stops,
+                    moveCount: count
+                )
+            }
+        }
+
+        return RouteOption(totalTime: 0, arrivalTime: "-", cost: 0, steps: steps)
+    }
+    
+    // MARK: - Transit fetchers (첫 페이지/다음 페이지)
+    
+    /// 첫 페이지 조회: 기존 추천경로를 대체
+    @MainActor
+    func fetchTransitFirst(departure dep: PlaceModel, arrival arr: PlaceModel, pageSize: Int = 5) async {
+        isTransitLoading = true
+        transitError = nil
+        resetTransitPagination()
+        defer { isTransitLoading = false }
+
+        do {
+            let origin = try makePlacePoint(from: dep)
+            let destination = try makePlacePoint(from: arr)
+
+            let resp = try await transitService.fetchFirst(origin: origin, destination: destination, size: pageSize)
+
+            transitNextCursor = resp.pageInfo.nextCursor?.asString
+            transitHasNext = resp.pageInfo.hasNext
+
+            // ✅ 여기!
+            transportation.applyTransit(response: resp)
+        } catch {
+            transitError = error.localizedDescription
+        }
+    }
+
+    @MainActor
+    func fetchTransitNext(departure dep: PlaceModel, arrival arr: PlaceModel, pageSize: Int = 5) async {
+        guard transitHasNext, let cursor = transitNextCursor else { return }
+        isTransitLoading = true
+        transitError = nil
+        defer { isTransitLoading = false }
+
+        do {
+            let origin = try makePlacePoint(from: dep)
+            let destination = try makePlacePoint(from: arr)
+
+            // cursor 문자열→Int 변환은 네가 이미 처리했으니 그대로
+            let resp = try await transitService.fetchNext(origin: origin, destination: destination, cursor: Int(cursor), size: pageSize)
+
+            transitNextCursor = resp.pageInfo.nextCursor?.asString
+            transitHasNext = resp.pageInfo.hasNext
+
+            // 기존 목록 뒤에 추가
+            let old = transportation.recommendedRoutes
+            transportation.applyTransit(response: resp)
+            transportation.recommendedRoutes = old + transportation.recommendedRoutes
+        } catch {
+            transitError = error.localizedDescription
+        }
+    }
+    
 // 스위치 버튼 누르면 출발지 <-> 도착지 바뀜
     func swapLocations() {
         let temp = transportation.departure
@@ -77,7 +286,15 @@ class TransportationViewModel {
     func setTab(to tab: TransportationTab) {
         transportation.selectedTab = tab
     }
-
+    
+    @MainActor
+    func resetTransit() {
+        transitError = nil
+        isTransitLoading = false
+        transitHasNext = false
+        transitNextCursor = nil
+        transportation.recommendedRoutes = []
+    }
     // 출발지 또는 도착지 설정
     func setPlace(_ place: PlaceModel, for entryType: EntryType) {
         switch entryType {
@@ -102,5 +319,12 @@ class TransportationViewModel {
             )
         }
     }
-}
     
+    // MARK: - Convenience
+    /// 대중교통 탭으로 전환하며 첫 페이지를 불러옵니다.
+    @MainActor
+    func showTransitAndLoad(dep: PlaceModel, arr: PlaceModel) async {
+        setTab(to: .transit)
+        await fetchTransitFirst(departure: dep, arrival: arr)
+    }
+}

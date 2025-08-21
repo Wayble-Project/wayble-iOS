@@ -35,7 +35,7 @@ struct WalkBox: View {
                 .font(.mainTextSemibold12)
                 .foregroundStyle(Color("gray96"))
             }
-            .padding(.trailing, 15)
+            .padding(.horizontal,15)
             .padding(.top, 17)
             .padding(.bottom, 15)
             .frame(maxWidth: 170, maxHeight: 113)

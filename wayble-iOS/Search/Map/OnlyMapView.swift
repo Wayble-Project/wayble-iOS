@@ -16,6 +16,8 @@ import NMapsMap
 struct OnlyMapView: View {
     @Binding var place: PlaceModel
     @Binding var selectedIndex: Int
+    @Binding var selectedDeparture: PlaceModel?
+    @Binding var selectedArrival: PlaceModel?
     @Binding var searchBarViewID: UUID
     @Environment(\.dismiss) private var dismiss
 
@@ -63,10 +65,10 @@ struct OnlyMapView: View {
                     }
                 }) {
                     Image(systemName: "chevron.left")
-                        .foregroundColor(.black)
+                        .foregroundStyle(.black)
                     
                     Text("ex.숙대입구역 맛집")
-                        .foregroundColor(.gray500)
+                        .foregroundStyle(.gray500)
                         .font(.mainTextRegular14)
                         .padding(.leading, 4)
                 }
@@ -94,7 +96,10 @@ struct OnlyMapView: View {
                     place: place,
                     title: $placeTitle,
                     roadAddress: $placeRoadAddress,
-                    category: $placeCategory
+                    category: $placeCategory,
+                    selectedIndex: $selectedIndex,
+                    selectedDeparture: $selectedDeparture,
+                    selectedArrival: $selectedArrival
                 )
             }
         }
@@ -117,9 +122,8 @@ struct OnlyMapView: View {
         }
          */
 
-        .onChange(of: viewModel.selectedPlace) { newPlace in
-            guard newPlace != self.place else { return }
-            
+        .onChange(of: viewModel.selectedPlace) { _, newValue in
+            let newPlace = newValue
             DispatchQueue.main.async {
 
                 /*
@@ -163,6 +167,8 @@ extension OnlyMapView {
             isWaybleZone: true
         )),
         selectedIndex: .constant(0),
+        selectedDeparture: .constant(nil),
+        selectedArrival: .constant(nil),
         searchBarViewID: .constant(UUID())
     )
 }

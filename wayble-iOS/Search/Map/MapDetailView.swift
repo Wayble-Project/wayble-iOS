@@ -27,7 +27,7 @@ struct MapDetailView: View {
                     let lng = mapx / 10_000_000.0
                     let lat = mapy / 10_000_000.0
 
-                    NaverMapView(centerX: lng, centerY: lat, zoomLevel: 20,showMarker: true) // 줌 레벨 지정
+                    NaverMapView(centerX: lng, centerY: lat, zoomLevel: 17.9,showMarker: true ) 
                 }
 
             }
@@ -67,10 +67,17 @@ struct MapDetailView: View {
             )
             .padding(.horizontal, 20)
             .padding(.top, 12)
-            if let zone = SearchViewModel.shared.waybleZones.first(where: { $0.name == place.title }) {
+            if SearchViewModel.shared.waybleZones.first(where: { $0.name == place.title }) != nil {
                 VStack {
                     Spacer()
-                    PlaceDetailView(vm: PlaceDetailViewModel(zoneID: zone.id), selectedIndex: $selectedIndex)
+//<<<<<<< HEAD
+//                    PlaceDetailView(vm: PlaceDetailViewModel(zoneID: zone.id), selectedIndex: $selectedIndex)
+//=======
+
+                    //여기 에러가 나요!!!
+                 //   PlaceDetailView(vm: PlaceDetailViewModel(zoneID: place.id), selectedIndex: )
+
+
                 }
             } else {
                 VStack {

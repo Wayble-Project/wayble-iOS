@@ -11,6 +11,7 @@ import AVKit
 
 struct SearchHomeView: View {
     @State private var searchText: String = ""
+    @EnvironmentObject var searchRoute: SearchRouteState
     @Binding var selectedIndex: Int
     
 
@@ -44,6 +45,7 @@ struct SearchHomeView: View {
             // 상단 홍대입구역
             Button(action: {
                 withAnimation(.easeInOut(duration: 0.3)) {
+                    searchRoute.entryPoint = .directions
                     selectedIndex = 5
                 }
             }) {
@@ -60,7 +62,7 @@ struct SearchHomeView: View {
                 }
                 .padding(.horizontal, 20)
                 .padding(.vertical, 15)
-                .frame(width: 350, height: 51)
+                .frame(maxWidth: .infinity, minHeight: 51, maxHeight: 51)
                 .background(Color.white)
                 .clipShape(RoundedRectangle(cornerRadius: 15))
                 .overlay(
@@ -77,17 +79,13 @@ struct SearchHomeView: View {
                 .frame(height:80)
             GeometryReader { geo in
                 MP4View(filename: "Search", fileExtension: "mp4", size: geo.size)
-                    .frame(height: 479)
-                    .padding(.bottom, 54)
                     .clipped()
             }
-            .frame(height: 479)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .clipped()
+            .padding(.bottom, 54)
         }
        
     }
 }
 
-#Preview {
-    SearchHomeView(selectedIndex: .constant(0))
-        .withRouter(selectedIndex: .constant(0),router: NavigationRouter())
-}

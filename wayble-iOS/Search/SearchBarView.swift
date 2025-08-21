@@ -8,12 +8,6 @@
 import SwiftUI
 import Foundation
 
-enum EntryPoint {
-    case home
-    case directions
-  
-}
-
 // MARK: - SearchRow
 struct SearchRow: View {
     let icon: String
@@ -39,12 +33,13 @@ struct SearchRow: View {
 
 struct SearchBarView: View {
     @Environment(NavigationRouter.self) private var router
-    @Bindable var viewModel: SearchViewModel
+    @EnvironmentObject var searchRoute: SearchRouteState
+    @Bindable var viewModel: SearchViewModel = .shared
     @FocusState private var isFocused: Bool
     @State private var mapDetailViewID = UUID()
+    @State private var isSavingRecord: Bool = false
     @Binding var place: PlaceModel
     @Binding var selectedIndex: Int
-    var entryPoint: EntryPoint = .directions
     var entryType: EntryType? = nil // 출발/도착 구분 필요 시만 사용
     // 선택 콜백 (부모에서 주입해주면 출발/도착 값을 안전하게 올려보낼 수 있음)
     var onSelectDeparture: ((PlaceModel) -> Void)? = nil
@@ -59,7 +54,7 @@ struct SearchBarView: View {
                 HStack() {
                     Button(action: {
                         withAnimation(.easeInOut(duration: 0.3)) {
-                            switch entryPoint {
+                            switch searchRoute.entryPoint {
                             case .home:
                                 $selectedIndex.wrappedValue = 0
                             case .directions:
@@ -76,13 +71,13 @@ struct SearchBarView: View {
                     ZStack(alignment: .leading) {
                         if viewModel.searchText.isEmpty {
                             Text("ex.숙대입구역 맛집")
-                                .foregroundColor(.gray500)
+                                .foregroundStyle(.gray500)
                                 .font(.mainTextRegular14)
                                 .padding(.leading, 4) // 살짝 들여쓰기 맞춰주기
                         }
                         
                         TextField("", text: $viewModel.searchText)
-                            .foregroundColor(.black)
+                            .foregroundStyle(.black)
                             .font(.mainTextRegular14)
                             .focused($isFocused)
                     }
@@ -131,7 +126,7 @@ struct SearchBarView: View {
             .padding(.horizontal, 20)
             
             Rectangle()
-                .foregroundColor(.clear)
+                .foregroundStyle(.clear)
                 .frame(maxWidth: .infinity)
                 .frame(height: 12)
                 .background(.white)
@@ -159,17 +154,41 @@ struct SearchBarView: View {
                 .frame(height: 14)
             
             if viewModel.searchText.isEmpty {
-                SearchHistoryListView(history: viewModel.searchModels)
+                if viewModel.searchHistoryUI.isEmpty {
+                    Text("최근 검색이 없어요")
+                        .font(.mainTextRegular14)
+                        .foregroundStyle(Color.gray500)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 8)
+                   
+                } else {
+                    Text("최근 검색")
+                        .font(.mainTextSemibold14)
+                        .foregroundStyle(Color.gray900)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal, 20)
+                        .padding(.bottom, 6)
+                }
+                SearchHistoryListView(history: viewModel.searchHistoryUI) { item in
+                    viewModel.searchText = item.title
+                    Task { try? await viewModel.fetchNaverSuggestions(for: item.title) }
+                }
             } else {
-                suggestionListView()
+                VStack(alignment: .leading, spacing: 6) {
+                    suggestionListView()
+                }
             }
-            
             Spacer()
+        }
+        .task {
+         
+            if viewModel.searchHistoryUI.isEmpty {
+                await viewModel.loadHistoriesFromServer()
+            }
         }
         .padding(.top)
     }
-    
-    
     
     
     
@@ -204,72 +223,77 @@ struct SearchBarView: View {
         }
     }
     
-    private func suggestionListView() -> some View {
-        VStack(spacing: 0) {
-            ForEach(Array(viewModel.suggestionKeywords.prefix(3).enumerated()), id: \.element) { index, keyword in
+    // MARK: - Suggestion Row (extract to reduce type-checker load)
+    struct PlaceSuggestionRow: View {
+        let place: PlaceModel
+        let showTopPadding: Bool
+        let showDivider: Bool
+
+        var body: some View {
+            VStack(alignment: .leading, spacing: 9.5) {
                 HStack(spacing: 11) {
-                    Image("search")
-                    getHighlightedText(keyword, keyword: viewModel.searchText)
-                        .font(.mainTextRegular16)
+                    Image("marker")
+                        .frame(width: 24, height: 24)
+                    Text(place.title.removeHTMLTags())
+                        .font(.mainTextSemibold16)
+                        .foregroundStyle(.black)
                     Spacer()
                 }
-                .padding(.horizontal, 20)
-                .padding(.vertical, 18)
 
-                if index < 2 {
-                    Divider().padding(.horizontal, 20)
-                }
+                Text(place.roadAddress)
+                    .font(.mainTextRegular12)
+                    .foregroundStyle(.gray700)
+                    .padding(.leading, 31)
+                    .padding(.bottom, 10)
+
+                if showDivider { Divider() }
             }
-
-            Rectangle()
-                .frame(height: 3)
-                .foregroundStyle(Color.gray300)
-
-            let suggestions = Array(viewModel.suggestions.prefix(4).enumerated())
-            ForEach(suggestions, id: \.element.id) { index, place in
-                VStack(alignment: .leading, spacing: 9.5) {
-                    HStack(spacing: 11) {
-                        Image("marker")
-                            .frame(width: 24, height: 24)
-                        Text(place.title.removeHTMLTags())
-                            .font(.mainTextSemibold16)
-                            .foregroundStyle(.black)
-                        Spacer()
-                    }
-
-                    Text(place.roadAddress)
-                        .font(.mainTextRegular12)
-                        .foregroundStyle(.gray700)
-                        .padding(.leading, 31)
-                        .padding(.bottom, 10)
-
-                    if index < viewModel.suggestions.prefix(4).count - 1 {
-                        Divider()
-                    }
-                }
-                .padding(.top, index == 0 ? 17 : 0)
-                .padding(.bottom, 17)
-                .padding(.horizontal, 20)
+            .padding(.top, showTopPadding ? 17 : 0)
+            .padding(.bottom, 17)
+            .padding(.horizontal, 20)
+        }
+    }
+    
+    private func suggestionListView() -> some View {
+        VStack(spacing: 0) {
+            let items: [PlaceModel] = Array(viewModel.suggestions.prefix(4))
+            ForEach(items, id: \.id) { place in
+                PlaceSuggestionRow(
+                    place: place,
+                    showTopPadding: place == items.first,
+                    showDivider: place != items.last
+                )
+                .contentShape(Rectangle())
                 .onTapGesture {
-                    print("선택한 장소: \(place.title), x: \(place.x ?? "nil"), y: \(place.y ?? "nil")")
+                    if isSavingRecord { return }
+                    isSavingRecord = true
+
+                    let xStr = place.x ?? "nil"
+                    let yStr = place.y ?? "nil"
+                    print("선택한 장소: \(place.title), x: \(xStr), y: \(yStr)")
                     viewModel.selectedPlace = place
+                    viewModel.searchText = "" // 히스토리 섹션을 보이게 전환
                     self.place = place
                     self.mapDetailViewID = UUID()
 
-                    if let entryType { // 길찾기 모드: 출발/도착 중 하나 선택
+                    Task {
+                        defer { isSavingRecord = false }
+                        await viewModel.saveSearchRecord(for: place)
+                    }
+                    
+                    
+                    if let entryType {
                         switch entryType {
                         case .departure:
-                            // 부모로 출발 선택 전달 + 뷰모델 플래그 세팅
                             onSelectDeparture?(place)
-                            SearchViewModel.shared.setPlace(place, for: .departure)
+                            viewModel.setPlace(place, for: .departure)
                             $selectedIndex.wrappedValue = 15
                         case .destination:
                             onSelectDestination?(place)
-                            SearchViewModel.shared.setPlace(place, for: .destination) 
+                            viewModel.setPlace(place, for: .destination)
                             $selectedIndex.wrappedValue = 15
                         }
                     } else {
-                        // 기존 플로우: 상세로 이동
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                             $selectedIndex.wrappedValue = 17
                             print(" selectedIndex set to 17")

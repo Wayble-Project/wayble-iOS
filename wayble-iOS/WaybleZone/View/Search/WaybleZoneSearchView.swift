@@ -178,6 +178,7 @@ struct WaybleZoneSearchView: View {
 
             if mapVM.isLoading {
                 ProgressView().padding(.top, 12)
+                    .progressViewStyle(CircularProgressViewStyle(tint: .loading))
             }
 
             List {
@@ -221,7 +222,7 @@ struct WaybleZoneSearchView: View {
 
                 TextField("검색", text: $query)
                     .font(.mainTextRegular14)
-                    .foregroundColor(Color("darkblue-500"))
+                    .foregroundStyle(Color("darkblue-500"))
                     .textInputAutocapitalization(.never)
                     .tracking(-0.28)
                     .autocorrectionDisabled()

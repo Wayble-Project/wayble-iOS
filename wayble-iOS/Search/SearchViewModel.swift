@@ -18,8 +18,11 @@ enum PlaceEntryType {
 
 @Observable
 class SearchViewModel {
-
-
+    var searchHistoryUI: [SearchModel] = []
+    private static let apiSerial = PlaceAPISerial()
+    init() {}
+   
+    
     var waybleZones: [WaybleZone] = []
     var entryType: PlaceEntryType  = .departure
 
@@ -107,6 +110,7 @@ class SearchViewModel {
             print(" 가까운 장소 못 찾음")
         }
     }
+    
 
     //  역지오코딩 함수 - 바깥으로 뺐음! / 지도 api 사용
     func callReverseGeocodeAPI(lat: Double, lng: Double) async throws -> (String, String) {
@@ -204,20 +208,21 @@ class SearchViewModel {
         case .destination:
             transportation.destination = place.roadAddress
             
-            //출발지에 있으면 종료 
+            // 출발지에 있으면 종료
             guard !hasUserSetDeparture,
-                          transportation.departure.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                    else { return }
-            
-            
-            if !hasUserSetDeparture && self.transportation.departure.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                Task {
+                  transportation.departure.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            else { return }
+
+
+            // ❗️여기를 currentCoordinate 접근 대신, 요청으로 대체
+            LocationManager.shared.requestLocation { [weak self] coord in
+                guard let self = self, let c = coord else { return }
+                Task { @MainActor in
                     do {
-                        guard let coordinate = LocationManager.shared.currentCoordinate else { return }
-                        let (fullAddress, _) = try await self.callReverseGeocodeAPI(lat: coordinate.latitude, lng: coordinate.longitude)
-                        if !self.transportation.departure.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty { return }
-                        DispatchQueue.main.async {
-                            self.transportation.departure = fullAddress
+                        let (full, _) = try await self.callReverseGeocodeAPI(lat: c.latitude, lng: c.longitude)
+                        if self.transportation.departure.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                            self.transportation.departure = full
+                            self.hasUserSetDeparture = true
                         }
                     } catch {
                         print("현재 위치 기반 출발지 설정 실패: \(error)")
@@ -226,15 +231,63 @@ class SearchViewModel {
             }
         }
     }
+    @MainActor
+    func saveSearchRecord(for place: PlaceModel) async {
+        let name = place.title.removeHTMLTags()
+        let lat = place.latitude
+        let lng = place.longitude
+        let address = PlaceRequest.Address(
+            state: "",
+            city: "",
+            district: "",
+            streetAddress: place.roadAddress,
+            detailAddress: "",
+            latitude: lat,
+            longitude: lng
+        )
+        print("📤 saveSearchRecord -> name=\(name), lat=\(lat), lng=\(lng), road=\(place.roadAddress)")
+        do {
+            // 네트워크 호출(토큰 접근)만 직렬 액터에서 수행
+            try await Self.apiSerial.run {
+                _ = try await PlaceService().createSingleSearch(name: name, address: address)
+            }
+
+            // 네트워크 성공 이후, 메인액터에서 UI 즉시 반영
+            print("✅ 검색기록 저장 성공: \(name)")
+            let out = DateFormatter()
+            out.locale = Locale(identifier: "ko_KR")
+            out.dateFormat = "MM.dd"
+            self.searchHistoryUI.removeAll { $0.title == name }
+            self.searchHistoryUI.insert(
+                SearchModel(icon: "marker", title: name, date: out.string(from: Date())),
+                at: 0
+            )
+        } catch {
+            print("❌ 검색기록 저장 실패: \(error.localizedDescription)")
+        }
+    }
+    
+    @MainActor
+    func loadHistoriesFromServer() async {
+        do {
+            let models = try await Self.apiSerial.run {
+                try await PlaceService().fetchHistories()
+            }
+            self.searchHistoryUI = models
+        } catch {
+            print("히스토리 불러오기 실패: \(error)")
+        }
+    }
+    
     // 중심 좌표가 바뀌었을 때 → 역지오코딩 → 카카오 장소 검색 → selectedPlace 세팅
     func handleCenterChanged(lat: Double, lng: Double) {
         Task {
             let currentCoord = CLLocationCoordinate2D(latitude: lat, longitude: lng)
 
-            // 이미 비슷한 좌표로 요청했는지 확인 (10미터 이내면 중복으로 간주)
+            // 이미 비슷한 좌표로 요청했는지 확인 (1미터 이내면 중복으로 간주)
             if let lastCoord = lastRequestedCoordinate {
                 let distance = CLLocation(latitude: lat, longitude: lng).distance(from: CLLocation(latitude: lastCoord.latitude, longitude: lastCoord.longitude))
-                if distance < 10 {
+                if distance < 0.01 {
                     print("너무 가까운 위치 - 중복 호출 방지됨 (\(distance)m)")
                     return
                 }
@@ -256,8 +309,8 @@ class SearchViewModel {
                     }
                 } else {
                     let dummy = PlaceModel(
-                        title: "이 위치의 장소",
-                        roadAddress: roadAddress,
+                        title: roadAddress,
+                        roadAddress: "",
                         x: "\(lng)",
                         y: "\(lat)",
                         category: "기타"
@@ -303,3 +356,13 @@ struct ReverseGeoLand: Decodable {
     let number1: String?
     let number2: String?
 }
+
+    actor PlaceAPISerial {
+        private var isBusy = false
+        func run<T>(_ work: @escaping () async throws -> T) async rethrows -> T {
+            while isBusy { try? await Task.sleep(nanoseconds: 25_000_000) } // 25ms 폴링
+            isBusy = true
+            defer { isBusy = false }
+            return try await work()
+        }
+    }

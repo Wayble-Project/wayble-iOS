@@ -16,18 +16,18 @@ struct iOSApp: App {
     @State private var step = 0
     @State var userInfo = UserInfo()
     @StateObject var authViewModel = AuthViewModel()
-    //@State private var wzRouter = WaybleZoneNavigationRouter()
+    @StateObject private var searchRoute = SearchRouteState()
+
 
     var body: some Scene {
         WindowGroup {
             MainView(selectedIndex: $selectedIndex, step: $step)
                 .withRouter(selectedIndex: $selectedIndex, router: router)
                 .environment(router)
-                //.environment(wzRouter)
                 .environmentObject(authViewModel)
                 .environment(userInfo)  /// 0811
-               // .withWaybleZoneRouter()
-                
+                .environmentObject(searchRoute) ///0818
+
         }
     }
 }

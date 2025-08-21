@@ -184,25 +184,6 @@ struct NaverMapViewWrapper: UIViewRepresentable {
         marker.mapView = mapView
     }
     
-    // 현재는 bounds-fit로 카메라를 맞추므로 미사용. 필요 시 fallback 용으로 보관.
-    private func calculateZoomLevel(start: NMGLatLng, end: NMGLatLng) -> Double {
-        let distance = start.distance(to: end) // 단위: 미터
-        switch distance {
-        case 0..<500: return 17.5
-        case 500..<1000: return 16
-        case 1000..<2000: return 15
-        case 2000..<3000: return 14
-        case 3000..<4000: return 13.5
-        case 4000..<5000: return 13
-        case 5000..<10000: return 12.5
-        case 10000..<15000: return 12
-        case 15000..<30000: return 11
-        default: return 10.5
-        }
-    }
+ 
 }
-#Preview {
-    NaverMapViewWrapper(
-        route: SampleRoutes.wayble
-    )
-}
+

@@ -7,12 +7,41 @@
 
 import SwiftUI
 
+
 struct ProfileView: View {
+    @EnvironmentObject var authViewModel: AuthViewModel
+    @Binding var selectedIndex: Int
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack {
+            /*
+            Button("로그아웃(키체인 삭제)") {
+                KeychainManager.standard.deleteSession(for: "tokenInfoKey")
+                authViewModel.state = .loggedOut
+                selectedIndex = 7
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 8)
+            .background(.ultraThinMaterial)
+            .clipShape(Capsule())
+            .shadow(radius: 3)
+            .padding(.top, 100)
+            */
+            Spacer()
+            
+            OkButton(title: "로그아웃", isDisabled: false) {
+                KeychainManager.standard.deleteSession(for: "tokenInfoKey")
+                authViewModel.state = .loggedOut
+                selectedIndex = 7
+            }
+        }
     }
 }
 
+
+
+
+
 #Preview {
-    ProfileView()
+    ProfileView(selectedIndex: .constant(0))
 }

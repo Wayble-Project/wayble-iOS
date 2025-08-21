@@ -39,10 +39,4 @@ struct WaybleZoneHeaderView: View {
 }
 
 
-//#Preview {
-//   // WaybleZoneHeaderView().withRouter(selectedIndex: .constant(0))
-//    WaybleZoneHeaderView()
-//        //.environment(NavigationRouter())
-//        .environment(WaybleZoneNavigationRouter())
-//}
 

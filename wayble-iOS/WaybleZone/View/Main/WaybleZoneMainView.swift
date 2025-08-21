@@ -33,9 +33,3 @@ struct WaybleZoneMainView: View {
     }
 }
 
-//#Preview {
-//    //WaybleZoneView(vm: WaybleZoneViewModel())
-////    WaybleZoneMainView(vm: TopPlaceViewModel()).withRouter(selectedIndex: .constant(0)).environment(NavigationRouter())
-//    WaybleZoneMainView(vm: TopPlaceViewModel()).environment(NavigationRouter())
-//   // WaybleZoneMainView(vm: TopPlaceViewModel()).environment(WaybleZoneNavigationRouter())
-//}

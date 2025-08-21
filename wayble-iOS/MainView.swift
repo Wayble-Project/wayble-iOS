@@ -13,6 +13,8 @@ struct MainView: View {
     @State private var searchBarViewID = UUID()
     @State private var searchViewModel = SearchViewModel.shared
     @Binding var selectedIndex: Int
+    @State private var transportationVM = TransportationViewModel()
+    @State private var selectedRoute: RouteOption? = nil
     @Binding var step: Int
     @State private var router = NavigationRouter()
     @State var signupViewModel = SignupViewModel()
@@ -30,9 +32,11 @@ struct MainView: View {
                     
                     switch selectedIndex {
                         // 밑에 추가하고 싶은 뷰 적기
-                    case 0: HomeView(selectedIndex: $selectedIndex, viewModel: onboardingViewModel, homeViewModel: homeViewModel)
+                    case 0: HomeView(selectedIndex: $selectedIndex, viewModel: onboardingViewModel, homeViewModel: homeViewModel, selectedDeparture: $selectedDeparture,
+                                     selectedArrival: $selectedArrival)
+                           
                     case 1: MapView()
-                    case 2: ProfileView()
+                    case 2: ProfileView(selectedIndex: $selectedIndex)
                     case 3: SearchHomeView(selectedIndex: $selectedIndex)
                     case 4: WaybleZoneMainView(vm: TopPlaceViewModel(),selectedIndex: $selectedIndex)
                     case 5:
@@ -41,7 +45,6 @@ struct MainView: View {
                             viewModel: searchViewModel,
                             place: $place,
                             selectedIndex: $selectedIndex,
-                            entryPoint: .directions,
                             onSelectDeparture: { place in
                                 selectedDeparture = place
                             },
@@ -53,6 +56,8 @@ struct MainView: View {
                         OnlyMapView(
                             place: $place,
                             selectedIndex: $selectedIndex,
+                            selectedDeparture: $selectedDeparture,
+                            selectedArrival: $selectedArrival,
                             searchBarViewID: $searchBarViewID
                         )
                     case 7: LoginView(selectedIndex: $selectedIndex, onboardingViewModel: onboardingViewModel, homeViewModel: homeViewModel)
@@ -70,8 +75,8 @@ struct MainView: View {
                             entryType: .destination,
                             selectedArrival: $selectedArrival,
                             selectedDeparture: $selectedDeparture,
-                            viewModel: TransportationViewModel(),
-                            searchViewModel: .constant(SearchViewModel.shared),
+                            viewModel: transportationVM,
+                            searchViewModel: $searchViewModel,
                             transportation: SearchViewModel.shared.transportation
                         )
                         .id(UUID())
@@ -100,6 +105,9 @@ struct MainView: View {
                         )
                         
                     case 18: MainMapView(selectedIndex: $selectedIndex)
+
+                    case 19: SavedPlaceListView(vm: UserPlaceViewModel(), selectedIndex: $selectedIndex)
+
                     default:
                         Text("오류!")
                     }
@@ -119,7 +127,8 @@ struct MainView: View {
                         SearchHomeView(selectedIndex: $selectedIndex)
                             .navigationBarBackButtonHidden(true)
                     case .home:
-                        HomeView(selectedIndex: $selectedIndex, viewModel: onboardingViewModel, homeViewModel: homeViewModel)
+                        HomeView(selectedIndex: $selectedIndex, viewModel: onboardingViewModel, homeViewModel: homeViewModel,  selectedDeparture: $selectedDeparture,
+                                 selectedArrival: $selectedArrival)
                             .navigationBarBackButtonHidden(true)
                     case .signupEmail:
                         SignupEmailView(viewModel: signupViewModel, selectedIndex: $selectedIndex)
@@ -161,15 +170,21 @@ struct MainView: View {
                     case .signupCompleted:
                         SignupCompletedView(viewModel: signupViewModel, selectedIndex: $selectedIndex)
                             .navigationBarBackButtonHidden(true)
-                    case .routeDetail:
-                        RouteDetail()
+                    case .routeDetail(let route):
+                        let routeOption = RouteOption(
+                            totalTime: route.totalTime,
+                            arrivalTime: route.arrivalTime,
+                            cost: route.cost,
+                            steps: route.steps
+                        )
+                        RouteDetail(route: routeOption)
                             .navigationBarBackButtonHidden(true)
+                            
                     case .searchBar:
                         SearchBarView(
                             viewModel: searchViewModel,
                             place: $place,
                             selectedIndex: $selectedIndex,
-                            entryPoint: .directions,
                             onSelectDeparture: { place in
                                 selectedDeparture = place
                             },
@@ -197,8 +212,8 @@ struct MainView: View {
                             entryType: entryType,
                             selectedArrival: Binding(get: { arrival }, set: { selectedArrival = $0 }),
                             selectedDeparture: Binding(get: { departure }, set: { selectedDeparture = $0 }),
-                            viewModel: TransportationViewModel(),
-                            searchViewModel: .constant(SearchViewModel.shared),
+                            viewModel: transportationVM,  
+                            searchViewModel: $searchViewModel,
                             transportation: SearchViewModel.shared.transportation
                         )
                         .navigationBarBackButtonHidden(true)
@@ -217,6 +232,8 @@ struct MainView: View {
                     case .mainMapView:
                         MainMapView(selectedIndex: $selectedIndex)
                             .navigationBarBackButtonHidden(true)
+                    
+                  
                     }
                 }
             }
@@ -235,7 +252,7 @@ struct MainView: View {
     // 안 보이고 싶은곳 selectedIndex 따라서 추가하기
     var shouldHideTabBar: Bool {
         switch selectedIndex {
-        case 5,6,7,8,9,10,11,12,13,14,15,16,17:
+        case 5,6,7,8,9,10,11,12,13,14,15,16,17,19:
             return true
         default:
             return false

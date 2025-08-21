@@ -1,4 +1,5 @@
 import SwiftUI
+import Foundation
 
 struct CommonStepView: View {
     let step: RouteStep
@@ -23,7 +24,7 @@ struct CommonStepView: View {
                                 Spacer()
                                     .frame(height:4)
                                 
-                                let color: Color = {
+                                let _: Color = {
                                     switch step.type {
                                     case .subway: return step.subwayLine?.color ?? .gray
                                     case .bus: return step.busType?.color ?? .gray
@@ -126,7 +127,7 @@ struct CommonStepView: View {
         return AnyView(
             ZStack(alignment: .center) {
                 Image("check04")
-                    .foregroundColor(color)
+                    .foregroundStyle(color)
             }
                 .frame(width: 16, height: 16)
         )
