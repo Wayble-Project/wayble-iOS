@@ -16,6 +16,7 @@ struct NaverMapView: UIViewRepresentable {
     let zoomLevel: Double
     var showMarker: Bool = true  // mapDetailView 에서만 보여주기
     var facilities: [HomeFacility] = [] ///MainMapView에서 사용 여러 마커를 받을 수 있게 파라미터 추가 0813
+    var autoFitFacilities: Bool = false
 
     //마커 기준으로 카메라를 살짝 치우칠지 여부 + 오프셋 값
     var keepOffsetToMarker: Bool = false
@@ -142,7 +143,7 @@ struct NaverMapView: UIViewRepresentable {
 
             // 카메라 이동 (애니메이션 없이, 루프 방지)
             isProgrammaticMove = true
-            let update = NMFCameraUpdate(position: NMFCameraPosition(target, zoom: parent.zoomLevel))
+            let update = NMFCameraUpdate(scrollTo: target)
             update.animation = .none
             mapView.moveCamera(update)
             lastAppliedPlaceSignature = placeSig
@@ -219,7 +220,7 @@ struct NaverMapView: UIViewRepresentable {
             }
 
             // 최초 1회 bounds fit
-            if lastFacilitiesSignature != didFitForSignature, !markers.isEmpty {
+            if parent.autoFitFacilities, lastFacilitiesSignature != didFitForSignature, !markers.isEmpty {
                 var minLat = markers[0].position.lat
                 var minLng = markers[0].position.lng
                 var maxLat = markers[0].position.lat

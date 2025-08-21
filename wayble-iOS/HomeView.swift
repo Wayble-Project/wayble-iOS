@@ -55,7 +55,7 @@ struct HomeView: View {
                         Spacer()
                             .frame(maxHeight:9)
                         
-                        let zoneName = homeViewModel.zone?.name ?? "추천존"
+                        let zoneName = homeViewModel.zone?.name ?? "아임히어"
                         (
                             Text("오늘은 ")
                                 .font(.mainTextSemibold24)

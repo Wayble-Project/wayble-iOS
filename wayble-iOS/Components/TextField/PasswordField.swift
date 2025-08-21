@@ -74,7 +74,7 @@ struct PasswordField: View {
             .focused($isFocused)
             
             
-            Text("5회 로그인 실패시, 로그인이 10분 동안 제한됩니다.(1/5)")
+            Text("이메일 혹은 비밀번호가 틀립니다")
                 .font(.mainTextRegular12)
                 .foregroundStyle(fieldState == .mismatched ? Color.error : Color.white) //틀렸을 때만 보이게
                 .tracking(-0.24)

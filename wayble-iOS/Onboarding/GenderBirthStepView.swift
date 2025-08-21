@@ -52,5 +52,12 @@ struct GenderBirthStepView: View {
             )
         } //v
         .padding(.horizontal, 20)
+        .onAppear { resetGenderBirth() }
+    }
+    
+    private func resetGenderBirth() {
+        selectedItem = nil
+        viewModel.userInfo.birth = ""
+        viewModel.birthValidationState = .valid
     }
 }

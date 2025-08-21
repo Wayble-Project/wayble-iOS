@@ -105,6 +105,7 @@ struct MainView: View {
                         )
                         
                     case 18: MainMapView(selectedIndex: $selectedIndex)
+                    case 19: SavedPlaceListView(collections: mockSavedPlaces, selectedIndex: $selectedIndex)
                     default:
                         Text("오류!")
                     }
@@ -215,6 +216,10 @@ struct MainView: View {
                     case .mainMapView:
                         MainMapView(selectedIndex: $selectedIndex)
                             .navigationBarBackButtonHidden(true)
+                    
+                    case .savedPlaceList:
+                        SavedPlaceListView(collections: mockSavedPlaces, selectedIndex: $selectedIndex)
+                            .navigationBarBackButtonHidden(true)
                     }
                 }
             }
@@ -233,7 +238,7 @@ struct MainView: View {
     // 안 보이고 싶은곳 selectedIndex 따라서 추가하기
     var shouldHideTabBar: Bool {
         switch selectedIndex {
-        case 5,6,7,8,9,10,11,12,13,14,15,16,17:
+        case 5,6,7,8,9,10,11,12,13,14,15,16,17,19:
             return true
         default:
             return false

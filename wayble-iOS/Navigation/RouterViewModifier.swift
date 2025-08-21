@@ -152,6 +152,9 @@ struct RouterViewModifier: ViewModifier {
             return AnyView(MainMapView(selectedIndex: $selectedIndex)
                 .navigationBarBackButtonHidden(true))
             
+        case .savedPlaceList:
+            return AnyView(SavedPlaceListView(collections: mockSavedPlaces, selectedIndex: $selectedIndex)
+                .navigationBarBackButtonHidden(true))
         }
     }
     
