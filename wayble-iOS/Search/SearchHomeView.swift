@@ -31,7 +31,6 @@ struct SearchHomeView: View {
                     .font(.mainTextSemibold20)
             }
             .padding(.horizontal, 24)
-            .padding(.leading, 5.6)
             
             Spacer()
                 .frame(height: 52)
@@ -82,8 +81,8 @@ struct SearchHomeView: View {
                 MP4View(filename: "Search", fileExtension: "mp4", size: geo.size)
                     .clipped()
             }
-            .frame(maxWidth: .infinity)
-            .aspectRatio(390.0/479.0, contentMode: .fit)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .clipped()
             .padding(.bottom, 54)
         }
        

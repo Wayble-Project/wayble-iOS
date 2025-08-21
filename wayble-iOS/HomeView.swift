@@ -67,9 +67,11 @@ struct HomeView: View {
                         )
                         .lineLimit(2)
                         .truncationMode(.tail)
-                        .frame(height: 60, alignment: .topLeading)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .multilineTextAlignment(.leading)
                     }
                     .padding(.horizontal,25)
+                    .padding(.bottom, 8)
                     
                     
                     // 아이콘 웨이블존 껄로 다시
