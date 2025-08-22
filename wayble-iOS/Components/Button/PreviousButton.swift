@@ -17,10 +17,10 @@ struct PreviousButton: View {
                 .tracking(-0.28)
                 .padding(.horizontal, 20)
                 .padding(.vertical, 15)
-                .foregroundStyle(Color.gray700)
+                .foregroundStyle(Color("gray-700"))
                 .frame(maxWidth: .infinity)
                 .frame(height: 50, alignment: .center)
-                .background(Color.gray200)
+                .background(Color("gray-200"))
                 .clipShape(RoundedRectangle(cornerRadius: 13))
             
         }

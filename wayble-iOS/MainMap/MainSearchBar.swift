@@ -24,7 +24,7 @@ struct MainSearchBar: View {
             
             Text("ex.숙대입구역 맛집")
                 .font(.mainTextRegular14)
-                .foregroundStyle(.gray500)
+                .foregroundStyle(Color("gray-500"))
                 .tracking(-0.28)
             Spacer()
         }
@@ -37,7 +37,7 @@ struct MainSearchBar: View {
         .frame(maxWidth: .infinity)
         .background(
             RoundedRectangle(cornerRadius: 15)
-                .stroke(Color.gray300, lineWidth: 1)
+                .stroke(Color("gray-300"), lineWidth: 1)
         )
     }
 }

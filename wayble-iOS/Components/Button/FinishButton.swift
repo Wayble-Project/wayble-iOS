@@ -26,7 +26,7 @@ struct FinishButton: View {
 
             .background(
                 RoundedRectangle(cornerRadius: 24)
-                    .fill(Color.blue500)
+                    .fill(Color("blue-500"))
             )
             .buttonStyle(.plain)
         }

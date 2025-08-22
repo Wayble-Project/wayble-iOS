@@ -17,15 +17,15 @@ struct ConvenientButton: View {
         if isSelected {
             return Color.white
         } else {
-            return Color.gray100
+            return Color("gray-100")
         }
     }
     
     private var textColor: Color {
         if isSelected {
-            return Color.darkblue500
+            return Color("darkblue-500")
         } else {
-            return Color.gray500
+            return Color("gray-500")
         }
     }
     
@@ -50,7 +50,7 @@ struct ConvenientButton: View {
                     .overlay(
                         RoundedRectangle(cornerRadius: 40)
                             .stroke(
-                                isSelected ? Color.darkblue500 : Color.clear, lineWidth: 1)
+                                isSelected ? Color("darkblue-500") : Color.clear, lineWidth: 1)
                     )
             )
             .buttonStyle(.plain)

@@ -64,6 +64,8 @@ struct OnboardingCompletedView: View {
                         await MainActor.run {
                             viewModel.errorMessage = "온보딩 전송에 실패했어요. 잠시 후 다시 시도해 주세요."
                         }
+                        
+                        
                     }
                 }
             }

@@ -32,7 +32,7 @@ struct PasswordField: View {
         VStack(alignment: .leading, spacing: 0) {
             Text("비밀번호")
                 .font(.mainTextSemibold14)
-                .foregroundStyle(Color.gray900)
+                .foregroundStyle(Color("gray-900"))
                 .tracking(-0.28)
                 .padding(.bottom, 5)
             
@@ -41,14 +41,14 @@ struct PasswordField: View {
                     SecureField("8자 이상의 비밀번호", text: $password)
                         .font(.mainTextRegular14)
                         .tracking(-0.28)
-                        .foregroundStyle(Color.gray900)
+                        .foregroundStyle(Color("gray-900"))
                         .autocorrectionDisabled(true)
                         .textInputAutocapitalization(.none)
                 } else {
                     TextField("8자 이상의 비밀번호", text: $password)
                         .font(.mainTextRegular14)
                         .tracking(-0.28)
-                        .foregroundStyle(Color.gray900)
+                        .foregroundStyle(Color("gray-900"))
                         .autocorrectionDisabled(true)
                         .textInputAutocapitalization(.none)
                 }
@@ -90,12 +90,12 @@ struct PasswordField: View {
     private func borderColor(for state: FieldState) -> Color {
         switch state {
         case .default:
-            return Color.gray200
+            return Color("gray-200")
         case .focused:
             return Color(red: 1/255, green: 32/255, blue: 50/255)
             // #012032
         case .completed:
-            return Color.gray200
+            return Color("gray-200")
         case .mismatched:
             return Color.error
         }
@@ -106,9 +106,9 @@ struct PasswordField: View {
         case .default:
             return Color(red: 150/255, green: 150/255, blue: 150/255) // #969696
         case .focused, .mismatched:
-            return Color.gray900
+            return Color("gray-900")
         case .completed:
-            return Color.darkblue500
+            return Color("darkblue-500")
         }
     }
     

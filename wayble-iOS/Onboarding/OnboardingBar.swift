@@ -17,7 +17,7 @@ struct OnboardingBar: View {
         HStack(spacing: 7.45) {
             ForEach(0..<totalSteps, id: \.self) { index in
                 Capsule()
-                    .fill(index <= currentStep ? Color.blue500 : Color.gray200)
+                    .fill(index <= currentStep ? Color("blue-500") : Color("gray-200"))
                     .frame(height: 5)
                     .frame(maxWidth: .infinity)
                     .animation(.easeInOut, value: currentStep)

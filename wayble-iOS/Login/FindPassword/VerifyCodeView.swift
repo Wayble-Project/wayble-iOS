@@ -70,7 +70,7 @@ struct ResendCodeAlertPopup: View {
                 }) {
                     ZStack {
                         RoundedRectangle(cornerRadius: 13)
-                            .fill(Color.blue500)
+                            .fill(Color("blue-500"))
                             .frame(width: 259, height: 50)
                         Text("확인")
                             .font(.mainTextSemibold14)
