@@ -363,7 +363,7 @@ struct HomeView: View {
                             + Text(zoneName)
                                 .font(.mainTextSemibold24)
                                 .foregroundStyle(Color("blue-700"))
-                            + Text("를 추천해요")
+                            + Text("을 추천해요")
                                 .font(.mainTextSemibold24)
                         )
                         .lineLimit(2)
