@@ -80,7 +80,7 @@ struct VerifyField: View {
             
             Text("인증코드가 올바르지 않습니다.")
                 .font(.mainTextRegular12)
-                .foregroundStyle(fieldState == .mismatched ? Color.error : Color.white) //틀렸을 때만 보이게
+                .foregroundStyle(fieldState == .mismatched ? Color("error") : Color.white) //틀렸을 때만 보이게
                 .tracking(-0.24)
                 .padding(.leading, 5)
                 .padding(.top, 5)
@@ -101,7 +101,7 @@ struct VerifyField: View {
         case .completed:
             return Color("gray-200")
         case .mismatched:
-            return Color.error
+            return Color("error")
         }
     }
 

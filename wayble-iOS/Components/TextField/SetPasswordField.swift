@@ -100,7 +100,7 @@ struct SetPasswordField: View {
             if isPasswordValid() && (!shouldCheckMatch || isMatched) {
                 Text(content)
                     .font(.mainTextRegular12)
-                    .foregroundStyle(Color.positive)
+                    .foregroundStyle(Color("positive"))
                     .tracking(-0.24)
                     .padding(.leading, 5)
                     .padding(.top, 5)
