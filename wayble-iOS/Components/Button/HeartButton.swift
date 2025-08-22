@@ -24,7 +24,7 @@ struct HeartButton: View {
                 .padding(.vertical, 15)
                 .overlay {
                     RoundedRectangle(cornerRadius: 15)
-                        .stroke(Color.gray300, lineWidth: 1)
+                        .stroke(Color("gray-300"), lineWidth: 1)
                 }
         }
     }

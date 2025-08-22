@@ -12,7 +12,7 @@ struct StartButton: View {
         HStack(alignment: .center) {
             Text("출발")
                 .font(.mainTextSemibold16)
-                .foregroundStyle(Color.blue700)
+                .foregroundStyle(Color("blue-700"))
         }
         .padding(.horizontal, 20)
         .padding(.vertical, 12)

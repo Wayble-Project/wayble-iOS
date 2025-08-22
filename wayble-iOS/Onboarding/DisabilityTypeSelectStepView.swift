@@ -40,7 +40,7 @@ struct DisabilityTypeSelectView: View {
                     VStack(alignment: .leading, spacing: 0) {
                         Text("장애 유형")
                             .font(.mainTextSemibold16)
-                            .foregroundStyle(Color.gray900)
+                            .foregroundStyle(Color("gray-900"))
                             .tracking(-0.32)
                             .frame(height: 22)
                             .padding(.bottom, 11)
@@ -52,7 +52,7 @@ struct DisabilityTypeSelectView: View {
                     VStack(alignment: .leading, spacing: 0) {
                         Text("이동보조수단")
                             .font(.mainTextSemibold16)
-                            .foregroundStyle(Color.gray900)
+                            .foregroundStyle(Color("gray-900"))
                             .tracking(-0.32)
                             .frame(height: 22)
                             .padding(.bottom, 11)

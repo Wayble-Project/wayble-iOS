@@ -20,16 +20,16 @@ struct NextButtonStyle: ButtonStyle {
             .padding(.vertical, 15)
             .foregroundStyle(
                 isDisabled
-                ? Color.gray700
+                ? Color("gray-700")
                 : configuration.isPressed
-                    ? Color.blue200 // 버튼 눌림
+                    ? Color("blue-200") // 버튼 눌림
                     : Color.white) // 버튼 안 눌림
             .frame(maxWidth: .infinity)
             .frame(height: 50, alignment: .center)
             .background(
                 isDisabled
-                ? Color.gray200 // 비활성화 색
-                : Color.darkblue500 // Default 색
+                ? Color("gray-200") // 비활성화 색
+                : Color("darkblue-500") // Default 색
             )
             .clipShape(RoundedRectangle(cornerRadius: 13))
     }

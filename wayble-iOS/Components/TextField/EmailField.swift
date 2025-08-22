@@ -38,7 +38,7 @@
          VStack(alignment: .leading,spacing: 0) {
              Text("이메일(아이디)")
                  .font(.mainTextSemibold14)
-                 .foregroundStyle(Color.gray900)
+                 .foregroundStyle(Color("gray-900"))
                  .tracking(-0.28)
                  .frame(height: 20)
                  .padding(.bottom, 5)
@@ -65,12 +65,12 @@
      private func borderColor(for state: FieldState) -> Color {
          switch state {
          case .default:
-             return Color.gray200
+             return Color("gray-200")
          case .focused:
              return Color(red: 1/255, green: 32/255, blue: 50/255)
              // #012032
          case .completed:
-             return Color.gray200
+             return Color("gray-200")
          case .mismatched:
              return Color.error
          }
@@ -81,9 +81,9 @@
          case .default:
              return Color(red: 150/255, green: 150/255, blue: 150/255) // #969696
          case .focused, .mismatched:
-             return Color.gray900
+             return Color("gray-900")
          case .completed:
-             return Color.darkblue500
+             return Color("darkblue-500")
          }
      }
  }

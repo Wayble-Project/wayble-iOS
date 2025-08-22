@@ -473,7 +473,7 @@ struct HomeView: View {
                             .font(.mainTextSemibold16)
                         Text("우리 주변 접근성 정보를 보여드려요")
                             .font(.mainTextRegular14)
-                            .foregroundStyle(Color.gray700)
+                            .foregroundStyle(Color("gray-700"))
                             .frame(maxWidth: .infinity, alignment: .leading)
                         
                         Spacer()
@@ -489,7 +489,7 @@ struct HomeView: View {
                     .cornerRadius(15)
                     .overlay(
                         RoundedRectangle(cornerRadius: 15)
-                            .stroke(Color.gray300, lineWidth: 1)
+                            .stroke(Color("gray-300"), lineWidth: 1)
                     )
                 }
                 .buttonStyle(.plain)
@@ -507,7 +507,7 @@ struct HomeView: View {
                             .font(.mainTextSemibold16)
                         Text("개인에 맞춘 최적 경로를 추천해요")
                             .font(.mainTextRegular14)
-                            .foregroundStyle(Color.gray700)
+                            .foregroundStyle(Color("gray-700"))
                             .frame(maxWidth: .infinity, alignment: .leading)
                         
                         Spacer()
@@ -523,7 +523,7 @@ struct HomeView: View {
                     .cornerRadius(15)
                     .overlay(
                         RoundedRectangle(cornerRadius: 15)
-                            .stroke(Color.gray300, lineWidth: 1)
+                            .stroke(Color("gray-300"), lineWidth: 1)
                     )
                 }
                 .buttonStyle(.plain)

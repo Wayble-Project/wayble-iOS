@@ -20,16 +20,16 @@ struct MultipleSelectButton: View {
             Text(title)
                 .font(.mainTextSemibold16)
                 .tracking(-0.32)
-                .foregroundStyle(isSelected ? Color.blue900 : .black)
+                .foregroundStyle(isSelected ? Color("blue-900") : .black)
                 .frame(maxWidth: .infinity)
                 .frame(height: 108)
-                .background((isSelected ? Color.blue50 : Color.white))
+                .background((isSelected ? Color("blue-50") : Color.white))
                 .clipShape(RoundedRectangle(cornerRadius: 15))
                 .overlay(
                     RoundedRectangle(cornerRadius: 15)
                         .stroke(isSelected
-                                ? Color.blue500
-                                : Color.gray300,
+                                ? Color("blue-500")
+                                : Color("gray-300"),
                                 lineWidth: 2
                                )
                 )

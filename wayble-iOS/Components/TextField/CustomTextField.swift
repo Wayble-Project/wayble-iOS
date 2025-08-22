@@ -55,12 +55,12 @@ struct CustomTextField: View {
         VStack(alignment: .leading, spacing: 0) {
             Text(text)
                 .font(.mainTextSemibold14)
-                .foregroundStyle(Color.gray900)
+                .foregroundStyle(Color("gray-900"))
                 .tracking(-0.28)
                 .frame(height: 20)
                 .padding(.bottom, 5)
             TextField(placeHolder, text: $textValue)
-                .foregroundStyle(Color.gray900)
+                .foregroundStyle(Color("gray-900"))
                 .keyboardType(keyboardType)
                 .textInputAutocapitalization(.never)
                 .autocorrectionDisabled(true)
@@ -72,7 +72,7 @@ struct CustomTextField: View {
                 .tracking(-0.28)
                 .background(
                     RoundedRectangle(cornerRadius: 15)
-                        .stroke(hasError ? Color.error : Color.gray200)
+                        .stroke(hasError ? Color.error : Color("gray-200"))
                 )
             if hasError {
                 Text(errorMessage)

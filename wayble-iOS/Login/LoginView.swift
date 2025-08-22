@@ -148,16 +148,16 @@ struct LoginView: View {
             Button(action: {}) {
                 Text("비밀번호 찾기")
                     .font(.mainTextSemibold12)
-                    .foregroundStyle(Color.gray900)
+                    .foregroundStyle(Color("gray-900"))
                     .tracking(-0.24)
             }
             Text("|")
-                .foregroundStyle(.gray900)
+                .foregroundStyle(Color("gray-900"))
                 .padding(.horizontal, 4)
             Button(action: { selectedIndex = 14 }) {
                 Text("회원가입")
                     .font(.mainTextSemibold12)
-                    .foregroundStyle(Color.gray900)
+                    .foregroundStyle(Color("gray-900"))
                     .tracking(-0.24)
             }
             Spacer()
@@ -169,15 +169,15 @@ struct LoginView: View {
         HStack(alignment: .center) {
             Rectangle()
                 .frame(height: 1)
-                .foregroundStyle(Color.gray300)
+                .foregroundStyle(Color("gray-300"))
             Text("간편 로그인 하기")
                 .font(.mainTextRegular12)
-                .foregroundStyle(Color.gray700)
+                .foregroundStyle(Color("gray-700"))
                 .tracking(-0.24)
                 .padding(.horizontal, 8)
             Rectangle()
                 .frame(height: 1)
-                .foregroundStyle(Color.gray300)
+                .foregroundStyle(Color("gray-300"))
         }
     }
 }

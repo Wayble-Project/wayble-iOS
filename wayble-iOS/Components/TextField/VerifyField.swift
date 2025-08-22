@@ -37,7 +37,7 @@ struct VerifyField: View {
         VStack(alignment: .leading, spacing: 0) {
             Text("인증코드")
                 .font(.mainTextSemibold14)
-                .foregroundStyle(Color.gray900)
+                .foregroundStyle(Color("gray-900"))
                 .tracking(-0.28)
                 .padding(.bottom, 5)
             
@@ -45,13 +45,13 @@ struct VerifyField: View {
                 TextField("인증코드를 입력해주세요", text: $inputCode)
                     .font(.mainTextRegular14)
                     .tracking(-0.28)
-                    .foregroundStyle(Color.gray900)
+                    .foregroundStyle(Color("gray-900"))
                     .autocorrectionDisabled(true)
                     .keyboardType(.numberPad)
                 
                 Text("00:50")
                     .font(.mainTextSemibold14)
-                    .foregroundStyle(.gray700)
+                    .foregroundStyle(Color("gray-700"))
                     .padding(.trailing, 11)
                 
                 Button(action: {
@@ -59,10 +59,10 @@ struct VerifyField: View {
                 }) {
                     Text("재요청")
                         .font(.mainTextSemibold14)
-                        .foregroundStyle(.gray700)
+                        .foregroundStyle(Color("gray-700"))
                         .padding(7)
                         .background(
-                            Color.gray200
+                            Color("gray-200")
                                 .clipShape(RoundedRectangle(cornerRadius: 8))
                             )
                 }
@@ -94,12 +94,12 @@ struct VerifyField: View {
     private func borderColor(for state: FieldState) -> Color {
         switch state {
         case .default:
-            return Color.gray200
+            return Color("gray-200")
         case .focused:
             return Color(red: 1/255, green: 32/255, blue: 50/255)
             // #012032
         case .completed:
-            return Color.gray200
+            return Color("gray-200")
         case .mismatched:
             return Color.error
         }
@@ -110,9 +110,9 @@ struct VerifyField: View {
         case .default:
             return Color(red: 150/255, green: 150/255, blue: 150/255) // #969696
         case .focused, .mismatched:
-            return Color.gray900
+            return Color("gray-900")
         case .completed:
-            return Color.darkblue500
+            return Color("darkblue-500")
         }
     }
     

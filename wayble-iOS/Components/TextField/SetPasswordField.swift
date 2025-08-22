@@ -49,7 +49,7 @@ struct SetPasswordField: View {
         VStack(alignment: .leading, spacing: 0) {
             Text("비밀번호")
                 .font(.mainTextSemibold14)
-                .foregroundStyle(Color.gray900)
+                .foregroundStyle(Color("gray-900"))
                 .tracking(-0.28)
                 .padding(.bottom, 5)
             
@@ -58,7 +58,7 @@ struct SetPasswordField: View {
                     SecureField("8자 이상의 비밀번호", text: $password)
                         .font(.mainTextRegular14)
                         .tracking(-0.28)
-                        .foregroundStyle(Color.gray900)
+                        .foregroundStyle(Color("gray-900"))
                         .textContentType(.newPassword)
                         .textInputAutocapitalization(.none)
                         .focused($isFocused)
@@ -66,7 +66,7 @@ struct SetPasswordField: View {
                     TextField("8자 이상의 비밀번호", text: $password)
                         .font(.mainTextRegular14)
                         .tracking(-0.28)
-                        .foregroundStyle(Color.gray900)
+                        .foregroundStyle(Color("gray-900"))
                         .textContentType(.newPassword)
                         .textInputAutocapitalization(.none)
                         .focused($isFocused)
@@ -107,7 +107,7 @@ struct SetPasswordField: View {
             } else {
                 Text(content)
                     .font(.mainTextRegular12)
-                    .foregroundStyle(Color.gray500)
+                    .foregroundStyle(Color("gray-500"))
                     .tracking(-0.24)
                     .padding(.leading, 5)
                     .padding(.top, 5)
@@ -125,7 +125,7 @@ struct SetPasswordField: View {
             return Color(red: 1/255, green: 32/255, blue: 50/255)
             // #012032
         case .completed, .default, .mismatched:
-            return Color.gray200
+            return Color("gray-200")
         }
     }
 
@@ -135,9 +135,9 @@ struct SetPasswordField: View {
         case .default:
             return Color(red: 150/255, green: 150/255, blue: 150/255) // #969696
         case .focused, .mismatched:
-            return Color.gray900
+            return Color("gray-900")
         case .completed:
-            return Color.darkblue500
+            return Color("darkblue-500")
         }
     }
     
