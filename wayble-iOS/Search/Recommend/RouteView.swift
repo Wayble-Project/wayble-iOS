@@ -22,7 +22,7 @@ struct RouteView: View {
                         VStack(alignment: .leading) {
                             Text("추천경로 \(idx)")
                                 .font(.mainTextSemibold20)
-                                .foregroundStyle(Color.gray900)
+                                .foregroundStyle(Color("gray-900"))
                                 .frame(maxWidth: .infinity, alignment: .leading)
                         }
                     }
@@ -143,21 +143,21 @@ struct RouteView: View {
                                             Image("lift04")
                                             Text("엘리베이터 있음")
                                                 .font(.mainTextSemibold12)
-                                                .foregroundStyle(Color.blue700)
+                                                .foregroundStyle(Color("blue-700"))
                                         }
                                     case .bus:
                                         HStack(spacing: 7) {
                                             if let low = step.Info  {
                                                 Text(low)
                                                     .font(.mainTextSemibold12)
-                                                    .foregroundStyle(Color.blue700)
+                                                    .foregroundStyle(Color("blue-700"))
                                                 
                                                 Image(.mini2)
                                             }
                                             if let busTime = step.busTime {
                                                 Text(busTime)
                                                     .font(.mainTextRegular12)
-                                                    .foregroundStyle(Color.gray700)
+                                                    .foregroundStyle(Color("gray-700"))
                                             }
                                         }
                                     case .walk:
@@ -167,7 +167,7 @@ struct RouteView: View {
                             }
 
                             if step.type == .subway || step.type == .bus {
-                                Rectangle().fill(Color.gray200).frame(height: 1).padding(.top, 10)
+                                Rectangle().fill(Color("gray-200")).frame(height: 1).padding(.top, 10)
                             }
                         }
                     }
@@ -178,7 +178,7 @@ struct RouteView: View {
                 Rectangle() // 밑에 구분 선
                     .foregroundStyle(Color.clear)
                     .frame(height: 2)
-                    .background(Color.gray300)
+                    .background(Color("gray-300"))
             }
            
             .padding(.top, 17)

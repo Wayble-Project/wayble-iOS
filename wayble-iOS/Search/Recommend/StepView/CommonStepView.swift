@@ -20,7 +20,7 @@ struct CommonStepView: View {
                                     .frame(height:1)
                                 Text(step.title)
                                     .font(.mainTextSemibold12)
-                                    .foregroundStyle(step.title.contains("출발") ? Color.positive : Color.black)
+                                    .foregroundStyle(step.title.contains("출발") ? Color("positive") : Color.black)
                                 Spacer()
                                     .frame(height:4)
                                 
@@ -59,7 +59,7 @@ struct CommonStepView: View {
                                         
                                         if step.destFinal != true {
                                             Rectangle()
-                                                .fill(Color.gray700)
+                                                .fill(Color("gray-700"))
                                                 .frame(width: 1, height: 10)
                                                 
                                         }
@@ -76,7 +76,7 @@ struct CommonStepView: View {
 
                                 if (step.type == .subway || step.type == .bus)  {
                                     Rectangle()
-                                        .fill(Color.gray200)
+                                        .fill(Color("gray-200"))
                                         .frame(height: 1)
                                         .padding(.top, 10.0)
                                 }

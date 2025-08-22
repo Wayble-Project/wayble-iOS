@@ -13,7 +13,7 @@ struct longView: View {
             Spacer()
             Text("도보 길안내는\n직선 거리 30km 이상일 경우\n제공되지 않습니다.")
                 .font(.mainTextSemibold14)
-                .foregroundStyle(Color.gray96)
+                .foregroundStyle(Color("gray-96"))
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 20)
             Spacer()

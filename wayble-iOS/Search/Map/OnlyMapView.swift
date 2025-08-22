@@ -85,7 +85,7 @@ struct OnlyMapView: View {
             .overlay(
                 RoundedRectangle(cornerRadius: 15)
                     .inset(by: 0.5)
-                    .stroke(Color.gray300, lineWidth: 1)
+                    .stroke(Color("gray-300"), lineWidth: 1)
             )
             .padding(.horizontal, 20)
             .padding(.top, 12)

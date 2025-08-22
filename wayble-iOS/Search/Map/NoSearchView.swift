@@ -11,7 +11,7 @@ struct NoSearchView: View {
     var body: some View {
         Text("길찾기 결과가 없습니다.")
             .font(.mainTextSemibold14)
-            .foregroundStyle(Color.gray96)
+            .foregroundStyle(Color("gray-96"))
             .multilineTextAlignment(.center)
     }
 }
