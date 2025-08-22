@@ -39,7 +39,7 @@ struct WalkBox: View {
             .padding(.top, 17)
             .padding(.bottom, 15)
             .frame(maxWidth: 170, maxHeight: 113)
-            .background(isSelected ? Color("blue50") : Color.white)
+            .background(isSelected ? Color("blue-50") : Color.white)
             .cornerRadius(15)
             .overlay(
                 RoundedRectangle(cornerRadius: 15)
