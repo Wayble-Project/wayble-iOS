@@ -112,7 +112,7 @@ struct Transportation: View {
                         .overlay(
                             RoundedRectangle(cornerRadius: 15)
                                 .inset(by: 0.5)
-                                .stroke(Color.gray200, lineWidth: 1)
+                                .stroke(Color("gray-200"), lineWidth: 1)
                         )
                         
                         Button(action: {
@@ -136,7 +136,7 @@ struct Transportation: View {
                         .overlay(
                             RoundedRectangle(cornerRadius: 15)
                                 .inset(by: 0.5)
-                                .stroke(Color.gray200, lineWidth: 1)
+                                .stroke(Color("gray-200"), lineWidth: 1)
                         )
                         .padding(.bottom, 10)
                     }
@@ -191,7 +191,7 @@ struct Transportation: View {
                         
                         if index < TransportationTab.allCases.count - 1 {
                             Rectangle()
-                                .fill(Color.gray300)
+                                .fill(Color("gray-300"))
                                 .frame(width: 1, height: 14)
                         }
                     }
@@ -200,7 +200,7 @@ struct Transportation: View {
                 .background(Color.white)
                 
                 Rectangle()
-                    .fill(Color.gray300)
+                    .fill(Color("gray-300"))
                     .frame(height: 1)
                     .frame(maxWidth: .infinity)
             }

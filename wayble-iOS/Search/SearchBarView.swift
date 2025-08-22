@@ -23,7 +23,7 @@ struct SearchRow: View {
                 .font(.mainTextRegular16)
             Spacer()
             Text(date)
-                .foregroundStyle(Color.gray700)
+                .foregroundStyle(Color("gray-700"))
         }
         .padding(.vertical, 14)
         .padding(.leading, 26)
@@ -101,7 +101,7 @@ struct SearchBarView: View {
                 .overlay(
                     RoundedRectangle(cornerRadius: 15)
                         .inset(by: 0.5)
-                        .stroke(Color.gray300, lineWidth: 1)
+                        .stroke(Color("gray-300"), lineWidth: 1)
                 )
                 Spacer()
                     .frame(width:10)
@@ -118,7 +118,7 @@ struct SearchBarView: View {
                         .overlay(
                             RoundedRectangle(cornerRadius: 15)
                                 .inset(by: 0.5)
-                                .stroke(Color.gray300, lineWidth: 1)
+                                .stroke(Color("gray-300"), lineWidth: 1)
                             
                         )
                 }
@@ -157,7 +157,7 @@ struct SearchBarView: View {
                 if viewModel.searchHistoryUI.isEmpty {
                     Text("최근 검색이 없어요")
                         .font(.mainTextRegular14)
-                        .foregroundStyle(Color.gray500)
+                        .foregroundStyle(Color("gray-500"))
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.horizontal, 20)
                         .padding(.vertical, 8)
@@ -165,7 +165,7 @@ struct SearchBarView: View {
                 } else {
                     Text("최근 검색")
                         .font(.mainTextSemibold14)
-                        .foregroundStyle(Color.gray900)
+                        .foregroundStyle(Color("gray-900"))
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.horizontal, 20)
                         .padding(.bottom, 6)
@@ -197,7 +197,7 @@ struct SearchBarView: View {
     private func getHighlightedText(_ suggestion: String, keyword: String) -> Text {
         if suggestion.lowercased().hasPrefix(keyword.lowercased()) {
             let highlightedPart = Text(String(suggestion.prefix(keyword.count)))
-                .foregroundStyle(Color.blue700)
+                .foregroundStyle(Color("blue-700"))
             let remainingPart = Text(String(suggestion.dropFirst(keyword.count)))
                 .foregroundStyle(Color.black)
             return highlightedPart + remainingPart
@@ -218,7 +218,7 @@ struct SearchBarView: View {
                 .foregroundStyle(Color.white)
                 .padding(.horizontal, 10)
                 .padding(.vertical, 5)
-                .background(Color.blue500)
+                .background(Color("blue-500"))
                 .cornerRadius(40)
         }
     }

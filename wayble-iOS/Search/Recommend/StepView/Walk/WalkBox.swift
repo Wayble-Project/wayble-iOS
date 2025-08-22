@@ -43,7 +43,7 @@ struct WalkBox: View {
             .cornerRadius(15)
             .overlay(
                 RoundedRectangle(cornerRadius: 15)
-                    .stroke(isSelected ? Color.blue500 : Color.gray200)
+                    .stroke(isSelected ? Color("blue-500") : Color("gray-200"))
             )
         }
         .buttonStyle(.plain)

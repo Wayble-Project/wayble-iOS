@@ -65,7 +65,7 @@ private extension RouteDetail {
 
             Text("상세경로")
                 .font(.mainTextRegular12)
-                .foregroundStyle(Color.gray700)
+                .foregroundStyle(Color("gray-700"))
 
             Spacer()
 
@@ -148,11 +148,11 @@ private extension RouteDetail {
                                 .frame(width: 16, height: 20)
                             Text("출발")
                                 .font(.mainTextSemibold12)
-                                .foregroundStyle(Color.positive)
+                                .foregroundStyle(Color("positive"))
                             Image(.dot3)
                         } else if isLast {
                             Image("fin").frame(width: 18, height: 20)
-                            Text("도착").font(.mainTextSemibold12).foregroundStyle(Color.error)
+                            Text("도착").font(.mainTextSemibold12).foregroundStyle(Color("error"))
                         } else {
                             if prevStep?.type == .subway {
                                 // Hide duplicate left marker/label/dots for walk right after subway
@@ -268,19 +268,19 @@ private extension RouteDetail {
                                 Image(.chair04)
                                 Text("휠체어 전용석 \(step.chair ?? "-")")
                                     .font(.mainTextSemibold12)
-                                    .foregroundStyle(Color.blue700)
+                                    .foregroundStyle(Color("blue-700"))
                             }
                             HStack(spacing:5){
                                 Image(.lift04)
                                 Text("엘레베이터와 가까운 출구 번호 \(step.elevator ?? "-")")
                                     .font(.mainTextSemibold12)
-                                    .foregroundStyle(Color.blue700)
+                                    .foregroundStyle(Color("blue-700"))
                             }
                             HStack(spacing:5){
                                 Image(.chair04)
                                 Text("장애인 화장실 \(step.toilet ?? "X")")
                                     .font(.mainTextSemibold12)
-                                    .foregroundStyle(Color.blue700)
+                                    .foregroundStyle(Color("blue-700"))
                             }
                                
                             }
@@ -527,21 +527,21 @@ struct BusStepView: View {
                     }()
                     Text("\(parts.first ?? base) 승차")
                         .font(.mainTextSemibold14)
-                        .foregroundStyle(Color.gray900)
+                        .foregroundStyle(Color("gray-900"))
                     Spacer().frame(height:14)
 
                     HStack(spacing: 7) {
                         if let low = step.Info {
                             Text(low)
                                 .font(.mainTextSemibold12)
-                                .foregroundStyle(Color.blue700)
+                                .foregroundStyle(Color("blue-700"))
                          
                             Image(.mini2)
                         }
                         if let busTime = step.busTime {
                             Text(busTime)
                                 .font(.mainTextRegular12)
-                                .foregroundStyle(Color.gray700)
+                                .foregroundStyle(Color("gray-700"))
                         }
                     }
                     Spacer().frame(maxHeight:14)
@@ -580,7 +580,7 @@ struct BusStepView: View {
                     VStack(alignment: .leading, spacing: 2) {
                         Text(lastStop + " 하차")
                             .font(.mainTextSemibold14)
-                            .foregroundStyle(Color.gray900)
+                            .foregroundStyle(Color("gray-900"))
 
                         let boardingBase: String = {
                             // 왼쪽/오른쪽 이름 추출 헬퍼
@@ -639,13 +639,13 @@ struct BusStepView: View {
                         HStack(spacing: 8) {
                             Text("\(boardingBase)까지")
                                 .font(.mainTextRegular12)
-                                .foregroundStyle(Color.gray900)
+                                .foregroundStyle(Color("gray-900"))
                                 .fixedSize()
 
                             Image("mini")
                             Text(distanceText)
                                 .font(.mainTextRegular12)
-                                .foregroundStyle(Color.gray900)
+                                .foregroundStyle(Color("gray-900"))
                                 .lineLimit(1)
                                 .minimumScaleFactor(0.85)
                                 .allowsTightening(true)
@@ -689,7 +689,7 @@ struct BusStepView: View {
                         let fallbackStop = parts.last ?? base
                         Text(fallbackStop + " 하차")
                             .font(.mainTextSemibold14)
-                            .foregroundStyle(Color.gray900)
+                            .foregroundStyle(Color("gray-900"))
 
                         let boardingBase: String = {
                             func leftName(_ raw: String) -> String {
@@ -745,12 +745,12 @@ struct BusStepView: View {
                         HStack(spacing: 8) {
                             Text("\(boardingBase)까지")
                                 .font(.mainTextRegular12)
-                                .foregroundStyle(Color.gray900)
+                                .foregroundStyle(Color("gray-900"))
                                 .fixedSize()
                             Image("mini")
                             Text(distanceText)
                                 .font(.mainTextRegular12)
-                                .foregroundStyle(Color.gray900)
+                                .foregroundStyle(Color("gray-900"))
                                 .lineLimit(1)
                                 .minimumScaleFactor(0.85)
                                 .allowsTightening(true)

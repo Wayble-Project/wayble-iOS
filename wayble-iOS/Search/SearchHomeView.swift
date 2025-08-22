@@ -51,7 +51,7 @@ struct SearchHomeView: View {
             }) {
                 HStack(alignment: .center) {
                     Text("홍대입구역")
-                        .foregroundStyle(Color.gray500)
+                        .foregroundStyle(Color("gray-500"))
                         .font(.mainTextRegular14)
                     
                     Spacer()
@@ -68,7 +68,7 @@ struct SearchHomeView: View {
                 .overlay(
                     RoundedRectangle(cornerRadius: 15)
                         .inset(by: 0.5)
-                        .stroke(Color.gray200, lineWidth: 1)
+                        .stroke(Color("gray-200"), lineWidth: 1)
                 )
             }
             
