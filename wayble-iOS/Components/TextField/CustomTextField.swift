@@ -72,7 +72,7 @@ struct CustomTextField: View {
                 .tracking(-0.28)
                 .background(
                     RoundedRectangle(cornerRadius: 15)
-                        .stroke(hasError ? Color.error : Color("gray-200"))
+                        .stroke(hasError ? Color("error") : Color("gray-200"))
                 )
             if hasError {
                 Text(errorMessage)

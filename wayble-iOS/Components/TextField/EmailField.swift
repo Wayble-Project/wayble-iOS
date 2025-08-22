@@ -72,7 +72,7 @@
          case .completed:
              return Color("gray-200")
          case .mismatched:
-             return Color.error
+             return Color("error")
          }
      }
 

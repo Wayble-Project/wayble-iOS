@@ -76,7 +76,7 @@ struct PasswordField: View {
             
             Text("이메일 혹은 비밀번호가 틀립니다")
                 .font(.mainTextRegular12)
-                .foregroundStyle(fieldState == .mismatched ? Color.error : Color.white) //틀렸을 때만 보이게
+                .foregroundStyle(fieldState == .mismatched ? Color("error") : Color.white) //틀렸을 때만 보이게
                 .tracking(-0.24)
                 .padding(.leading, 5)
                 .padding(.top, 5)
@@ -97,7 +97,7 @@ struct PasswordField: View {
         case .completed:
             return Color("gray-200")
         case .mismatched:
-            return Color.error
+            return Color("error")
         }
     }
 
