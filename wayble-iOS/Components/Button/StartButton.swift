@@ -20,7 +20,7 @@ struct StartButton: View {
         .clipShape(RoundedRectangle(cornerRadius: 24))
         .overlay(
             RoundedRectangle(cornerRadius: 24)
-                .stroke(Color(.blue500), lineWidth: 1)
+                .stroke(Color("blue500"), lineWidth: 1)
         )
     }
 }

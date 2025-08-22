@@ -20,7 +20,7 @@ struct MultipleSelectButton: View {
             Text(title)
                 .font(.mainTextSemibold16)
                 .tracking(-0.32)
-                .foregroundStyle(isSelected ? Color("blue-900") : .black)
+                .foregroundStyle(isSelected ? Color("blue-900") : Color("black"))
                 .frame(maxWidth: .infinity)
                 .frame(height: 108)
                 .background((isSelected ? Color("blue-50") : Color.white))

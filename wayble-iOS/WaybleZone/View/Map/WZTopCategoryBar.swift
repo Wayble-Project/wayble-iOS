@@ -63,14 +63,14 @@ private struct CategoryTagLabel: View {
                 .renderingMode(.template) // 템플릿 이미지면 틴트 적용
                 .scaledToFit()
                 .frame(width: 18, height: 18)
-                .foregroundStyle(isSelected ? .black : Color("gray-500"))
+                .foregroundStyle(isSelected ? Color("black") : Color("gray-500"))
 
             Text(title)
                 .font(.mainTextSemibold14)
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 8)
-        .background(isSelected ? Color(.white) : Color("gray-100"))
+        .background(isSelected ? Color("white") : Color("gray-100"))
         .foregroundStyle(isSelected ? Color("darkblue-500") : Color("gray-500"))
         .clipShape(Capsule())
         .overlay(

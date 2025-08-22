@@ -31,7 +31,7 @@ struct TopPlaceView: View {
                                     ZStack {
                                         if vm.selected == category {
                                             Capsule()
-                                                .fill(Color.black)
+                                                .fill(Color("black"))
                                                 .matchedGeometryEffect(id: "underline", in: underlineNamespace)
                                                 .frame(height: 2.3)
                                                 .offset(y: 5)

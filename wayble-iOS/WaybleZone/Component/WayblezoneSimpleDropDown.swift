@@ -23,7 +23,7 @@ struct WaybleZoneSimpleDropDown: View {
             .overlay(alignment: .bottomTrailing){
                 if isExpanded {
                     
-                    Color.black.opacity(0.001)
+                    Color("black").opacity(0.001)
                         .ignoresSafeArea()
                         .onTapGesture {
                             withAnimation {

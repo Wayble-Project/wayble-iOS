@@ -36,7 +36,7 @@ struct VerifyCodeView: View {
             } //v
             
             if showPopup {
-                Color.black.opacity(0.5)
+                Color("black").opacity(0.5)
                     .ignoresSafeArea()
                 ResendCodeAlertPopup(showPopup: $showPopup)
                 
@@ -62,7 +62,7 @@ struct ResendCodeAlertPopup: View {
                 Text("인증코드가 다시 발송되었습니다")
                     .font(.mainTextSemibold16)
                     .multilineTextAlignment(.center)
-                    .foregroundStyle(Color.black)
+                    .foregroundStyle(Color("black"))
                     .frame(width: .infinity, alignment: .top)
                     .padding(.bottom, 17)
                 Button(action: {

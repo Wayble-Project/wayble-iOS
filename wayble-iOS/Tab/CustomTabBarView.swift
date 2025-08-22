@@ -87,7 +87,7 @@ struct CustomTabBarView: View {
                     Circle()
                         .fill(Color("darkblue-500"))
                         .frame(width: 52, height: 52)
-                        .shadow(color: .black.opacity(0.2), radius: 8, x: 0, y: 4)
+                        .shadow(color: Color("black").opacity(0.2), radius: 8, x: 0, y: 4)
                     
                     Image("map01")
                         .resizable()
@@ -95,7 +95,7 @@ struct CustomTabBarView: View {
             }
             .offset(y: -35)
         }
-        .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: -7)
+        .shadow(color: Color("black").opacity(0.05), radius: 5, x: 0, y: -7)
         .offset(y: -26)
         
     }

@@ -508,7 +508,7 @@ struct BusStepView: View {
                     Text(chunkedLabel(step.title))
                         .multilineTextAlignment(.center)
                         .font(.mainTextSemibold12)
-                        .foregroundStyle(.black)
+                        .foregroundStyle(Color("black"))
                         .padding(.top, 2)
                     Rectangle()
                         .fill(busColor)
@@ -571,7 +571,7 @@ struct BusStepView: View {
                         Text(chunkedLabel(step.title))
                             .multilineTextAlignment(.center)
                             .font(.mainTextSemibold12)
-                            .foregroundStyle(.black)
+                            .foregroundStyle(Color("black"))
                             .padding(.top, 2)
                         Image("dot3")
                     }
@@ -672,7 +672,7 @@ struct BusStepView: View {
                         Text(chunkedLabel(step.title))
                             .multilineTextAlignment(.center)
                             .font(.mainTextSemibold12)
-                            .foregroundStyle(.black)
+                            .foregroundStyle(Color("black"))
                             .padding(.top, 2)
                         Image("dot3")
                     }

@@ -216,7 +216,7 @@ struct SavePlaceSheetView: View {
 
  
             if showModal {
-                Color.black.opacity(0.7)
+                Color("black").opacity(0.7)
                     .ignoresSafeArea()
                     .onTapGesture { withAnimation { showModal = false } }
 

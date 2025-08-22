@@ -20,7 +20,7 @@ struct CommonStepView: View {
                                     .frame(height:1)
                                 Text(step.title)
                                     .font(.mainTextSemibold12)
-                                    .foregroundStyle(step.title.contains("출발") ? Color("positive") : Color.black)
+                                    .foregroundStyle(step.title.contains("출발") ? Color("positive") : Color("black"))
                                 Spacer()
                                     .frame(height:4)
                                 
@@ -52,7 +52,7 @@ struct CommonStepView: View {
                                         if let routeDetail = step.routeDetail {
                                             Text(routeDetail)
                                                 .font(.mainTextRegular12)
-                                                .foregroundStyle(Color.black)
+                                                .foregroundStyle(Color("black"))
                                             
                                         }
 

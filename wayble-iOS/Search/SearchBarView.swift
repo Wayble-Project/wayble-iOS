@@ -77,7 +77,7 @@ struct SearchBarView: View {
                         }
                         
                         TextField("", text: $viewModel.searchText)
-                            .foregroundStyle(.black)
+                            .foregroundStyle(Color("black"))
                             .font(.mainTextRegular14)
                             .focused($isFocused)
                     }
@@ -130,7 +130,7 @@ struct SearchBarView: View {
                 .frame(maxWidth: .infinity)
                 .frame(height: 12)
                 .background(.white)
-                .shadow(color: .black.opacity(0.05), radius: 2, x: 0, y: 6)
+                .shadow(color: Color("black").opacity(0.05), radius: 2, x: 0, y: 6)
             
             Spacer()
                 .frame(height: 24)
@@ -199,11 +199,11 @@ struct SearchBarView: View {
             let highlightedPart = Text(String(suggestion.prefix(keyword.count)))
                 .foregroundStyle(Color("blue-700"))
             let remainingPart = Text(String(suggestion.dropFirst(keyword.count)))
-                .foregroundStyle(Color.black)
+                .foregroundStyle(Color("black"))
             return highlightedPart + remainingPart
         } else {
             return Text(suggestion)
-                .foregroundStyle(Color.black)
+                .foregroundStyle(Color("black"))
         }
     }
     
@@ -236,13 +236,13 @@ struct SearchBarView: View {
                         .frame(width: 24, height: 24)
                     Text(place.title.removeHTMLTags())
                         .font(.mainTextSemibold16)
-                        .foregroundStyle(.black)
+                        .foregroundStyle(Color("black"))
                     Spacer()
                 }
 
                 Text(place.roadAddress)
                     .font(.mainTextRegular12)
-                    .foregroundStyle(.gray700)
+                    .foregroundStyle(Color("gray-700"))
                     .padding(.leading, 31)
                     .padding(.bottom, 10)
 

@@ -323,7 +323,7 @@ struct WriteReView: View {
             
             // 커스텀 성공 모달
             if showModal {
-                Color.black.opacity(0.7)
+                Color("black").opacity(0.7)
                     .ignoresSafeArea()
                     .onTapGesture { withAnimation { showModal = false } }
                 

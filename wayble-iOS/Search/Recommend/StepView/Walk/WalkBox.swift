@@ -19,12 +19,12 @@ struct WalkBox: View {
             VStack(alignment: .leading, spacing: 0) {
                 Text(route.title)
                     .font(.mainTextRegular12)
-                    .foregroundStyle(isSelected ? Color("blue-900") : Color.black)
+                    .foregroundStyle(isSelected ? Color("blue-900") : Color("black"))
                 Spacer().frame(height: 4)
 
                 Text(route.time)
                     .font(.mainTextSemibold20)
-                    .foregroundStyle(isSelected ? Color("blue-900") : Color.black)
+                    .foregroundStyle(isSelected ? Color("blue-900") : Color("black"))
                 Spacer().frame(height: 10)
 
                 HStack(spacing: 4) {

@@ -16,7 +16,7 @@ struct HeartButton: View {
     
     var body: some View {
         Button(action: action) {
-            Image(.heart02)
+            Image("heart02")
                 .resizable()
                 .scaledToFit()
                 .frame(height: 20)

@@ -27,7 +27,7 @@ struct ProfileView: View {
             .shadow(radius: 3)
             .padding(.top, 100)
             */
-            Image(.waybleLogo4)
+            Image("waybleLogo4")
                 .resizable()
                 .frame(width: 140, height: 90)
                 .padding(.top,130)

@@ -15,11 +15,11 @@ struct SuggestionRow: View {
     var body: some View {
         HStack(spacing: 11) {
             Image("search")
-                .foregroundStyle(.black)
+                .foregroundStyle(Color("black"))
                 .frame(width: 24, height: 24)
             Text(keyword)
                 .font(.mainTextRegular16)
-                .foregroundStyle(.black)
+                .foregroundStyle(Color("black"))
             Spacer()
         }
         .padding(.vertical, 15)

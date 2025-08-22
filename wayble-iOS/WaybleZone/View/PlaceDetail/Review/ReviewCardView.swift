@@ -91,7 +91,7 @@ struct ReviewCardView: View {
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: innerHeight, height: innerHeight)
-                            .foregroundColor(.gray)
+                            .foregroundStyle(Color("gray"))
 
                     @unknown default:
                         EmptyView()

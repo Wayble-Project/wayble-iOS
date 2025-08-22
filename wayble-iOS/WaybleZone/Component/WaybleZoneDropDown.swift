@@ -91,7 +91,7 @@ struct WaybleZoneDropDown: View {
         .background(
             RoundedRectangle(cornerRadius: 12)
                 .fill(Color.white)
-                .shadow(color: .black.opacity(0.12),
+                .shadow(color: Color("black").opacity(0.12),
                         radius: 10,x:0, y: 0)
         )
         .offset(y: 50)

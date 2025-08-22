@@ -42,7 +42,7 @@ struct WaybleZoneModal: View {
 
     #Preview {
         ZStack {
-            Color.black.opacity(0.7)
+            Color("black").opacity(0.7)
                 .ignoresSafeArea()
 
             WaybleZoneModal(

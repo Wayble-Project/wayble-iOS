@@ -54,6 +54,7 @@ struct PlaceDetailHeaderView: View {
                     .padding(),
                 alignment: .bottomLeading
             )
+            .clipped()
 
                 .overlay(
                     HStack(spacing: 4) {
