@@ -74,7 +74,7 @@ struct RouteView: View {
 
                                 Text(displayTitle)
                                     .font(.mainTextSemibold12)
-                                    .foregroundStyle(.black)
+                                    .foregroundStyle(Color("black"))
                                     .lineSpacing(-2)
                                     .padding(.bottom, 2)
                             }
@@ -133,7 +133,7 @@ struct RouteView: View {
 
                                 Text(mainText)
                                     .font(.mainTextSemibold14)
-                                    .foregroundStyle(.black)
+                                    .foregroundStyle(Color("black"))
 
                                 // 보조 정보 라인
                                 if !isLast {

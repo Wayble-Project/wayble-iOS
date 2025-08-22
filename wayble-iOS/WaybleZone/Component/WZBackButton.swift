@@ -11,7 +11,7 @@ struct WZBackButton: View {
                             }
 
         } label: {
-            Image("back").foregroundStyle(.black)
+            Image("back").foregroundStyle(Color("black"))
         }
     }
 }

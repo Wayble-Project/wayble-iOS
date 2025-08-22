@@ -1,5 +1,13 @@
 import SwiftUI
 
+private func koCategory(_ raw: String) -> String {
+    switch raw.uppercased() {
+    case "CAFE": return "카페"
+    case "RESTAURANT": return "음식점"
+    default: return raw
+    }
+}
+
 struct WaybleZoneCard: View {
     let zone: WaybleZone
     @Binding var selectedIndex: Int
@@ -115,7 +123,7 @@ struct WaybleZoneCard: View {
     }
 
     private var infoText: String {
-        "\(zone.facilities?.floorInfo ?? "1층") · 500m · \(zone.category)"
+        "\(zone.facilities?.floorInfo ?? "1층") · 500m · \(koCategory(zone.category))"
     }
 
     private func openDetail() {

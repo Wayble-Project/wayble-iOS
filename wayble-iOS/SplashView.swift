@@ -17,7 +17,7 @@ struct SplashView: View {
 
     var body: some View {
         VStack {
-            Image(.waybleLogo4)
+            Image("waybleLogo4")
                 .resizable()
                 .frame(width: 145, height: 95)
                 .padding(.bottom, 9.19)

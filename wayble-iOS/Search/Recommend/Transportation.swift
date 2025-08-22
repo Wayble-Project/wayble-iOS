@@ -176,7 +176,7 @@ struct Transportation: View {
                                     .frame(height:11)
                                 Text(tab.rawValue)
                                     .font(.mainTextSemibold14)
-                                    .foregroundStyle(viewModel.transportation.selectedTab == tab ? .black : .gray300)
+                                    .foregroundStyle(viewModel.transportation.selectedTab == tab ? Color("black"): .Color("gray-300")
                                     .lineLimit(1)
                                     .fixedSize()
                                     .frame(height: 22)
@@ -184,7 +184,7 @@ struct Transportation: View {
                                     .frame(height:11)
                                 Rectangle()
                                     .frame(width: 130, height: 2)
-                                    .foregroundStyle(viewModel.transportation.selectedTab == tab ? .black : .clear)
+                                    .foregroundStyle(viewModel.transportation.selectedTab == tab ? Color("black") : Color("clear"))
                             }
                             .frame(maxWidth: .infinity)
                         }

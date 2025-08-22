@@ -14,7 +14,7 @@ struct TitleText: View {
         var body: some View {
             Text(text)
                 .font(.mainTextSemibold24) // weight 600 = SemiBold
-                .foregroundStyle(.black)
+                .foregroundStyle(Color("black"))
                 .lineSpacing(12) // 150% = 24 * 1.5 = 36 → lineHeight 계산시 간격으로는 12 라네요
                 .tracking(-0.48)
                 .multilineTextAlignment(alignment)

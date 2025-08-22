@@ -326,7 +326,7 @@ struct HomeView: View {
     var body: some View {
         VStack(alignment: .leading) {
             HStack{
-                Image(.waybleLogo3)
+                Image("waybleLogo3")
                 Text("wayble")
                     .font(.mainTextSemibold20)
             }

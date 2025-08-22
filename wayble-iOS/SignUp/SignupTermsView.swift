@@ -32,14 +32,14 @@ struct SignupTermsView: View {
                 }
                 Text("웨이블 서비스 이용 동의")
                     .font(.mainTextSemibold14)
-                    .foregroundStyle(Color.black)
+                    .foregroundStyle(Color("black"))
                     .padding(.leading, 12)
             }
             .padding(.bottom, 9)
             
             Text("가입 약관 내용 추가")
                 .font(.mainTextRegular14)
-                .foregroundStyle(Color.black)
+                .foregroundStyle(Color("black"))
                 .padding(.leading, 36)
             
             Spacer()

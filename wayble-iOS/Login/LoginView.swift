@@ -121,7 +121,7 @@ struct LoginView: View {
             }
              */
             if isLoading {
-                Color.black.opacity(0.1).ignoresSafeArea()
+                Color("black").opacity(0.1).ignoresSafeArea()
                 ProgressView()
                     .progressViewStyle(CircularProgressViewStyle(tint: .loading))
                     .scaleEffect(1.5)
@@ -189,12 +189,12 @@ struct SNSloginButtonView: View {
     var body: some View {
         HStack {
             Button(action: {}) {
-                Image(.kakaoIcon)
+                Image("kakaoIcon")
                     .resizable()
                     .frame(width: 52, height: 52)
             }
             Button(action: {}) {
-                Image(.appleIcon)
+                Image("appleIcon")
                     .resizable()
                     .frame(width: 52, height: 52)
             }
