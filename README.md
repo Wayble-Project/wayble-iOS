@@ -1,6 +1,79 @@
-# 🚀 wayble
 
-![image](https://github.com/user-attachments/assets/24f2efe9-6892-40dc-83fd-b82a11876ecd)
+사용자를 위한 맞춤형 배리어프리 서비스 Wayble
+
+모두의 편리한 이동을 위한 맞춤형 경로 탐색 및 장소 추천 서비스
+장애 유형별·이동 수단별 최적화된 경로 안내와 접근성 정보 공유 플랫폼, Wayble에서 만나보세요!
+<img width="731" height="508" alt="477903780-567f7e5c-ea57-41aa-8988-fa64cbed6fd2-2" src="https://github.com/user-attachments/assets/dd48f989-39ee-4a5b-bc41-b486e3703e3e" />
+
+
+
+🌊 Wayble 팀 노션 링크
+https://www.notion.so/wayble-20475cf0b87b806d9473feb579ab23e0
+
+
+📖 프로젝트 개요
+
+WAYBLE은 장애인·교통약자 사용자를 위해 맞춤형 경로 탐색, 접근성 필터 기반 장소 추천, 접근성 리뷰 공유 기능을 제공하는 배리어프리 지도 서비스입니다.
+사용자의 장애 유형과 이동 수단 설정에 따라 최적화된 경로를 안내하고, 누구나 접근성 정보를 등록·확인하여 모두의 이동권을 보장합니다.
+
+🚦 기획의 시작
+
+왜 장애인은 주변에서 자주 보이지 않을까?
+교통수단 이용의 어려움
+충분히 보장되지 않는 생활 접근성
+부족한 이동 편의 서비스
+장애인 인터뷰에서 나온 목소리
+
+"매일 똑같은 식당에 가요.", "하루가 계획대로 되지 않아요.", "엘리베이터 위치 정보가 부정확해서 이동이 힘들어요."
+기존 지도 서비스에는 엘리베이터·경사로·장애인 화장실 등 장애인들을 위한 확실한 정보가 불충분하고, 장애 유형별 경로 안내, 장애인들만의 접근성 리뷰 공유 기능등 편의성이 제공되지 않습니다.
+
+💡 서비스 소개
+
+WAYBLE은
+
+장애 유형과 이동 수단 설정에 따라 UI·안내 정보 자동 최적화
+접근성 필터 기반 장소 검색·추천
+장애인들을 기반으로 한 참여형 접근성 리뷰 공유
+장애인의 이동 경험 개선 및 말못하는 사소한 불편 해소 를 목표로 하는 배리어프리 지도 플랫폼입니다.
+🎯 서비스 목표
+
+장애 유형·이동 수단별 최적화된 경로 탐색
+
+접근성 필터 기반 장소 추천
+
+장애인 참여형 접근성 정보 수집·공유
+
+(채우기)
+
+
+
+
+🛠 주요 기능
+
+1. 지도 기반 접근 가능 장소 검색
+
+엘리베이터, 경사로, 장애인 화장실 등 장애인들이 필수적으로 알고싶어하는 정보들로 장소 필터링 위치 기반 추천
+
+2. 맞춤형 경로 안내
+
+장애 유형별 경로 최적화 (휠체어, 시각장애, 지적장애 등)
+
+웨이블 마커 (경사로, 휠체어 충전기 등)을 활용하여 커스텀 추천 경로 제공
+
+대중교통 경로에선 장애인들에게 필요한 정보(지하철역-엘리베이터 위치 등, 버스-저상버스 여부 등) 제공
+
+3. 접근성 리뷰 작성·열람
+
+이용자가 남긴 접근성 중심 리뷰 확인
+
+4. 마이 플레이스
+
+나만의 장소 웨이블존 리스트 저장
+
+저장한 장소별 웨이블존 조회 및 삭제
+
+
+
 
 
 > 베리어프리 맞춤형 지도 서비스
@@ -20,21 +93,11 @@
 | [[GitHub](깃허브 링크)](https://github.com/littby) | [[GitHub](깃허브 링크)](https://github.com/doitexactly) | [[GitHub](깃허브 링크)](https://github.com/hammoooo) | [GitHub](깃허브 링크) |
 
 
-<br>
-
-
-## 📱 소개
-
-> 베리어프리 맞춤형 지도 앱
-
-사용자는 맞춤 설정을 통해 편리한 경로와 접근 가능한 장소를 찾고 경험을 공유하며
-모두가 이동하기 좋은 세상을 함께 만듭니다.
 
 <br>
 
 ## 📆 프로젝트 기간
-- 전체 기간: `2025.07.10 - 2025.08.20(미정)`
-- 개발 기간: `2025.07.10 - 2025.08.20(미정)`
+- 전체 기간: `2025.07.10 - 2025.08.22`
 
 <br>
 
@@ -60,23 +123,19 @@ Swift 6.0
 <img src="https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white" />
 <img src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white" />
 <img src="https://img.shields.io/badge/SPM-FA7343?style=for-the-badge&logo=swift&logoColor=white" />
-<img src="https://img.shields.io/badge/Fastlane-n?style=for-the-badge&logo=fastlane&logoColor=black" />
 </div>
 
 ### Development
 <div align="left">
 <img src="https://img.shields.io/badge/Xcode-007ACC?style=for-the-badge&logo=Xcode&logoColor=white" />
-<img src="https://img.shields.io/badge/Firebase-DD2C00?style=for-the-badge&logo=Firebase&logoColor=white" />
 <img src="https://img.shields.io/badge/SwiftUI-42A5F5?style=for-the-badge&logo=swift&logoColor=white" />
 <img src="https://img.shields.io/badge/Alamofire-FF5722?style=for-the-badge&logo=swift&logoColor=white" />
 <img src="https://img.shields.io/badge/Moya-8A4182?style=for-the-badge&logo=swift&logoColor=white" />
 <img src="https://img.shields.io/badge/Kingfisher-0F92F3?style=for-the-badge&logo=swift&logoColor=white" />
-<img src="https://img.shields.io/badge/Combine-FF2D55?style=for-the-badge&logo=apple&logoColor=white" />
 </div>
 
 ### Communication
 <div align="left">
-<img src="https://img.shields.io/badge/Miro-FFFC00.svg?style=for-the-badge&logo=Miro&logoColor=050038" />
 <img src="https://img.shields.io/badge/Notion-white.svg?style=for-the-badge&logo=Notion&logoColor=000000" />
 <img src="https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=Discord&logoColor=white" />
 <img src="https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white" />
@@ -85,17 +144,11 @@ Swift 6.0
 <br>
 
 ## 📱 화면 구성
-<table>
-  <tr>
-    <td>
-      사진 넣어주세요
-    </td>
-    <td>
-      사진 넣어주세요
-    </td>
-   
-  </tr>
-</table>
+<img width="1920" height="1080" alt="onboardingScreen" src="https://github.com/user-attachments/assets/0177a29c-a9d4-4e3b-a862-3af45cf85812" />
+<img width="1920" height="1080" alt="homeScreen" src="https://github.com/user-attachments/assets/f94b1c92-959f-4187-8e8a-f564d6f4981c" />
+<img width="1920" height="1080" alt="waybleZoneScreen" src="https://github.com/user-attachments/assets/2bfc89de-92fe-4de9-a659-01c942190eb2" />
+<img width="1920" height="1080" alt="findmapScreen" src="https://github.com/user-attachments/assets/4b7874fc-34a6-44ad-9522-8efafc290f8e" />
+
 
 ## 🔖 브랜치 컨벤션
 * `main` - 제품 출시 브랜치
@@ -219,53 +272,4 @@ if let user = self.veryLongFunctionNameWhichReturnsOptionalUser(),
 > 💄 [Design] 로그인 화면 레이아웃 조정 <br>
 > 📝 [Docs] README에 프로젝트 소개 추가 <br>
 
-<br>
 
-## 🗂️ 폴더 컨벤션
-```
-
-MyApp/
-├── App/                  # 앱 진입점 (AppDelegate, SceneDelegate 등)
-│   └── AppDelegate.swift
-│   └── SceneDelegate.swift
-
-├── Resources/            # 이미지, 폰트, 색상 등 리소스
-│   ├── Assets.xcassets
-│   ├── Fonts/
-│   └── Colors.swift
-
-├── Common/               # 공용 컴포넌트 (버튼, 텍스트필드, 네비게이션 등)
-│   ├── UI/
-│   │   ├── CustomButton.swift
-│   │   └── BackNavigationBar.swift
-│   └── Extension/
-│       ├── UIView+Extension.swift
-│       └── String+Extension.swift
-
-├── Constants/            # 상수 관리 (URL, 색상, 폰트 등)
-│   ├── FontConstants.swift
-│   ├── ColorConstants.swift
-│   └── APIConstants.swift
-
-├── Features/             # 기능별 폴더
-│   ├── Login/
-│   │   ├── View/
-│   │   │   └── LoginViewController.swift
-│   │   ├── ViewModel/
-│   │   │   └── LoginViewModel.swift
-│   │   └── Model/
-│   │       └── LoginUser.swift
-│   ├── Signup/
-│   ├── Home/
-│   └── Map/
-
-├── Network/              # 네트워크 관련 코드
-│   ├── APIManager.swift
-│   ├── Endpoint.swift
-│   └── DTO/
-
-└── Utils/                # 유틸리티 도구 (예: 날짜 포맷터, Alert 등)
-    └── AlertHelper.swift
-
-
-```
